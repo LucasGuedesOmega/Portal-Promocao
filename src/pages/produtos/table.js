@@ -230,6 +230,7 @@ class Table extends React.Component{
                       rowsPerPageText: "Linhas por paginas",
                       rangeSeparatorText: "de"
                     }}
+                    className='tabelas'
                     noDataComponent={<div><p style={{float: 'left', marginRight: '10px'}}>Sem resultados</p><span style={{float: 'left'}} className="material-symbols-outlined mb-3">filter_list_off</span></div>}
                     />
                 </div>

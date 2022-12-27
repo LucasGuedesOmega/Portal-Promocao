@@ -216,36 +216,36 @@ export class NavbarClass extends React.Component{
 
     render(){
         return (
-            <div> 
-                <div className="navbar navbar">
-                    <div className="row navbar__row">
-                        <div className="col-lg-4 navbar__row__column1">
-                            <div><h5>{this.state.descricao_empresa}</h5></div> 
-                        </div>
-                        <div className="col-lg-4 navbar__row__column2">
-                            <div></div>
-                        </div>
-                        <div className="col-lg-4 navbar__row__column3">
-                            <DropdownMenu>
-                                <DropdownMenuTrigger asChild>
-                                    <IconButton aria-label="Customise options">
-                                        <HamburgerMenuIcon />
-                                    </IconButton>
-                                </DropdownMenuTrigger>
+        
+            <div className="navbar">
+                <div className="row navbar__row">
+                    <div className="col-lg-4 navbar__row__column1">
+                        <div><h5>{this.state.descricao_empresa}</h5></div> 
+                    </div>
+                    <div className="col-lg-4 navbar__row__column2">
+                        <div></div>
+                    </div>
+                    <div className="col-lg-4 navbar__row__column3">
+                        <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                                <IconButton aria-label="Customise options">
+                                    <HamburgerMenuIcon />
+                                </IconButton>
+                            </DropdownMenuTrigger>
 
-                                <DropdownMenuContent className={'content-dropdown'} sideOffset={5}>
-                                    <DropdownMenuItem className='item-dropdown'>
-                                        <Link type='button' to={'/usuario'} className="a-usuario">Meu Usuário</Link>
-                                    </DropdownMenuItem>
-                                    <DropdownMenuItem className='item-dropdown'>
-                                        <button className='bt_logout' onClick={()=>{this.logout()}}>Sair</button>
-                                    </DropdownMenuItem>
-                                </DropdownMenuContent>
-                            </DropdownMenu>
-                        </div>
+                            <DropdownMenuContent className={'content-dropdown'} sideOffset={5}>
+                                <DropdownMenuItem className='item-dropdown'>
+                                    <Link type='button' to={'/usuario'} className="a-usuario">Meu Usuário</Link>
+                                </DropdownMenuItem>
+                                <DropdownMenuItem className='item-dropdown'>
+                                    <button className='bt_logout' onClick={()=>{this.logout()}}>Sair</button>
+                                </DropdownMenuItem>
+                            </DropdownMenuContent>
+                        </DropdownMenu>
                     </div>
                 </div>
             </div>
+          
         );
     }
 }

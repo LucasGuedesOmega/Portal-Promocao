@@ -98,6 +98,31 @@ a {
             color: #bebebe
         }
     }
+    
+}
+
+.tabelas::-webkit-scrollbar{
+    background-color: transparent;
+    margin: 0px !important;
+    padding: 2px !important;
+}
+
+.tabelas::-webkit-scrollbar-button{
+    background-color: transparent;
+    height: 0px;
+    margin: 0px !important;
+    padding: 0px !important;
+}
+
+.tabelas::-webkit-scrollbar-thumb{
+    background-color: #26262c;
+    border-radius: 9px;
+    margin: 0px !important;
+    padding: 0px !important;
+}
+
+.tabelas::-webkit-scrollbar-thumb:hover{
+    background-color: #50505e;
 }
 
 .bt_cadastro{
@@ -181,7 +206,7 @@ a {
     transition: left 0.5s ease-in-out;
     background-color: #26262c;
     color: #ffffff; 
-    min-height: 100%;
+    min-height: 60.55rem;
     display: block;
 
     &__logo{
@@ -234,7 +259,6 @@ a {
 
 .navbar{
     display: flex;
-    flex-direction: row;
     background-color: #fff;
     margin-top: -49px;
     margin-left: -50px;
@@ -247,7 +271,7 @@ a {
     &__row {
         width: 100%;
         
-        &__column1{
+        &__column{
             text-align: left;
             align-items: center;
             justify-content: center;
@@ -632,7 +656,7 @@ color: #031446;
 }
 
 .cadastro{
-    height: 56rem;
+    max-height: 56rem;
     place-items: center;
     text-align: center;
     justify-content: center;
@@ -640,7 +664,8 @@ color: #031446;
     position: relative;
     width: 107%;
     left: -7%;
-
+    overflow-y: auto;
+    
     &__formulario{
         background-color: #fff;
         -webkit-box-shadow: 6px 11px 29px -5px rgba(0,0,0,0.75);
