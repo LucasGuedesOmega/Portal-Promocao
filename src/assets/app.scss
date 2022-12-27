@@ -266,7 +266,7 @@ a {
     justify-content: center;
     height: 72px;
     position: relative;
-    width: 103%;
+    min-width: 103%;
 
     &__row {
         width: 100%;
