@@ -6156,7 +6156,7 @@
   "resolved" "https://registry.npmjs.org/hoist-non-react-statics/-/hoist-non-react-statics-2.5.5.tgz"
   "version" "2.5.5"
 
-"hoist-non-react-statics@^3.0.0", "hoist-non-react-statics@^3.3.1":
+"hoist-non-react-statics@^3.0.0", "hoist-non-react-statics@^3.3.0", "hoist-non-react-statics@^3.3.1":
   "integrity" "sha512-/gGivxi8JPKWNm/W0jSmzcMPpfpPLc3dY/6GxhX2hQ9iGj3aDfklV4ET7NjKpSinLpJ5vafa9iiGIEZg10SfBw=="
   "resolved" "https://registry.npmjs.org/hoist-non-react-statics/-/hoist-non-react-statics-3.3.2.tgz"
   "version" "3.3.2"
@@ -9065,7 +9065,7 @@
     "react-is" "^16.3.2"
     "warning" "^4.0.0"
 
-"prop-types@^15.6.0", "prop-types@^15.6.1", "prop-types@^15.6.2", "prop-types@^15.7.2", "prop-types@^15.8.1":
+"prop-types@^15.5.0", "prop-types@^15.6.0", "prop-types@^15.6.1", "prop-types@^15.6.2", "prop-types@^15.7.2", "prop-types@^15.8.1":
   "integrity" "sha512-oj87CgZICdulUohogVAR7AjlC0327U4el4L6eAvOqCeudMDVU0NThNaV+b9Df4dXgSP1gXMTnPdhfe/2qDH5cg=="
   "resolved" "https://registry.npmjs.org/prop-types/-/prop-types-15.8.1.tgz"
   "version" "15.8.1"
@@ -9170,6 +9170,14 @@
     "regenerator-runtime" "^0.13.9"
     "whatwg-fetch" "^3.6.2"
 
+"react-async-script@^1.1.1":
+  "integrity" "sha512-bCpkbm9JiAuMGhkqoAiC0lLkb40DJ0HOEJIku+9JDjxX3Rcs+ztEOG13wbrOskt3n2DTrjshhaQ/iay+SnGg5Q=="
+  "resolved" "https://registry.npmjs.org/react-async-script/-/react-async-script-1.2.0.tgz"
+  "version" "1.2.0"
+  dependencies:
+    "hoist-non-react-statics" "^3.3.0"
+    "prop-types" "^15.5.0"
+
 "react-background-slider@^3.0.0-0":
   "integrity" "sha512-KmGmr+0i8dslVhxqTZoweGVcxFG2KqYQ3U+Pp6OTBylfnUnHQfFln0Xmy/KmbXrTaoiNZ/sEQK73uDRy+yC2+w=="
   "resolved" "https://registry.npmjs.org/react-background-slider/-/react-background-slider-3.0.0-0.tgz"
@@ -9260,6 +9268,14 @@
   "integrity" "sha512-/6UZ2qgEyH2aqzYZgQPxEnz33NJ2gNsnHA2o5+o4wW9bLM/JYQitNP9xPhsXwC08hMMovfGe/8retsdDsczPRg=="
   "resolved" "https://registry.npmjs.org/react-error-overlay/-/react-error-overlay-6.0.11.tgz"
   "version" "6.0.11"
+
+"react-google-recaptcha@^2.1.0":
+  "integrity" "sha512-K9jr7e0CWFigi8KxC3WPvNqZZ47df2RrMAta6KmRoE4RUi7Ys6NmNjytpXpg4HI/svmQJLKR+PncEPaNJ98DqQ=="
+  "resolved" "https://registry.npmjs.org/react-google-recaptcha/-/react-google-recaptcha-2.1.0.tgz"
+  "version" "2.1.0"
+  dependencies:
+    "prop-types" "^15.5.0"
+    "react-async-script" "^1.1.1"
 
 "react-hot-toast@^2.4.0":
   "integrity" "sha512-qnnVbXropKuwUpriVVosgo8QrB+IaPJCpL8oBI6Ov84uvHZ5QQcTp2qg6ku2wNfgJl6rlQXJIQU5q+5lmPOutA=="
@@ -9498,7 +9514,7 @@
     "loose-envify" "^1.4.0"
     "prop-types" "^15.6.2"
 
-"react@^0.14.0 || ^15.0.0 || ^16 || ^17 || ^18", "react@^16.8 || ^17.0 || ^18.0", "react@^16.8.0 || ^17.0.0 || ^18.0.0", "react@^16.8.0 || ^17.0.0-rc.1 || ^18.0.0", "react@^16.9.0 || ^17.0.0 || ^18.0.0", "react@^16.x || ^17.x || ^18.x", "react@^18.0.0", "react@^18.2.0", "react@>= 16", "react@>= 16.3.0", "react@>= 16.8.0", "react@>= 16.8.3", "react@>=0.14.0", "react@>=15", "react@>=15.0.0", "react@>=16", "react@>=16.14.0", "react@>=16.6.0", "react@>=16.8", "react@>=16.8.0":
+"react@^0.14.0 || ^15.0.0 || ^16 || ^17 || ^18", "react@^16.8 || ^17.0 || ^18.0", "react@^16.8.0 || ^17.0.0 || ^18.0.0", "react@^16.8.0 || ^17.0.0-rc.1 || ^18.0.0", "react@^16.9.0 || ^17.0.0 || ^18.0.0", "react@^16.x || ^17.x || ^18.x", "react@^18.0.0", "react@^18.2.0", "react@>= 16", "react@>= 16.3.0", "react@>= 16.8.0", "react@>= 16.8.3", "react@>=0.14.0", "react@>=15", "react@>=15.0.0", "react@>=16", "react@>=16.14.0", "react@>=16.4.1", "react@>=16.6.0", "react@>=16.8", "react@>=16.8.0":
   "integrity" "sha512-/3IjMdb2L9QbBdWiW5e3P2/npwMBaU9mHCSCUzNln0ZCYbcfTsGbTJrU/kGemdH2IWmB2ioZ+zkxtmq6g09fGQ=="
   "resolved" "https://registry.npmjs.org/react/-/react-18.2.0.tgz"
   "version" "18.2.0"

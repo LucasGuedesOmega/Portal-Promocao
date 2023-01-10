@@ -42,11 +42,11 @@ export default class Dashboard extends React.Component{
         .catch((error)=>{
             console.log(error)
             if (error.response.data.error === "Token expirado"){
-                this.props.navigate("/login")
+                window.location.href="/login"
             } else if (error.response.data.error === "não autorizado"){
-                this.props.navigate('/login')
+                window.location.href='/login'
             } else if (error.name === "AxiosError"){
-                this.props.navigate('/login')
+                window.location.href='/login'
             }
         })
 
@@ -70,17 +70,17 @@ export default class Dashboard extends React.Component{
                     vendas_concluidas: vendas_concluidas,
                     vendas: vendas
                 })
-                console.log(this.state.vendas_concluidas, 'concluida', this.state.vendas_emitidas, 'emitida', this.state.vendas_canceladas, 'cancelada')
+                // console.log(this.state.vendas_concluidas, 'concluida', this.state.vendas_emitidas, 'emitida', this.state.vendas_canceladas, 'cancelada')
             } 
         })
         .catch((error)=>{
             console.log(error)
             if (error.response.data.error === "Token expirado"){
-                this.props.navigate("/login")
+                window.location.href="/login"
             } else if (error.response.data.error === "não autorizado"){
-                this.props.navigate('/login')
+                window.location.href='/login'
             } else if (error.name === "AxiosError"){
-                this.props.navigate('/login')
+                window.location.href='/login'
             }
         })
     }
