@@ -132,7 +132,9 @@ class Editar extends React.Component{
 
             empresas: [],
             collapseEmpresa: true,
-            defaultTipo: null
+            defaultTipo: null,
+
+            marcarTodos: false
         }
 
         this.submitForm = this.submitForm.bind(this);
@@ -301,7 +303,7 @@ class Editar extends React.Component{
 
             if (error.response.data.error === "Token expirado"){
                 window.location.href="/login"
-            } else if (error.response.data.error === "não autorizado"){
+            } else if (error.response.data.error === "nï¿½o autorizado"){
                 window.location.href='/login'
             } else if (error.name === "AxiosError"){
                 window.location.href='/login'
@@ -336,7 +338,6 @@ class Editar extends React.Component{
                 status: this.state.status,
             }
         ]   
-        console.log(dados_promocao)
         let message;
 
         try{
@@ -560,6 +561,39 @@ class Editar extends React.Component{
         })
     }
 
+    async marcarTodos(){
+        let marcar = !this.state.marcarTodos
+
+        this.setState({
+            marcarTodos: marcar
+        })
+
+        let empresas = this.state.empresas;
+
+        if (marcar === true){
+            for(let i = 0; i < empresas.length; i++){
+                empresas[i].checked = true
+            }
+
+            this.setState({
+                empresas: empresas
+            })
+
+            return;
+        }else if (this.state.id_promocao){
+            await this.get_promocao();
+            await this.get_promocao_empresas();
+        }else{
+            for(let i = 0; i < empresas.length; i++){
+                empresas[i].checked = false
+            }
+
+            this.setState({
+                empresas: empresas
+            })
+        }
+    }
+
     render(){
         let default_produto;
         if (this.state.id_produto && this.state.descricao_produto){
@@ -750,6 +784,12 @@ class Editar extends React.Component{
                                         </li>
                                         <li className='header-empresas'>
                                             <div className='row'>
+                                                <button className={this.state.marcarTodos?'marcar-todos':'desliga-marcar-todos'} onClick={()=>{this.marcarTodos()}} >
+                                                    {this.state.marcarTodos?(<span class="material-symbols-outlined clickIcon">remove_done</span>)
+                                                    :
+                                                    (<span class="material-symbols-outlined clickIcon">verified</span>)
+                                                    }
+                                                </button>
                                                 <div className='col-sm'>Marcado</div>
                                                 <div className='col-sm'>ID</div>
                                                 <div className='col-sm'>RazÃ£o Social</div>
@@ -761,6 +801,7 @@ class Editar extends React.Component{
                                                 this.state.empresas.map((value, index)=>(
                                                         <li onClick={()=>{this.onEmpresaClicked(value.checked, index)}} className={value.checked?'item_empresa_checked':'item_empresa'}>
                                                             <div className='row'>
+                                                                <div className='col-sm col-traco'>-</div>
                                                                 <div className='col-sm'>
                                                                     {value.checked?(<span class="material-symbols-outlined">verified</span>)
                                                                     :

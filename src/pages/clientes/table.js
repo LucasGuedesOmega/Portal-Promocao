@@ -8,6 +8,7 @@ import * as ScrollAreaPrimitive from '@radix-ui/react-scroll-area';
 import DataTable from "react-data-table-component";
 import { useNavigate, Link } from "react-router-dom";
 import { Toaster } from 'react-hot-toast';
+import jwtDecode from 'jwt-decode';
 
 const columns = [
   {
@@ -142,7 +143,8 @@ export class Table extends React.Component{
         super(props);
         this.state = {
             clientes_list: [],
-            dados_table: []
+            dados_table: [],
+            token: jwtDecode(this.props.token)
         };
 
         this.dados_table = this.dados_table.bind(this)
@@ -155,7 +157,7 @@ export class Table extends React.Component{
     dados_table(){
 
       let clienteList = [];
-
+      console.log(this.state.token)
       try{
         
         api.get('/api/v1/cliente', { headers: { Authorization: this.props.token}})
@@ -171,7 +173,9 @@ export class Table extends React.Component{
              
               let url_editar = `/editar-cliente/${results.data[i].id_cliente}`
 
-              results.data[i].editar = <Link to={url_editar}><span className="material-symbols-outlined">edit</span></Link>
+              if (this.state.token.admin){
+                results.data[i].editar = <Link to={url_editar}><span className="material-symbols-outlined">edit</span></Link>
+              }
 
               let cliente_dict = results.data[i]
 
@@ -220,7 +224,16 @@ export class Table extends React.Component{
                     />
                 </div>
               </div>
-              <button className='bt_cadastro' onClick={()=>{this.props.navigate(`/cadastrar-cliente`)}}>Cadastrar Cliente</button>
+              { this.state.token.admin ? 
+                (
+                  <button className='bt_cadastro' onClick={()=>{this.props.navigate(`/cadastrar-cliente`)}}>Cadastrar Cliente</button>
+                )
+                :
+                (
+                  <div></div>
+                )
+              }
+              
               <Toaster />
             </div>
         );

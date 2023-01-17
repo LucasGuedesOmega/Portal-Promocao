@@ -410,6 +410,7 @@ a {
     flex-direction: column;
 
 }
+
 .card-login{
     width: 400px;
     height: 300px;
@@ -614,7 +615,7 @@ color: #031446;
 
 .item_empresa_checked{
     list-style: none;
-    background-color: #06450D;
+    background-color: #454547;
     color: white;
     padding: 5px;
     margin: 1px;
@@ -728,4 +729,34 @@ color: #031446;
 .label-tipo{
     text-align: left;
     width: 100%;
+}
+
+.marcar-todos{
+    justify-content: center;
+    align-items: center;
+    padding: 0px;
+    border: 0;
+    width: 30px;
+    max-height: 25px;
+    background-color: #031446;
+    margin-left: 1%;
+}
+
+.desliga-marcar-todos{
+    justify-content: center;
+    align-items: center;
+    padding: 0px;
+    border: 0;
+    width: 30px;
+    max-height: 25px;
+    background-color: #031446;
+    margin-left: 1%;
+}
+
+.clickIcon{
+    color: white;
+}
+
+.col-traco{
+    max-width: 50px;
 }

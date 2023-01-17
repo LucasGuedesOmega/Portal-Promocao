@@ -71,12 +71,9 @@ class Editar extends React.Component{
             id_usuario: this.props.id_usuario,
             username: null,
             senha: null, 
-            e_mail: null,
             status: null,
             user_admin: false, 
             id_empresa: null,
-            cpf_cnpj: null,
-            nome: null,
 
             descricao_empresa: null,
 
@@ -106,12 +103,9 @@ class Editar extends React.Component{
                         id_usuario: this.props.id_usuario,
                         username: results.data[0].username,
                         senha: results.data[0].senha,
-                        e_mail: results.data[0].e_mail,
                         status: results.data[0].status,
                         user_admin: results.data[0].user_admin,
-                        id_empresa: results.data[0].id_empresa,        
-                        nome: results.data[0].nome,        
-                        cpf_cnpj: results.data[0].cpf_cnpj,        
+                        id_empresa: results.data[0].id_empresa    
                     })
                 }
             })
@@ -153,7 +147,7 @@ class Editar extends React.Component{
         let empresaList = [];
         let empresaDict;
 
-        api.get(`/api/v1/empresa`, { headers: { Authorization: this.props.token}})
+        api.get(`/api/v1/empresa?id_grupo_empresa=${this.state.tokenDecode.id_grupo_empresa}`, { headers: { Authorization: this.props.token}})
         .then((results)=>{  
             if (results.data.length > 0){
                 for(let i=0; i<results.data.length; i++){
@@ -200,12 +194,9 @@ class Editar extends React.Component{
                 id_usuario: this.state.id_usuario,
                 username: this.state.username,
                 senha: this.state.senha,
-                e_mail: this.state.e_mail,
                 status: this.state.status,
                 user_admin: this.state.user_admin,
-                id_empresa: this.state.id_empresa,
-                nome: this.state.nome,
-                cpf_cnpj: this.state.cpf_cnpj,
+                id_empresa: this.state.id_empresa
             }
         ]       
 
@@ -239,7 +230,7 @@ class Editar extends React.Component{
 
                 if (error.response.data.error === "Token expirado"){
                     window.location.href="/login"
-                } else if (error.response.data.error === "não autorizado"){
+                } else if (error.response.data.error === "nÃ£o autorizado"){
                     window.location.href='/login'
                 } else if (error.name === "AxiosError"){
                     window.location.href='/login'
@@ -265,16 +256,6 @@ class Editar extends React.Component{
         this.setState({
             [name]: value
         });
-    }
-
-    handleNameValueCpfCnpj(event){
-        const target = event.target;
-        const value = target.type === 'checkbox' ? target.checked: target.value;
-        const name  = target.name;
-     
-        this.setState({
-            [name]: value
-        })
     }
 
     render(){
@@ -304,13 +285,9 @@ class Editar extends React.Component{
                                 <label className='cadastro__formulario__label'>Senha</label>
                                 <input type={'password'} className='form-control' defaultValue={this.state.senha} name={'senha'} onChange={(value)=>{this.handleNameValue(value)}} />
                             </div>
-                            <div className="col-sm">
-                                <label className='cadastro__formulario__label'>E-mail</label>
-                                <InputMask className='form-control' defaultValue={this.state.e_mail} name={'e_mail'} onChange={(value)=>{this.handleNameValue(value)}} />
-                            </div>
+                            
                         </div>
                         <div className="row mt-3">
-   
                             <div className="col-sm">
                                 <label className='cadastro__formulario__label'>Empresa</label>
                                 <select name='id_empresa' onChange={(value)=>{this.handleNameValue(value)}} className='form-select'>
@@ -321,14 +298,6 @@ class Editar extends React.Component{
                                         ))
                                     }
                                 </select>
-                            </div>
-                            <div className='col-sm'>
-                                <label className='cadastro__formulario__label'>CPF</label>
-                                <InputMask mask={'999.999.999-99'} className='form-control' value={this.state.cpf_cnpj} name={'cpf_cnpj'} onChange={(value)=>{this.handleNameValueCpfCnpj(value)}} />
-                            </div>
-                            <div className='col-sm'>
-                                <label className='cadastro__formulario__label'>Nome</label>
-                                <input className='form-control' defaultValue={this.state.nome} name={'nome'} onChange={(value)=>{this.handleNameValue(value)}} />
                             </div>
                         </div>
                         <div className="row mt-3">

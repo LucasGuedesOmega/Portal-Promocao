@@ -79,60 +79,133 @@ class Editar extends React.Component{
             cpf: null,
             e_mail: null,
             telefone: null,
-            status: null,
+            status: false,
             id_empresa: null,
 
             tokenDecode: jwtDecode(this.props.token),
 
-            showAlert: false 
+            showAlert: false, 
+            
+            empresas: [],
+            username: null,
+            senha: null,
+            status_usuario: false,
+            id_empresa_usuario: null,
+            id_usuario: null,
+            descricao_empresa: null
         }
-
-        this.submitForm = this.submitForm.bind(this);
 
     }
 
-    async componentDidMount(){
+    componentDidMount(){
+
         if (this.state.id_cliente){
-            await this.get_cliente();
-        }    
+            this.get_cliente();
+        }
+        
+        this.preenche_select_empresa();
+
+        console.log(this.state.id_usuario, this.state.nome, this.state.descricao_empresa);
+
     }
 
     get_cliente(){
-        
-        try{
-            api.get(`api/v1/cliente?id_cliente=${this.state.id_cliente}&campos=id_cliente, nome, e_mail, cpf, telefone, status, id_empresa`,  { headers: { Authorization: this.props.token}})
+        api.get(`api/v1/cliente?id_cliente=${this.state.id_cliente}`,  { headers: { Authorization: this.props.token}})
+        .then((results)=>{
+            if (results.data.length > 0){
+                this.setState({
+                    id_cliente: results.data[0].id_cliente,
+                    nome: results.data[0].nome,
+                    cpf: results.data[0].cpf,
+                    e_mail: results.data[0].e_mail,
+                    telefone: results.data[0].telefone,
+                    status: results.data[0].status,
+                    id_empresa: results.data[0].id_empresa,
+                    id_usuario: results.data[0].id_usuario
+                }, ()=>{
+                    this.get_usuario()
+                })  
+            }
+        })
+        .catch((error)=>{
+            console.log(error)
+            if (error.response.data.error === "Token expirado"){
+                window.location.href="/login"
+            } else if (error.response.data.error === "não autorizado"){
+                window.location.href='/login'
+            } else if (error.name === "AxiosError"){
+                window.location.href='/login'
+            }
+        })
+    }
+
+    get_usuario(){
+        if (this.state.id_usuario){
+            api.get(`api/v1/usuario?id_usuario=${this.state.id_usuario}`, { headers: { Authorization: this.props.token}})
             .then((results)=>{
                 if (results.data.length > 0){
                     this.setState({
-                        dados_cliente:results.data[0],
-                        id_cliente: results.data[0].id_cliente,
-                        nome: results.data[0].nome,
-                        cpf: results.data[0].cpf,
-                        e_mail: results.data[0].e_mail,
-                        telefone: results.data[0].telefone,
-                        status: results.data[0].status,
-                        id_empresa: results.data[0].id_empresa
+                        username: results.data[0].username,
+                        senha: results.data[0].senha,
+                        id_empresa_usuario: results.data[0].id_empresa,
+                        status_usuario: results.data[0].status,
+                    }, ()=>{
+                        this.get_default_empresa()
+                    })
+
+                    
+                }
+            })
+            .catch((error)=>{
+                console.log(error)
+            })
+        }
+        
+    }
+
+    get_default_empresa(){
+        if(this.state.id_empresa_usuario){
+            api.get(`api/v1/empresa?id_empresa=${this.state.id_empresa_usuario}`, { headers: { Authorization: this.props.token}})
+            .then((results)=>{
+                if (results.data.length > 0){
+                    this.setState({
+                        descricao_empresa: results.data[0].razao_social
                     })
                 }
             })
             .catch((error)=>{
                 console.log(error)
-                if (error.response.data.error === "Token expirado"){
-                    window.location.href="/login"
-                } else if (error.response.data.error === "n�o autorizado"){
-                    window.location.href='/login'
-                } else if (error.name === "AxiosError"){
-                    window.location.href='/login'
-                }
             })
-
-        }catch(error){
-            console.log(error)
         }
     }
 
     submitForm(){
-  
+        
+        let messageError = null;
+
+        if (!this.state.nome){
+            messageError = 'Digite um nome!';
+        }else if (!this.state.cpf){
+            messageError = 'Digite um cpf!';
+        }else if(!this.state.e_mail){
+            messageError = 'Digite uma e_mail!'
+        }
+        
+        if(messageError){
+            toast(messageError, {
+                duration: 2000,
+                style:{
+                    marginRight: '1%',
+                    backgroundColor: '#851C00',
+                    color: 'white'
+                },
+                position: 'bottom-right',
+                icon: <span className="material-symbols-outlined">sentiment_dissatisfied</span>,
+            });
+
+            return;
+        }
+
         var dados_cliete = [
             {
                 id_cliente: this.state.id_cliente,
@@ -141,7 +214,8 @@ class Editar extends React.Component{
                 e_mail: this.state.e_mail,
                 telefone: this.state.telefone,
                 status: this.state.status,
-                id_empresa: this.state.tokenDecode.id_empresa
+                id_empresa: this.state.tokenDecode.id_empresa,
+                id_usuario: this.state.id_usuario
             }
         ]   
         
@@ -174,7 +248,7 @@ class Editar extends React.Component{
 
                 if (error.response.data.error === "Token expirado"){
                     window.location.href="/login";
-                } else if (error.response.data.error === "n�o autorizado"){
+                } else if (error.response.data.error === "não autorizado"){
                     window.location.href='/login';
                 } else if (error.name === "AxiosError"){
                     window.location.href='/login';
@@ -185,6 +259,112 @@ class Editar extends React.Component{
         }
     }
 
+    submitFormUsuarios(){
+        let message = null;
+
+        if (!this.state.id_empresa_usuario){
+            message = 'Selecione uma empresa';
+        }else if (!this.state.username){
+            message = 'Digite um username!';
+        }else if(!this.state.senha){
+            message = 'Digite uma senha!'
+        }
+
+        if(message){
+            toast(message, {
+                duration: 2000,
+                style:{
+                    marginRight: '1%',
+                    backgroundColor: '#851C00',
+                    color: 'white'
+                },
+                position: 'bottom-right',
+                icon: <span className="material-symbols-outlined">sentiment_dissatisfied</span>,
+            });
+            return;
+        }
+
+        var dados_usuario = [
+            {
+                id_usuario: this.state.id_usuario,
+                username: this.state.username,
+                senha: this.state.senha,
+                status: this.state.status_usuario,
+                user_admin: false,
+                id_empresa: this.state.id_empresa_usuario
+            }
+        ]       
+
+        try{
+            api.post('/api/v1/usuario', dados_usuario, { headers: { Authorization: this.props.token}})
+            .then((results) => {
+                if (results.data.Sucesso){
+                    this.setState({
+                        id_usuario: results.data.id
+                    }, ()=>this.submitForm())
+                }
+            })
+            .catch((error)=>{
+
+                if (error.response.data.error === "Token expirado"){
+                    window.location.href="/login"
+                } else if (error.response.data.error === "não autorizado"){
+                    window.location.href='/login'
+                } else if (error.name === "AxiosError"){
+                    window.location.href='/login'
+                }
+
+            })
+        }catch(err){
+            console.log(err)
+        }
+    }
+
+    preenche_select_empresa(){
+
+        let empresaList = [];
+        let empresaDict;
+
+        api.get(`/api/v1/empresa?id_grupo_empresa=${this.state.tokenDecode.id_grupo_empresa}`, { headers: { Authorization: this.props.token}})
+        .then((results)=>{  
+            if (results.data.length > 0){
+                for(let i=0; i<results.data.length; i++){
+                    empresaDict = {
+                        value: results.data[i].id_empresa,
+                        text: results.data[i].razao_social
+                    }
+                    empresaList.push(empresaDict)
+                }
+                this.setState({
+                    empresas: empresaList
+                })
+            }
+        })
+        .catch((error)=>{
+            console.log(error.response.data)
+            if(error.name === 'AxiosError'){
+                toast(error.response.data.Error, {
+                    duration: 2000,
+                    style:{
+                        marginRight: '1%',
+                        backgroundColor: '#851C00',
+                        color: 'white'
+                    },
+                    position: 'bottom-right',
+                    icon: <span className="material-symbols-outlined">sentiment_dissatisfied</span>,
+                });
+            } 
+
+            if (error.response.data.erros[0] === "Sem conexao com a api ou falta fazer login."){
+                window.location.href="/login";
+            } 
+            
+            if (error.response.data.error === "Token expirado"){
+                window.location.href="/login";
+            }
+        }) 
+    }
+
     handleNameValue(event){
         const target = event.target;
         const value = target.type === 'checkbox' ? target.checked: target.value;
@@ -192,6 +372,7 @@ class Editar extends React.Component{
         this.setState({
             [name]: value
         })
+        
     }
 
     handleCheckValue(value, name){
@@ -201,14 +382,62 @@ class Editar extends React.Component{
     }
 
     render(){
-
+        let default_empresa;
+        if (this.state.id_empresa_usuario && this.state.descricao_empresa){
+            default_empresa = {value: this.state.id_empresa_usuario, text: this.state.descricao_empresa}
+        } else {
+            default_empresa = {value: 0, text: 'Selecione uma empresa'}
+        }
         return (
             <div className='cadastro'>
                 <div  className="cadastro__formulario" >
                     <div className="cadastro__formulario__header">
                         <div className="row">
-                            <div className="col-md-10"><h3 className="cadastro__formulario__header__titulo">{this.state.nome}</h3></div>
-                            {/* <div className="col-md-2"><button className="btn btn-dark voltar" onClick={()=>{this.props.navigate('/cliente')}}>Página Anterior</button></div> */}
+                            <div className="col-md-10"><h3 className="cadastro__formulario__header__titulo">Usuário</h3></div>
+
+                        </div>
+                    </div>
+                    <hr />
+                    <div className="content w-100 cadastro__formulario__content">
+                        <div className="row mt-3">
+                            <div className="col-sm">
+                                <label className='cadastro__formulario__label'>Usename</label>
+                                <input className='form-control' defaultValue={this.state.username} name={'username'} onChange={(value)=>{this.handleNameValue(value)}} />
+                            </div>
+                            <div className="col-sm">
+                                <label className='cadastro__formulario__label'>Senha</label>
+                                <input type={'password'} className='form-control' defaultValue={this.state.senha} name={'senha'} onChange={(value)=>{this.handleNameValue(value)}} />
+                            </div>
+                        </div>
+                        <div className="row mt-3">
+                            <div className="col-sm">
+                                <label className='cadastro__formulario__label'>Empresa</label>
+                                <select name='id_empresa_usuario' onChange={(value)=>{this.handleNameValue(value)}} className='form-select'>
+                                    <option defaultValue={default_empresa.value}>{default_empresa.text}</option>
+                                    { 
+                                        this.state.empresas.map((item, key)=>(
+                                            <option key={key} value={item.value}>{item.text}</option>
+                                        ))
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                        <div className="row mt-3">
+                            <Flex css={{ alignItems: 'left', float: 'left', marginTop: 9, marginLeft: 4}} >
+                                <Label htmlFor="s9" css={{ paddingRight: 15 }}>
+                                    Status
+                                </Label>
+                                <Switch name='status_usuario' checked={this.state.status_usuario} onCheckedChange={(value)=>{this.handleCheckValue(value, 'status_usuario')}} id="s9">
+                                    <SwitchThumb />
+                                </Switch>
+                            </Flex>
+                        </div>
+                    </div>
+                </div>
+                <div  className="cadastro__formulario" >
+                    <div className="cadastro__formulario__header">
+                        <div className="row">
+                            <div className="col-md-10"><h3 className="cadastro__formulario__header__titulo">Cliente</h3></div>
                         </div>
                     </div>
                     <hr />
@@ -247,7 +476,7 @@ class Editar extends React.Component{
                             <div className="col-sm  "></div>
                             
                             <div className="col-sm ">
-                                <button onClick={this.submitForm} className="cadastro__formulario__enviar">Enviar</button>
+                                <button onClick={()=>{this.submitFormUsuarios()}} className="cadastro__formulario__enviar">Enviar</button>
                             </div>
                         </div>
                     </div>
