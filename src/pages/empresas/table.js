@@ -162,14 +162,23 @@ export class Table extends React.Component{
         super(props);
         this.state = {
             empresa_list: [],
-            dados_table: []
+            dados_table: [],
+            url_empresa: null
         };
 
         this.dados_table = this.dados_table.bind(this)
     }
 
     componentDidMount() {
-      this.dados_table()
+      this.permissoes()
+    }
+
+    permissoes(){
+      this.setState({
+        url_empresa: `/api/v1/empresa?id_grupo_empresa=${this.props.id_grupo_empresa}`,
+      }, (()=>{
+        this.dados_table()
+      }))
     }
 
     dados_table(){
@@ -177,8 +186,8 @@ export class Table extends React.Component{
       let empresaList = [];
 
       try{
-        
-        api.get(`/api/v1/empresa?id_grupo_empresa=${this.props.id_grupo_empresa}`, { headers: { Authorization: this.props.token}})
+        // 
+        api.get(this.state.url_empresa, { headers: { Authorization: this.props.token}})
         .then((results)=>{
           if (results.data.length > 0){
             console.log(results)

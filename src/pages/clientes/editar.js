@@ -90,6 +90,7 @@ class Editar extends React.Component{
             username: null,
             senha: null,
             status_usuario: false,
+            user_app: false,
             id_empresa_usuario: null,
             id_usuario: null,
             descricao_empresa: null
@@ -149,6 +150,7 @@ class Editar extends React.Component{
                         senha: results.data[0].senha,
                         id_empresa_usuario: results.data[0].id_empresa,
                         status_usuario: results.data[0].status,
+                        user_app: results.data[0].user_app,
                     }, ()=>{
                         this.get_default_empresa()
                     })
@@ -290,6 +292,7 @@ class Editar extends React.Component{
                 username: this.state.username,
                 senha: this.state.senha,
                 status: this.state.status_usuario,
+                user_app: this.state.user_app,
                 user_admin: false,
                 id_empresa: this.state.id_empresa_usuario
             }
@@ -305,7 +308,7 @@ class Editar extends React.Component{
                 }
             })
             .catch((error)=>{
-
+                console.log(error)
                 if (error.response.data.error === "Token expirado"){
                     window.location.href="/login"
                 } else if (error.response.data.error === "não autorizado"){
@@ -423,14 +426,24 @@ class Editar extends React.Component{
                             </div>
                         </div>
                         <div className="row mt-3">
-                            <Flex css={{ alignItems: 'left', float: 'left', marginTop: 9, marginLeft: 4}} >
-                                <Label htmlFor="s9" css={{ paddingRight: 15 }}>
-                                    Status
-                                </Label>
-                                <Switch name='status_usuario' checked={this.state.status_usuario} onCheckedChange={(value)=>{this.handleCheckValue(value, 'status_usuario')}} id="s9">
-                                    <SwitchThumb />
-                                </Switch>
-                            </Flex>
+                            <div className="col-sm semana__col">
+                                <Flex css={{ alignItems: 'left', float: 'left', maxWidth: '100px', marginTop: 9, marginLeft: 15}} >
+                                    <Label htmlFor="s9" css={{ paddingRight: 15 }}>
+                                        Status
+                                    </Label>
+                                    <Switch name='status_usuario' checked={this.state.status_usuario} onCheckedChange={(value)=>{this.handleCheckValue(value, 'status_usuario')}} id="s9">
+                                        <SwitchThumb />
+                                    </Switch>
+                                </Flex>
+                                <Flex css={{ alignItems: 'left', float: 'left', maxWidth: '100px', marginTop: 9, marginLeft: 15}} >
+                                    <Label htmlFor="s8" css={{ paddingRight: 15 }}>
+                                        App
+                                    </Label>
+                                    <Switch name='user_app' checked={this.state.user_app} onCheckedChange={(value)=>{this.handleCheckValue(value, 'user_app')}} id="s8">
+                                        <SwitchThumb />
+                                    </Switch>
+                                </Flex>
+                            </div>
                         </div>
                     </div>
                 </div>

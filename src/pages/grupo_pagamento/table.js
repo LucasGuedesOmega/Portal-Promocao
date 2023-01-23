@@ -116,7 +116,7 @@ export function TableGrupoPagamento(){
 
   let token = localStorage.getItem('tokenApi');
   const navigate = useNavigate();
-
+  console.log(token)
   return <Table token={token} navigate={navigate}/>;
 }
 
@@ -128,7 +128,7 @@ export class Table extends React.Component{
         this.state = {
             grupo_pagamento_list: [],
             dados_table: [],
-
+            url_grupo_pagamento: null, 
             tokenDecode: jwtDecode(this.props.token)
         };
 
@@ -136,7 +136,16 @@ export class Table extends React.Component{
     }
 
     componentDidMount() {
-      this.dados_table()
+      this.permissoes()
+    } 
+
+    permissoes(){
+      console.log(this.state.tokenDecode)
+      this.setState({
+          url_grupo_pagamento: `/api/v1/grupo-pagamento?id_grupo_empresa=${this.state.tokenDecode.id_grupo_empresa}`
+      }, (()=>{
+        this.dados_table()
+      }))
     }
 
     dados_table(){
@@ -145,7 +154,7 @@ export class Table extends React.Component{
 
       try{
         
-        api.get(`/api/v1/grupo-pagamento?id_empresa=${this.state.tokenDecode.id_empresa}`, { headers: { Authorization: this.props.token}})
+        api.get(this.state.url_grupo_pagamento, { headers: { Authorization: this.props.token}})
         .then((results)=>{
           if (results.data.length > 0){
             for (let i = 0; results.data.length > i; i++){

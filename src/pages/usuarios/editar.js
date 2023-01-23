@@ -73,13 +73,19 @@ class Editar extends React.Component{
             senha: null, 
             status: null,
             user_admin: false, 
-            id_empresa: null,
+            user_app: false,
+            id_empresa: 'null',
+            id_grupo_empresa: 'null',
+            id_grupo_usuario: 'null',
+            user_app_portal: false,
 
             descricao_empresa: null,
+            descricao_grupo_empresa: null,
 
             tokenDecode: jwtDecode(this.props.token),
 
-            empresas: []
+            empresas: [],
+            grupo_empresa: []
         }
 
         this.submitForm = this.submitForm.bind(this);
@@ -92,6 +98,7 @@ class Editar extends React.Component{
         }
 
         this.preenche_select_empresa()
+        this.preenche_select_grupo_empresa()
     }
 
     async get_usuario(){
@@ -105,8 +112,22 @@ class Editar extends React.Component{
                         senha: results.data[0].senha,
                         status: results.data[0].status,
                         user_admin: results.data[0].user_admin,
-                        id_empresa: results.data[0].id_empresa    
+                        user_app: results.data[0].user_app,
+                        user_app_portal: results.data[0].user_app_portal,
+                        id_grupo_usuario: results.data[0].id_grupo_usuario,
                     })
+
+                    if (results.data[0].id_empresa){
+                        this.setState({
+                            id_empresa: results.data[0].id_empresa,
+                        })
+                    }
+                    if(results.data[0].id_grupo_empresa){
+                        this.setState({
+                            id_grupo_empresa: results.data[0].id_grupo_empresa,
+                        })
+                    }
+                        
                 }
             })
             .catch((error)=>{
@@ -117,7 +138,7 @@ class Editar extends React.Component{
                 }
             })
             
-            if (this.state.id_empresa){
+            if (this.state.id_empresa !== 'null'){
                 api.get(`/api/v1/empresa?id_empresa=${this.state.id_empresa}`, { headers: { Authorization: this.props.token}})
                 .then((results)=>{
                     if (results.data.length>0){
@@ -131,10 +152,33 @@ class Editar extends React.Component{
                         window.location.href="/login"
                     } else if (error.response.data.error === "Token expirado"){
                         window.location.href="/login"
-                    } else if (error.response.data.error === "n�o autorizado"){
+                    } else if (error.response.data.error === "não autorizado"){
                         window.location.href='/login'
                     }
                 });
+            }
+            
+            if(this.state.id_grupo_empresa !== 'null'){
+                api.get(`/api/v1/grupo-empresa?id_grupo_empresa=${this.state.id_grupo_empresa}`, { headers: { Authorization: this.props.token}})
+                .then((results)=>{
+                    if (results.data.length>0){
+                        console.log(results)
+                        this.setState({
+                            descricao_grupo_empresa: results.data[0].descricao
+                        })
+                    }
+                }).catch((error)=>{
+                    console.log(error)
+                    if (error.response.data.erros[0] === "Sem conexao com a api ou falta fazer login."){
+                        window.location.href="/login"
+                    } else if (error.response.data.error === "Token expirado"){
+                        window.location.href="/login"
+                    } else if (error.response.data.error === "não autorizado"){
+                        window.location.href='/login'
+                    }
+                });
+
+                console.log(this.state.id_grupo_empresa, this.state.descricao_grupo_empresa)
             }
 
         }catch(error){
@@ -147,7 +191,7 @@ class Editar extends React.Component{
         let empresaList = [];
         let empresaDict;
 
-        api.get(`/api/v1/empresa?id_grupo_empresa=${this.state.tokenDecode.id_grupo_empresa}`, { headers: { Authorization: this.props.token}})
+        api.get(`/api/v1/empresa`, { headers: { Authorization: this.props.token}})
         .then((results)=>{  
             if (results.data.length > 0){
                 for(let i=0; i<results.data.length; i++){
@@ -159,6 +203,51 @@ class Editar extends React.Component{
                 }
                 this.setState({
                     empresas: empresaList
+                })
+            }
+        })
+        .catch((error)=>{
+            console.log(error.response)
+            if(error.name === 'AxiosError'){
+                toast(error.response.data.Error, {
+                    duration: 2000,
+                    style:{
+                        marginRight: '1%',
+                        backgroundColor: '#851C00',
+                        color: 'white'
+                    },
+                    position: 'bottom-right',
+                    icon: <span className="material-symbols-outlined">sentiment_dissatisfied</span>,
+                });
+            } 
+
+            if (error.response.data.erros[0] === "Sem conexao com a api ou falta fazer login."){
+                window.location.href='/login'
+            } 
+            
+            if (error.response.data.error === "Token expirado"){
+                window.location.href='/login'
+            }
+        }) 
+    }
+
+    preenche_select_grupo_empresa(){
+
+        let grupoEmpresaList = [];
+        let grupoEmpresaDict;
+
+        api.get(`/api/v1/grupo-empresa`, { headers: { Authorization: this.props.token}})
+        .then((results)=>{  
+            if (results.data.length > 0){
+                for(let i=0; i<results.data.length; i++){
+                    grupoEmpresaDict = {
+                        value: results.data[i].id_grupo_empresa,
+                        text: results.data[i].descricao
+                    }
+                    grupoEmpresaList.push(grupoEmpresaDict)
+                }
+                this.setState({
+                    grupo_empresa: grupoEmpresaList
                 })
             }
         })
@@ -178,11 +267,11 @@ class Editar extends React.Component{
             } 
 
             if (error.response.data.erros[0] === "Sem conexao com a api ou falta fazer login."){
-                this.props.navigate('/login');
+                window.location.href='/login'
             } 
             
             if (error.response.data.error === "Token expirado"){
-                this.props.navigate('/login');
+                window.location.href='/login'
             }
         }) 
     }
@@ -196,7 +285,11 @@ class Editar extends React.Component{
                 senha: this.state.senha,
                 status: this.state.status,
                 user_admin: this.state.user_admin,
-                id_empresa: this.state.id_empresa
+                user_app: this.state.user_app,
+                user_app_portal: this.state.user_app_portal,
+                id_empresa: this.state.id_empresa,
+                id_grupo_empresa: this.state.id_grupo_empresa,
+                id_grupo_usuario: this.state.id_grupo_usuario
             }
         ]       
 
@@ -205,7 +298,6 @@ class Editar extends React.Component{
         try{
             api.post('/api/v1/usuario', dados_usuario, { headers: { Authorization: this.props.token}})
             .then((results) => {
-                console.log(results)
                 if (results.data['Sucesso']){
                     if (this.state.id_usuario){
                         message = 'Usuário editado com sucesso!'
@@ -258,12 +350,29 @@ class Editar extends React.Component{
         });
     }
 
+    ressetEmpresa(){
+        this.setState({
+            id_empresa: 'null',
+            id_grupo_empresa: 'null'
+        }, (()=>{
+            this.submitForm()
+            window.location.href=`/editar-usuario/${this.state.id_usuario}`
+        }))
+    }
+
     render(){
         let default_empresa;
         if (this.state.id_empresa && this.state.descricao_empresa){
             default_empresa = {value: this.state.id_empresa, text: this.state.descricao_empresa}
         } else {
-            default_empresa = {value: 0, text: 'Selecione uma empresa'}
+            default_empresa = {value: 'null', text: 'Selecione uma empresa'}
+        }
+
+        let default_grupo_empresa;
+        if (this.state.id_grupo_empresa && this.state.descricao_grupo_empresa){
+            default_grupo_empresa = {value: this.state.id_grupo_empresa, text: this.state.descricao_grupo_empresa}
+        } else {
+            default_grupo_empresa = {value: 'null', text: 'Selecione um grupo de empresa'}
         }
 
         return (
@@ -289,6 +398,17 @@ class Editar extends React.Component{
                         </div>
                         <div className="row mt-3">
                             <div className="col-sm">
+                                <label className='cadastro__formulario__label'>Grupo Empresa</label>
+                                <select name='id_grupo_empresa' onChange={(value)=>{this.handleNameValue(value)}} className='form-select'>
+                                    <option defaultValue={default_grupo_empresa.value}>{default_grupo_empresa.text}</option>
+                                    { 
+                                        this.state.grupo_empresa.map((item, key)=>(
+                                            <option key={key} value={item.value}>{item.text}</option>
+                                        ))
+                                    }
+                                </select>
+                            </div>
+                            <div className="col-sm">
                                 <label className='cadastro__formulario__label'>Empresa</label>
                                 <select name='id_empresa' onChange={(value)=>{this.handleNameValue(value)}} className='form-select'>
                                     <option defaultValue={default_empresa.value}>{default_empresa.text}</option>
@@ -298,6 +418,9 @@ class Editar extends React.Component{
                                         ))
                                     }
                                 </select>
+                            </div>
+                            <div className='col-sm'>
+                                <button onClick={()=>this.ressetEmpresa()} className="bt_apagar_empresa">Apagar empresa</button>
                             </div>
                         </div>
                         <div className="row mt-3">
@@ -315,6 +438,22 @@ class Editar extends React.Component{
                                         Admin
                                     </Label>
                                     <Switch name='user_admin' checked={this.state.user_admin} onCheckedChange={(value)=>{this.handleCheckValue(value, 'user_admin')}} id="s1">
+                                        <SwitchThumb />
+                                    </Switch>
+                                </Flex>
+                                <Flex css={{ alignItems: 'left', float: 'left', maxWidth: '100px', marginTop: 9, marginLeft: 15}} className='semana__col__check'>
+                                    <Label htmlFor="s2" css={{ paddingRight: 15 }}>
+                                        App
+                                    </Label>
+                                    <Switch name='user_app' checked={this.state.user_app} onCheckedChange={(value)=>{this.handleCheckValue(value, 'user_app')}} id="s2">
+                                        <SwitchThumb />
+                                    </Switch>
+                                </Flex>
+                                <Flex css={{ alignItems: 'left', float: 'left', marginTop: 9, marginLeft: 15}} className='semana__col__check'>
+                                    <Label htmlFor="s3" css={{ paddingRight: 15 }}>
+                                        Portal e App
+                                    </Label>
+                                    <Switch name='user_app_portal' checked={this.state.user_app_portal} onCheckedChange={(value)=>{this.handleCheckValue(value, 'user_app_portal')}} id="s3">
                                         <SwitchThumb />
                                     </Switch>
                                 </Flex>

@@ -115,7 +115,7 @@ export class SideBar extends React.Component {
             ativo: false
           },
           {
-            display: 'Usuarios',
+            display: 'Super Usuarios',
             icon: <span className="material-symbols-outlined">person</span>,
             to: '/usuario-relacao',
             section: '',

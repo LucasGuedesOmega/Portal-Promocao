@@ -27,14 +27,6 @@ const columns = [
     reorder: true
   },
   {
-    id: 3,
-    name: "E-mail",
-    selector: (row) => row.e_mail,
-    sortable: true,
-    center: true,
-    reorder: true
-  },
-  {
     id: 5,
     name: "Empresa",
     selector: (row) => row.id_empresa,
@@ -46,6 +38,14 @@ const columns = [
     id: 6,
     name: "Admin",
     selector: (row) => row.user_admin,
+    sortable: true,
+    center: true,
+    reorder: true
+  },
+  {
+    id: 8,
+    name: "App",
+    selector: (row) => row.user_app,
     sortable: true,
     center: true,
     reorder: true
@@ -158,7 +158,7 @@ export class Table extends React.Component{
 
       try{
         
-        api.get('/api/v1/usuario', { headers: { Authorization: this.props.token}})
+        api.get('/api/v1/usuario?user_app_portal=true', { headers: { Authorization: this.props.token}})
         .then((results)=>{
           if (results.data.length > 0){
             for (let i = 0; results.data.length > i; i++){
@@ -173,6 +173,12 @@ export class Table extends React.Component{
                 results.data[i].user_admin = <span className="material-symbols-outlined" style={{color: 'rgb(85, 255, 100)'}}>priority</span>;
               }else{
                 results.data[i].user_admin = <span className="material-symbols-outlined" style={{color: 'rgb(255, 50, 50)'}}>dangerous</span>;
+              }
+
+              if (results.data[i].user_app === true){
+                results.data[i].user_app = <span className="material-symbols-outlined" style={{color: 'rgb(85, 255, 100)'}}>priority</span>;
+              }else{
+                results.data[i].user_app = <span className="material-symbols-outlined" style={{color: 'rgb(255, 50, 50)'}}>dangerous</span>;
               }
 
               let url_editar = `/editar-usuario/${results.data[i].id_usuario}`

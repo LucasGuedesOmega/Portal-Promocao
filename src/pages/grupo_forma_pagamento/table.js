@@ -119,7 +119,7 @@ export class Table extends React.Component{
         this.state = {
             grupo_forma_pagamento_list: [],
             dados_table: [],
-
+            url_grupo_forma_pagamento: null,
             tokenDecode: jwtDecode(this.props.token)
         };
 
@@ -127,7 +127,15 @@ export class Table extends React.Component{
     }
 
     componentDidMount() {
-      this.dados_table()
+      this.permissoes()
+    }
+
+    permissoes(){
+      this.setState({
+        url_grupo_forma_pagamento: `/api/v1/grupo-forma-pagamento?id_grupo_empresa=${this.state.tokenDecode.id_grupo_empresa}`
+      }, (()=>{
+        this.dados_table()
+      }))
     }
 
     dados_table(){
@@ -135,8 +143,8 @@ export class Table extends React.Component{
       let grupoFormaPagamentoList = [];
 
       try{
-        
-        api.get(`/api/v1/grupo-forma-pagamento?id_empresa=${this.state.tokenDecode.id_empresa}`, { headers: { Authorization: this.props.token}})
+        console.log(this.state.url_grupo_forma_pagamento)
+        api.get(this.state.url_grupo_forma_pagamento, { headers: { Authorization: this.props.token}})
         .then((results)=>{
           if (results.data.length > 0){
             for (let i = 0; results.data.length > i; i++){

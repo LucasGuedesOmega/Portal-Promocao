@@ -151,12 +151,20 @@ export class Table extends React.Component{
     }
   
     componentDidMount() {
-      this.dados_table()
+      this.permissoes()
     }
-  
+    
+    permissoes(){
+      this.setState({
+        url_forma_pagamento: `api/v1/grupo-forma-pagamento?id_grupo_pagamento=${this.props.id_grupo_pagamento}`
+      }, (()=>{
+        this.dados_table()
+      }))
+    }
+
     dados_table(){
       let formaPagamentoList = [];
-      api.get(`api/v1/grupo-forma-pagamento?id_grupo_pagamento=${this.props.id_grupo_pagamento}`, { headers: { Authorization: this.props.token}})
+      api.get(this.state.url_forma_pagamento, { headers: { Authorization: this.props.token}})
       .then(async (results)=>{
         if(results.data.length>0){
           for (let i = 0; results.data.length>i;i++){
