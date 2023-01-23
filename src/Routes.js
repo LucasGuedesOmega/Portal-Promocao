@@ -21,6 +21,8 @@ import { TableFormaPagamento } from "./pages/formas-pagamento/table";
 import { CadastrarFormaPagamento, EditarFormaPagamento } from "./pages/formas-pagamento/editar";
 import { TableGrupoPagamento } from "./pages/grupo_pagamento/table";
 import { CadastrarGrupoPagamento, EditarGrupoPagamento } from "./pages/grupo_pagamento/editar";
+import { TableGrupoUsuario } from "./pages/grupo_usuario/table";
+import { CadastrarGrupoUsuario, EditarGrupoUsuario } from "./pages/grupo_usuario/editar";
 
 export class AppRotas extends React.Component{
     constructor(props){
@@ -70,6 +72,10 @@ export class AppRotas extends React.Component{
                             <Route path="/grupo-pagamento" element={<TableGrupoPagamento/>}/>
                             <Route path="/editar-grupo-pagamento/:id_grupo_pagamento" element={<EditarGrupoPagamento/>}/>
                             <Route path="/cadastrar-grupo-pagamento" element={<CadastrarGrupoPagamento/>}/>
+
+                            <Route path="/grupo-usuario" element={<TableGrupoUsuario/>}/>
+                            <Route path="/editar-grupo-usuario/:id_grupo_usuario" element={<EditarGrupoUsuario/>}/>
+                            <Route path="/cadastrar-grupo-usuario" element={<CadastrarGrupoUsuario/>}/>
 
                             <Route path="/*" element={<Dashboard/>}/>
                         </Route>

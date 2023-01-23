@@ -6,84 +6,11 @@ import { styled } from '@stitches/react';
 import { mauve, blackA } from '@radix-ui/colors';
 import * as ScrollAreaPrimitive from '@radix-ui/react-scroll-area';
 import DataTable from "react-data-table-component";
-import { Toaster } from 'react-hot-toast';
+import { useNavigate, Link } from "react-router-dom";
+import toast, { Toaster } from 'react-hot-toast';
+import jwtDecode from 'jwt-decode';
 
-import { useNavigate } from 'react-router-dom';
 
-const columns = [
-  {
-    id: 1,
-    name: "ID",
-    selector: (row) => row.id_produto,
-    sortable: true,
-    center: true,
-    reorder: true
-  },
-  {
-    id: 2,
-    name: "ID Externo",
-    selector: (row) => row.id_externo,
-    sortable: true,
-    center: true,
-    reorder: true
-  },
-  {
-    id: 3,
-    name: "Descrição",
-    selector: (row) => row.descricao,
-    sortable: true,
-    center: true,
-    reorder: true
-  },
-  {
-    id: 4,
-    name: "Modalidade",
-    selector: (row) => row.modalidade_produto,
-    sortable: true,
-    center: true,
-    reorder: true
-  },
-  {
-    id: 5,
-    name: "Código Empresa",
-    selector: (row) => row.codigo_empresa,
-    sortable: true,
-    center: true,
-    reorder: true
-  },
-  {
-    id: 6,
-    name: "Valor",
-    selector: (row) => row.valor,
-    sortable: true,
-    center: true,
-    reorder: true
-  },
-  {
-    id: 7,
-    name: "Código de Barra",
-    selector: (row) => row.codigo_barras,
-    sortable: true,
-    center: true,
-    reorder: true
-  },
-  {
-    id: 8,
-    name: "NCM",
-    selector: (row) => row.ncm,
-    sortable: true,
-    center: true,
-    reorder: true
-  },
-  {
-    id: 9,
-    name: "Status",
-    selector: (row) => row.status,
-    sortable: true,
-    center: true,
-    reorder: true
-  }
-];
 
 const SCROLLBAR_SIZE = 10;
 
@@ -145,55 +72,126 @@ export const ScrollAreaScrollbar = StyledScrollbar;
 export const ScrollAreaThumb = StyledThumb;
 export const ScrollAreaCorner = StyledCorner;
 
-export function TableProduto(){
-
+export function TableGrupoUsuario(){
+  
   let token = localStorage.getItem('tokenApi');
   const navigate = useNavigate();
 
   return <Table token={token} navigate={navigate}/>;
 }
 
-class Table extends React.Component{
+
+export class Table extends React.Component{
    
     constructor(props){
         super(props);
         this.state = {
-            produtos_list: [],
-            dados_table: []
+            grupo_usuario_list: [],
+            dados_table: [],
+            tokenDecode: jwtDecode(this.props.token),
+            url_grupo_usuario: null,
+            columns: [
+              {
+                id: 1,
+                name: "ID",
+                selector: (row) => row.id_grupo_usuario,
+                sortable: true,
+                center: true,
+                reorder: true,
+                ativo: true
+              },
+              {
+                id: 2,
+                name: "Nome",
+                selector: (row) => row.nome,
+                sortable: true,
+                center: true,
+                reorder: true,
+                ativo: true
+              },
+              {
+                id: 3,
+                name: "Status",
+                selector: (row) => row.status,
+                sortable: true,
+                center: true,
+                reorder: true,
+                ativo: true
+              },
+              {
+                id: 4,
+                name: "Editar",
+                selector: (row) => row.editar,
+                sortable: true,
+                center: true,
+                reorder: true,
+                ativo: false
+              },
+            ]
         };
 
         this.dados_table = this.dados_table.bind(this)
     }
 
     componentDidMount() {
-      this.dados_table()
+      this.permissao()
+    }
+
+    permissao(){
+        this.setState({
+          url_grupo_usuario: `/api/v1/grupo-usuario?id_grupo_empresa=${this.state.tokenDecode.id_grupo_empresa}`
+        }, (()=>{
+          this.dados_table()
+        }))
+    }
+
+    get_admin_columns(){
+      let admin_columns = this.state.columns;
+      let fill_list = [];
+
+      for(let i = 0; i < admin_columns.length; i++){
+        if (this.state.tokenDecode.admin){
+          admin_columns[i].ativo = true
+        }
+        if (admin_columns[i].ativo){
+          fill_list.push(admin_columns[i])
+        }
+      }
+
+      return fill_list
     }
 
     dados_table(){
 
-      let produtoList = [];
+      let grupoUsuarioList = [];
 
       try{
-        api.get('/api/v1/integracao/produto/lista', { headers: { Authorization: this.props.token}})
+        
+        api.get(this.state.url_grupo_usuario, { headers: { Authorization: this.props.token}})
         .then((results)=>{
-
           if (results.data.length > 0){
-
             for (let i = 0; results.data.length > i; i++){
               
               if (results.data[i].status === true){
-                // console.log(results.data[i])
                 results.data[i].status = <span className="material-symbols-outlined" style={{color: 'rgb(85, 255, 100)'}}>thumb_up</span>;
               }else{
                 results.data[i].status = <span className="material-symbols-outlined" style={{color: 'rgb(255, 50, 50)'}}>thumb_down</span>;
               }
+             
+              let url_editar = `/editar-grupo-usuario/${results.data[i].id_grupo_usuario}`
 
-              let produto_dict = results.data[i]
+              results.data[i].editar = <Link to={url_editar}><span className="material-symbols-outlined">edit</span></Link>
+              
+              let url_usuario = `/usuarios/${results.data[i].id_grupo_usuario}`
 
-              produtoList.push(produto_dict)
+              results.data[i].usuarios = <Link to={url_usuario}><span className="material-symbols-outlined">apartment</span></Link>
+
+              let grupo_usuario_dict = results.data[i]
+
+              grupoUsuarioList.push(grupo_usuario_dict)
             }
             this.setState({
-                produtos_list: produtoList
+                grupo_usuario_list: grupoUsuarioList
             })
           }
         })
@@ -203,9 +201,19 @@ class Table extends React.Component{
             window.location.href="/login"
           } else if (error.response.data.error === "não autorizado"){
             window.location.href='/login'
-          } else if (error.name === "AxiosError"){
-            window.location.href='/login'
-          }
+          } else if (error.response.data.error === 'Você não tem permissão'){
+            toast(error.response.data.error, {
+                duration: 2000,
+                style:{
+                    marginRight: '1%',
+                    backgroundColor: '#851C00',
+                    color: 'white'
+                },
+                position: 'bottom-right',
+                icon: <span className="material-symbols-outlined">sentiment_satisfied</span>,
+            });
+            this.props.navigate(-1)
+        }
         })
 
       }catch(error){
@@ -221,23 +229,24 @@ class Table extends React.Component{
               <div>
                 <div className='tabela__formulario__table'>
                   <DataTable
-                    title="Produtos"
-                    columns={columns}
-                    data={this.state.produtos_list}
+                    title="Grupo de Usuários"
+                    columns={this.state.columns}
+                    data={this.state.grupo_usuario_list}
                     defaultSortFieldId={1}
                     pagination
                     paginationComponentOptions={{
                       rowsPerPageText: "Linhas por paginas",
-                      rangeSeparatorText: "de"
+                      rangeSeparatorText: "de",
                     }}
                     className='tabelas'
                     noDataComponent={<div><p style={{float: 'left', marginRight: '10px'}}>Sem resultados</p><span style={{float: 'left'}} className="material-symbols-outlined mb-3">filter_list_off</span></div>}
                     />
                 </div>
-              </div>
-              <Toaster />
             </div>
-
+            
+            <button className='bt_cadastro' onClick={()=>{this.props.navigate(`/cadastrar-grupo-usuario`)}}>Cadastrar Grupo de Usuario</button>
+            <Toaster />
+            </div>
         );
     }
 }

@@ -8,49 +8,9 @@ import * as ScrollAreaPrimitive from '@radix-ui/react-scroll-area';
 import DataTable from "react-data-table-component";
 import { useNavigate, Link } from "react-router-dom";
 import { Toaster } from 'react-hot-toast';
+import jwtDecode from 'jwt-decode';
 
-const columns = [
-  {
-    id: 1,
-    name: "ID",
-    selector: (row) => row.id_grupo_empresa,
-    sortable: true,
-    center: true,
-    reorder: true
-  },
-  {
-    id: 2,
-    name: "Descrição",
-    selector: (row) => row.descricao,
-    sortable: true,
-    center: true,
-    reorder: true
-  },
-  {
-    id: 3,
-    name: "Status",
-    selector: (row) => row.status,
-    sortable: true,
-    center: true,
-    reorder: true
-  },
-  {
-    id: 4,
-    name: "Editar",
-    selector: (row) => row.editar,
-    sortable: true,
-    center: true,
-    reorder: true
-  },
-  {
-    id: 5,
-    name: "Empresa",
-    selector: (row) => row.empresa,
-    sortable: true,
-    center: true,
-    reorder: true
-  },
-];
+
 
 const SCROLLBAR_SIZE = 10;
 
@@ -127,14 +87,95 @@ export class Table extends React.Component{
         super(props);
         this.state = {
             grupo_empresa_list: [],
-            dados_table: []
+            dados_table: [],
+            tokenDecode: jwtDecode(this.props.token),
+            url_grupo_empresa: null,
+            columns: [
+              {
+                id: 1,
+                name: "ID",
+                selector: (row) => row.id_grupo_empresa,
+                sortable: true,
+                center: true,
+                reorder: true,
+                ativo: true
+              },
+              {
+                id: 2,
+                name: "Descrição",
+                selector: (row) => row.descricao,
+                sortable: true,
+                center: true,
+                reorder: true,
+                ativo: true
+              },
+              {
+                id: 3,
+                name: "Status",
+                selector: (row) => row.status,
+                sortable: true,
+                center: true,
+                reorder: true,
+                ativo: true
+              },
+              {
+                id: 4,
+                name: "Editar",
+                selector: (row) => row.editar,
+                sortable: true,
+                center: true,
+                reorder: true,
+                ativo: false
+              },
+              {
+                id: 5,
+                name: "Empresa",
+                selector: (row) => row.empresa,
+                sortable: true,
+                center: true,
+                reorder: true,
+                ativo: true
+              },
+            ]
         };
 
         this.dados_table = this.dados_table.bind(this)
     }
 
     componentDidMount() {
-      this.dados_table()
+      this.permissao()
+    }
+
+    permissao(){
+      if(this.state.tokenDecode.admin){
+        this.setState({
+          url_grupo_empresa: '/api/v1/grupo-empresa'
+        }, (()=>{
+          this.dados_table()
+        }))
+      }else{
+        this.setState({
+          url_grupo_empresa: `/api/v1/grupo-empresa?id_grupo_empresa=${this.state.tokenDecode.id_grupo_empresa}`  
+        }, (()=>{
+          this.dados_table()
+        }))
+      }
+    }
+
+    get_admin_columns(){
+      let admin_columns = this.state.columns;
+      let fill_list = [];
+
+      for(let i = 0; i < admin_columns.length; i++){
+        if (this.state.tokenDecode.admin){
+          admin_columns[i].ativo = true
+        }
+        if (admin_columns[i].ativo){
+          fill_list.push(admin_columns[i])
+        }
+      }
+
+      return fill_list
     }
 
     dados_table(){
@@ -143,7 +184,7 @@ export class Table extends React.Component{
 
       try{
         
-        api.get('/api/v1/grupo-empresa', { headers: { Authorization: this.props.token}})
+        api.get(this.state.url_grupo_empresa, { headers: { Authorization: this.props.token}})
         .then((results)=>{
           if (results.data.length > 0){
             for (let i = 0; results.data.length > i; i++){
@@ -175,7 +216,7 @@ export class Table extends React.Component{
           console.log(error)
           if (error.response.data.error === "Token expirado"){
             window.location.href="/login"
-          } else if (error.response.data.error === "n�o autorizado"){
+          } else if (error.response.data.error === "não autorizado"){
             window.location.href='/login'
           } else if (error.name === "AxiosError"){
             window.location.href='/login'
@@ -196,7 +237,7 @@ export class Table extends React.Component{
                 <div className='tabela__formulario__table'>
                   <DataTable
                     title="Grupo Empresa"
-                    columns={columns}
+                    columns={this.get_admin_columns()}
                     data={this.state.grupo_empresa_list}
                     defaultSortFieldId={1}
                     pagination
@@ -209,7 +250,14 @@ export class Table extends React.Component{
                     />
                 </div>
               </div>
-              <button className='bt_cadastro' onClick={()=>{this.props.navigate(`/cadastrar-grupo-empresa`)}}>Cadastrar Grupo de Empresa</button>
+              { this.state.tokenDecode.admin ? (
+                <button className='bt_cadastro' onClick={()=>{this.props.navigate(`/cadastrar-grupo-empresa`)}}>Cadastrar Grupo de Empresa</button>
+              ):(
+                <div></div>
+              )
+
+              }
+              
               <Toaster />
             </div>
         );

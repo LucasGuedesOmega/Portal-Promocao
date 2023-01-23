@@ -7,6 +7,7 @@ import { mauve, blackA } from '@radix-ui/colors';
 import * as ScrollAreaPrimitive from '@radix-ui/react-scroll-area';
 import DataTable from "react-data-table-component";
 import { Toaster } from 'react-hot-toast';
+import jwtDecode from 'jwt-decode';
 
 const columns = [
   {
@@ -163,21 +164,33 @@ class Table extends React.Component{
         super(props);
         this.state = {
             promocoes_list: [],
-            dados_table: []
+            dados_table: [],
+            tokenDecode: jwtDecode(this.props.token),
+            url_promocao: null
         };
 
         this.dados_table = this.dados_table.bind(this)
     }
 
     componentDidMount() {
-      this.dados_table()
+      this.permissao()
     }
+
+    permissao(){
+      this.setState({
+        url_promocao: `/api/v1/promocao?id_grupo_empresa=${this.state.tokenDecode.id_grupo_empresa}`
+      },(()=>{
+        this.dados_table()
+      })
+      )
+    }
+
     async dados_table(){
 
       let promocaoList = [];
 
       try{
-        await api.get('/api/v1/promocao', { headers: { Authorization: this.props.token}})
+        await api.get(this.state.url_promocao, { headers: { Authorization: this.props.token}})
         .then((results)=>{
 
           if (results.data.length > 0){
@@ -214,7 +227,7 @@ class Table extends React.Component{
           console.log(error)
           if (error.response.data.error === "Token expirado"){
             window.location.href="/login"
-          } else if (error.response.data.error === "não autorizado"){
+          } else if (error.response.data.error === "nï¿½o autorizado"){
             window.location.href='/login'
           } else if (error.name === "AxiosError"){
             window.location.href='/login'

@@ -1,6 +1,6 @@
 import jwtDecode from 'jwt-decode';
 import React from 'react'
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate} from 'react-router-dom';
 import api from '../../services/api';
 import { styled, keyframes } from '@stitches/react';
 import { violet } from '@radix-ui/colors';
@@ -8,6 +8,7 @@ import {
     HamburgerMenuIcon
 } from '@radix-ui/react-icons';
 import * as DropdownMenuPrimitive from '@radix-ui/react-dropdown-menu';
+import toast, { Toaster } from 'react-hot-toast';
 
 const slideUpAndFade = keyframes({
     '0%': { opacity: 0, transform: 'translateY(2px)' },
@@ -201,10 +202,20 @@ export class NavbarClass extends React.Component{
             console.log(error)
             if (error.response.data.error === "Token expirado"){
                 window.location.href="/login";
-            } else if (error.response.data.error === "n�o autorizado"){
+            } else if (error.response.data.error === "não autorizado"){
                 window.location.href='/login';
-            } else if (error.name === "AxiosError"){
-                window.location.href='/login';
+            } else if (error.response.data.error === 'Você não tem permissão'){
+                toast(error.response.data.Error, {
+                    duration: 2000,
+                    style:{
+                        marginRight: '1%',
+                        backgroundColor: '#851C00',
+                        color: 'white'
+                    },
+                    position: 'bottom-right',
+                    icon: <span className="material-symbols-outlined">sentiment_satisfied</span>,
+                });
+                this.props.navigate(-1)
             }
         })
     }
@@ -244,6 +255,7 @@ export class NavbarClass extends React.Component{
                         </DropdownMenu>
                     </div>
                 </div>
+                <Toaster/>
             </div>
           
         );

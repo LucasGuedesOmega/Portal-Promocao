@@ -8,6 +8,7 @@ import * as ScrollAreaPrimitive from '@radix-ui/react-scroll-area';
 import DataTable from "react-data-table-component";
 import { useNavigate, Link } from "react-router-dom";
 import jwtDecode from 'jwt-decode';
+import toast, { Toaster } from 'react-hot-toast';
 
 const columns = [
   {
@@ -116,7 +117,7 @@ export function TableGrupoPagamento(){
 
   let token = localStorage.getItem('tokenApi');
   const navigate = useNavigate();
-  console.log(token)
+
   return <Table token={token} navigate={navigate}/>;
 }
 
@@ -140,7 +141,6 @@ export class Table extends React.Component{
     } 
 
     permissoes(){
-      console.log(this.state.tokenDecode)
       this.setState({
           url_grupo_pagamento: `/api/v1/grupo-pagamento?id_grupo_empresa=${this.state.tokenDecode.id_grupo_empresa}`
       }, (()=>{
@@ -185,11 +185,21 @@ export class Table extends React.Component{
           console.log(error)
           if (error.response.data.error === "Token expirado"){
             window.location.href="/login"
-          } else if (error.response.data.error === "n�o autorizado"){
+          } else if (error.response.data.error === "não autorizado"){
             window.location.href='/login'
-          } else if (error.name === "AxiosError"){
-            window.location.href='/login'
-          }
+          } if (error.response.data.error === 'Você não tem permissão'){
+            toast(error.response.data.Error, {
+                duration: 2000,
+                style:{
+                    marginRight: '1%',
+                    backgroundColor: '#851C00',
+                    color: 'white'
+                },
+                position: 'bottom-right',
+                icon: <span className="material-symbols-outlined">sentiment_satisfied</span>,
+            });
+            this.props.navigate(-1)
+        }
         })
 
       }catch(error){
@@ -218,6 +228,7 @@ export class Table extends React.Component{
               </div>
             </div>
             <button className='bt_cadastro' onClick={()=>{this.props.navigate(`/cadastrar-grupo-pagamento`)}}>Cadastrar Grupo de Pagamento</button>
+            <Toaster/>
           </div>
         );
     }

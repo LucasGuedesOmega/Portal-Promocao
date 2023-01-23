@@ -217,7 +217,8 @@ class Editar extends React.Component{
                 telefone: this.state.telefone,
                 status: this.state.status,
                 id_empresa: this.state.tokenDecode.id_empresa,
-                id_usuario: this.state.id_usuario
+                id_usuario: this.state.id_usuario,
+                id_grupo_empresa: this.state.tokenDecode.id_grupo_empresa
             }
         ]   
         
@@ -294,7 +295,8 @@ class Editar extends React.Component{
                 status: this.state.status_usuario,
                 user_app: this.state.user_app,
                 user_admin: false,
-                id_empresa: this.state.id_empresa_usuario
+                id_empresa: this.state.id_empresa_usuario,
+                id_grupo_empresa: this.state.tokenDecode.id_grupo_empresa
             }
         ]       
 

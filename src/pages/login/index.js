@@ -42,19 +42,19 @@ class LoginClass extends React.Component{
     enviar(){
         let tokenApi;
         try{
-            if(!this.state.tokenCaptcha){
-                toast("Por favor marque a caixa reCAPTCHA.", {
-                    duration: 2000,
-                    style:{
-                        marginRight: '1%',
-                        backgroundColor: '#851C00',
-                        color: 'white'
-                    },
-                    position: 'bottom-right',
-                    icon: <span className="material-symbols-outlined">sentiment_dissatisfied</span>,
-                });
-                return;
-            }
+            // if(!this.state.tokenCaptcha){
+            //     toast("Por favor marque a caixa reCAPTCHA.", {
+            //         duration: 2000,
+            //         style:{
+            //             marginRight: '1%',
+            //             backgroundColor: '#851C00',
+            //             color: 'white'
+            //         },
+            //         position: 'bottom-right',
+            //         icon: <span className="material-symbols-outlined">sentiment_dissatisfied</span>,
+            //     });
+            //     return;
+            // }
             api.post('/api/v1/login', [{'username': this.state.username, 'senha': this.state.senha, 'tipo': 'portal'}])
             .then(async (results)=>{
                 tokenApi = results.data.token; 

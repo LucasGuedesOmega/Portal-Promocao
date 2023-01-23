@@ -127,7 +127,7 @@ class Editar extends React.Component{
                 console.log(error)
                 if (error.response.data.error === "Token expirado"){
                     window.location.href="/login"
-                  } else if (error.response.data.error === "não autorizado"){
+                  } else if (error.response.data.error === "nï¿½o autorizado"){
                     window.location.href='/login'
                   } else if (error.name === "AxiosError"){
                     window.location.href='/login'
@@ -144,52 +144,50 @@ class Editar extends React.Component{
         var dados_forma_pagamento = [
             {
                 id_forma_pagamento: this.state.id_forma_pagamento,
-                id_grupo_empresa: this.state.id_grupo_empresa,
                 status: this.state.status,
                 tipo: this.state.tipo,
                 id_externo: this.state.id_externo,
                 descricao: this.state.descricao,
                 id_empresa: this.state.tokenDeconde.id_empresa,     
+                id_grupo_empresa: this.state.tokenDeconde.id_grupo_empresa,     
             }
         ]   
 
-        
         let message;
 
-        try{
-            api.post('/api/v1/forma-pagamento', dados_forma_pagamento, { headers: { Authorization: this.props.token}})
-            .then(async (results) => {
-                if (results.data['Sucesso']){
-                    var dados_grupo_forma_pagamento = []
-                    api.get(`api/v1/grupo-forma-pagamento?id_forma_pagamento=${results.data['id']}&id_grupo_pagamento=${this.props.id_grupo_pagamento}`)
-                    .then(async (results)=>{
-                        if(results.data.length > 0){
+      
+        api.post('/api/v1/forma-pagamento', dados_forma_pagamento, { headers: { Authorization: this.props.token}})
+        .then(async (results) => {
+            if (results.data['Sucesso']){
+                var dados_grupo_forma_pagamento = []
+                api.get(`api/v1/grupo-forma-pagamento?id_forma_pagamento=${results.data['id']}&id_grupo_pagamento=${this.props.id_grupo_pagamento}`)
+                .then(async (results)=>{
+                    if(results.data.length > 0){
 
-                            let dict = {   
-                                id_grupo_forma_pagamento: results.data[0].id_grupo_forma_pagamento,
-                                id_grupo_pagamento: this.props.id_grupo_pagamento,
-                                id_forma_pagamento: results.data['id'],
-                                id_empresa: this.state.tokenDeconde.id_empresa, 
-                            }
-                            
-                            dados_grupo_forma_pagamento.push(dict)
-                        }else{
-                            let dict = {   
-                                id_grupo_pagamento: this.props.id_grupo_pagamento,
-                                id_forma_pagamento: results.data['id'],
-                                id_empresa: this.state.tokenDeconde.id_empresa, 
-                            }
-                            dados_grupo_forma_pagamento.push(dict)
+                        let dict = {   
+                            id_grupo_forma_pagamento: results.data[0].id_grupo_forma_pagamento,
+                            id_grupo_pagamento: this.props.id_grupo_pagamento,
+                            id_forma_pagamento: results.data['id'],
+                            id_empresa: this.state.tokenDeconde.id_empresa, 
+                            id_grupo_empresa: this.state.tokenDeconde.id_grupo_empresa, 
                         }
-                    }).catch((error)=>{
-                        console.log(error)
-                    })
-                    
-                    api.post('/api/v1/grupo-forma-pagamento', dados_grupo_forma_pagamento, { headers: { Authorization: this.props.token}})
-                    .then((results)=>{
-                        console.log('sucesso')
-                    })
-
+                        
+                        dados_grupo_forma_pagamento.push(dict)
+                    }else{
+                        let dict = {   
+                            id_grupo_pagamento: this.props.id_grupo_pagamento,
+                            id_forma_pagamento: results.data['id'],
+                            id_empresa: this.state.tokenDeconde.id_empresa, 
+                            id_grupo_empresa: this.state.tokenDeconde.id_grupo_empresa, 
+                        }
+                        dados_grupo_forma_pagamento.push(dict)
+                    }
+                }).catch((error)=>{
+                    console.log(error)
+                })
+                
+                api.post('/api/v1/grupo-forma-pagamento', dados_grupo_forma_pagamento, { headers: { Authorization: this.props.token}})
+                .then((results)=>{
                     if (this.state.id_forma_pagamento){
                         message = 'Forma de Pagamento editada com sucesso!'
                     } else{
@@ -206,24 +204,25 @@ class Editar extends React.Component{
                         position: 'bottom-right',
                         icon: <span className="material-symbols-outlined">sentiment_satisfied</span>,
                     });
-                    
+                })
+                .catch((error)=>{
+                    console.log(error)
+                })
+            }
+        })
+        .catch((error)=>{
+            console.log(error.response.data)
+
+            if (error.response.data.error === "Token expirado"){
+                window.location.href="/login"
+                } else if (error.response.data.error === "nÃ£o autorizado"){
+                window.location.href='/login'
+                } else if (error.name === "AxiosError"){
+                window.location.href='/login'
                 }
-            })
-            .catch((error)=>{
-                console.log(error.response.data)
 
-                if (error.response.data.error === "Token expirado"){
-                    window.location.href="/login"
-                  } else if (error.response.data.error === "não autorizado"){
-                    window.location.href='/login'
-                  } else if (error.name === "AxiosError"){
-                    window.location.href='/login'
-                  }
-
-            });
-        }catch(err){
-            console.log(err)
-        }
+        });
+        
     }
 
     handleNameValue(event){

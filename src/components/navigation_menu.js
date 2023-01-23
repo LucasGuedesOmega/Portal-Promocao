@@ -104,7 +104,15 @@ export class SideBar extends React.Component {
             to: '/grupo-pagamento',
             section: '',
             cardHeight: '62px',
-            ativo: false
+            ativo: true
+          },
+          {
+            display: 'Grupo de Usuarios',
+            icon: <span class="material-symbols-outlined">group</span>,
+            to: '/grupo-usuario',
+            section: '',
+            cardHeight: '62px',
+            ativo: true
           },
           {
             display: 'Grupos de Empresas',
@@ -112,7 +120,7 @@ export class SideBar extends React.Component {
             to: '/grupo-empresa',
             section: '',
             cardHeight: '62px',
-            ativo: false
+            ativo: true
           },
           {
             display: 'Super Usuarios',
@@ -130,16 +138,17 @@ export class SideBar extends React.Component {
     
     var fill_list = [];
     var token_decode = jwtDecode(this.state.token);
-    
-    for (let i = 0; i <= this.state.sidebarNavItens.length; i++){
-      if (this.state.sidebarNavItens[i]){
+    let sidebarNavItens = this.state.sidebarNavItens
+
+    for (let i = 0; i <= sidebarNavItens.length; i++){
+      if (sidebarNavItens[i]){
         if (token_decode.admin === true){
-          this.state.sidebarNavItens[i].ativo = true;
+          sidebarNavItens[i].ativo = true;
         }
       }
 
-      if (this.state.sidebarNavItens[i] && this.state.sidebarNavItens[i].ativo === true){
-        fill_list.push(this.state.sidebarNavItens[i]);
+      if (sidebarNavItens[i] && sidebarNavItens[i].ativo === true){
+        fill_list.push(sidebarNavItens[i]);
       }
     }
 

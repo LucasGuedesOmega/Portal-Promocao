@@ -289,7 +289,7 @@ class Editar extends React.Component{
                 user_app_portal: this.state.user_app_portal,
                 id_empresa: this.state.id_empresa,
                 id_grupo_empresa: this.state.id_grupo_empresa,
-                id_grupo_usuario: this.state.id_grupo_usuario
+                id_grupo_usuario: 'null'
             }
         ]       
 
@@ -324,8 +324,18 @@ class Editar extends React.Component{
                     window.location.href="/login"
                 } else if (error.response.data.error === "não autorizado"){
                     window.location.href='/login'
-                } else if (error.name === "AxiosError"){
-                    window.location.href='/login'
+                } else if (error.response.data.error === 'Você não tem permissão'){
+                    toast(error.response.data.Error, {
+                        duration: 2000,
+                        style:{
+                            marginRight: '1%',
+                            backgroundColor: '#851C00',
+                            color: 'white'
+                        },
+                        position: 'bottom-right',
+                        icon: <span className="material-symbols-outlined">sentiment_satisfied</span>,
+                    });
+                    this.props.navigate(-1)
                 }
 
             });
@@ -419,10 +429,12 @@ class Editar extends React.Component{
                                     }
                                 </select>
                             </div>
-                            <div className='col-sm'>
+                            <div className='col-sm row'>
+                                <label className='cadastro__formulario__label'></label>
                                 <button onClick={()=>this.ressetEmpresa()} className="bt_apagar_empresa">Apagar empresa</button>
                             </div>
                         </div>
+                        
                         <div className="row mt-3">
                             <div className="col-sm semana__col">
                                 <Flex css={{ alignItems: 'left', float: 'left', maxWidth: '100px', marginTop: 9, marginLeft: 4}} className='semana__col__check'>

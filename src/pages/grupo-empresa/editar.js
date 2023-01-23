@@ -74,7 +74,7 @@ class Editar extends React.Component{
                     window.location.href="/login"
                 } else if (error.response.data.error === "Token expirado"){
                     window.location.href="/login"
-                } else if (error.response.data.error === "não autorizado"){
+                } else if (error.response.data.error === "nï¿½o autorizado"){
                     window.location.href='/login'
                 }
             })
@@ -134,7 +134,7 @@ class Editar extends React.Component{
                 console.log(error)
                 if (error.response.data.error === "Token expirado"){
                     window.location.href="/login"
-                } else if (error.response.data.error === "não autorizado"){
+                } else if (error.response.data.error === "nÃ£o autorizado"){
                     window.location.href='/login'
                 } else if (error.name === "AxiosError"){
                     window.location.href='/login'

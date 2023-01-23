@@ -117,6 +117,7 @@ class Editar extends React.Component{
                 id_grupo_pagamento: this.state.id_grupo_pagamento,
                 id_forma_pagamento: this.state.id_forma_pagamento,
                 id_empresa: this.state.tokenDeconde.id_empresa,     
+                id_grupo_empresa: this.state.tokenDeconde.id_grupo_empresa,     
             }
         ]   
 
@@ -259,7 +260,7 @@ class Editar extends React.Component{
 
             if (error.response.data.error === "Token expirado"){
                 window.location.href="/login"
-            } else if (error.response.data.error === "não autorizado"){
+            } else if (error.response.data.error === "nï¿½o autorizado"){
                 window.location.href='/login'
             } else if (error.name === "AxiosError"){
                 window.location.href='/login'

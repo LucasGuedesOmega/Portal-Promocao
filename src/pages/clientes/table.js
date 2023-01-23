@@ -144,23 +144,31 @@ export class Table extends React.Component{
         this.state = {
             clientes_list: [],
             dados_table: [],
-            token: jwtDecode(this.props.token)
+            token: jwtDecode(this.props.token),
+            url_cliente: null
         };
 
         this.dados_table = this.dados_table.bind(this)
     }
 
     componentDidMount() {
-      this.dados_table()
+      this.permissao()
+    }
+
+    permissao(){
+      this.setState({
+        url_cliente: `/api/v1/cliente?id_grupo_empresa=${this.state.token.id_grupo_empresa}`
+      },(()=>{
+        this.dados_table()
+      })
+      )
     }
 
     dados_table(){
 
       let clienteList = [];
-      console.log(this.state.token)
       try{
-        
-        api.get('/api/v1/cliente', { headers: { Authorization: this.props.token}})
+        api.get(this.state.url_cliente, { headers: { Authorization: this.props.token}})
         .then((results)=>{
           if (results.data.length > 0){
             for (let i = 0; results.data.length > i; i++){
@@ -190,7 +198,7 @@ export class Table extends React.Component{
           console.log(error)
           if (error.response.data.error === "Token expirado"){
             window.location.href="/login";
-          } else if (error.response.data.error === "n„o autorizado"){
+          } else if (error.response.data.error === "n√£o autorizado"){
             window.location.href='/login';
           } else if (error.name === "AxiosError"){
             window.location.href='/login';
