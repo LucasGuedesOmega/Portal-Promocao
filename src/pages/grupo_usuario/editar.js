@@ -102,8 +102,8 @@ class Editar extends React.Component{
         });
     }
 
-    get_grupo_usuario(){
-        api.get(`api/v1/grupo-usuario?id_grupo_usuario=${this.state.id_grupo_usuario}`,  { headers: { Authorization: this.props.token}})
+    async get_grupo_usuario(){
+        await api.get(`api/v1/grupo-usuario?id_grupo_usuario=${this.state.id_grupo_usuario}`,  { headers: { Authorization: this.props.token}})
         .then((results)=>{
             if (results.data.length > 0){
                 this.setState({
@@ -203,7 +203,8 @@ class Editar extends React.Component{
                 id_grupo_usuario: this.state.id_grupo_usuario,
                 nome: this.state.nome,
                 status: this.state.status,
-                permissao: this.state.id_permissao
+                id_permissao: this.state.id_permissao,
+                id_grupo_empresa: this.state.tokenDecode.id_grupo_empresa
             }
         ]   
 
@@ -212,8 +213,8 @@ class Editar extends React.Component{
         try{
             api.post('/api/v1/grupo-usuario', dados_grupo_usuario, { headers: { Authorization: this.props.token}})
             .then((results) => {
-                if (results.data['Sucesso']){
-                    this.componentDidMount()
+                if (results.data[0].Sucesso){
+
                     if (this.state.id_grupo_usuario){
                         message = 'Grupo de usuario editado com sucesso!'
                     }else{
@@ -282,7 +283,7 @@ class Editar extends React.Component{
         if (this.state.id_permissao && this.state.descricao_permissao){
             default_permissao = {value: this.state.id_permissao, text: this.state.descricao_permissao}
         } else {
-            default_permissao = {value: 0, text: 'Selecione a permissao'}
+            default_permissao = {value: 0, text: 'Selecione a permissão'}
         }
         return (
             <div className='cadastro'>
@@ -301,7 +302,7 @@ class Editar extends React.Component{
                             </div>
                             <div className="col-sm">
                                 <label className='cadastro__formulario__label'>Permissão</label>
-                                <select name='id_produto' onChange={(value)=>{this.handleNameValue(value)}} className='form-select'>
+                                <select name='id_permissao' onChange={(value)=>{this.handleNameValue(value)}} className='form-select'>
                                         <option defaultValue={default_permissao.value}>{default_permissao.text}</option>
                                         { 
                                             this.state.permissoes.map((item, key)=>
@@ -312,7 +313,6 @@ class Editar extends React.Component{
                                         }
                                 </select>
                             </div>
-                            
                         </div>
         
                         <div className="row mt-3">

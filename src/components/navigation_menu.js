@@ -62,86 +62,88 @@ export class SideBar extends React.Component {
     this.state = {
       dados: props.dados,
       token: localStorage.getItem('tokenApi'),
-      sidebarNavItens: []
+      sidebarNavItens: [
+        {
+          display: 'Dashboard',
+          icon: <i className='bx bx-home'></i>,
+          to: '/',
+          section: '',
+          ativo: true,
+        },
+        {
+          display: 'Clientes',
+          icon: <span className="material-symbols-outlined">how_to_reg</span>,
+          to: '/cliente',
+          ativo: true,
+          section: '',
+        },
+        {
+          display: 'Produtos',
+          icon: <span className="material-symbols-outlined">shopping_cart</span>,
+          to: '/produtos',
+          ativo: true,
+          section: '',
+        },
+        {
+          display: 'Promoções',
+          icon: <i className='bx bx-receipt'></i>,
+          to: '/promocao',
+          section: '',
+          cardHeight: '62px',
+          ativo: true,
+        },
+        {
+          display: 'Grupo de Pagamento',
+          icon: <span className="material-symbols-outlined">account_balance_wallet</span>,
+          to: '/grupo-pagamento',
+          section: '',
+          cardHeight: '62px',
+          ativo: true
+        },
+        {
+          display: 'Funcionários',
+          icon: <span className="material-symbols-outlined">business_center</span>,
+          to: '/funcionarios',
+          section: '',
+          cardHeight: '62px',
+          ativo: true
+        },
+        {
+          display: 'Grupo de Usuarios',
+          icon: <span className="material-symbols-outlined">group</span>,
+          to: '/grupo-usuario',
+          section: '',
+          cardHeight: '62px',
+          ativo: true
+        },
+        {
+          display: 'Permissões',
+          icon: <span className="material-symbols-outlined">back_hand</span>,
+          to: '/permissao',
+          section: '',
+          cardHeight: '62px',
+          ativo: true
+        },
+        {
+          display: 'Rede',
+          icon: <span className="material-symbols-outlined">apartment</span>,
+          to: '/grupo-empresa',
+          section: '',
+          cardHeight: '62px',
+          ativo: true
+        },
+        {
+          display: 'Super Usuarios',
+          icon: <span className="material-symbols-outlined">person</span>,
+          to: '/usuario-relacao',
+          section: '',
+          cardHeight: '62px',
+          ativo: false
+        },
+      ]
     }
   }
-
-  componentDidMount(){
-    this.setState({
-      sidebarNavItens:[
-          {
-            display: 'Dashboard',
-            icon: <i className='bx bx-home'></i>,
-            to: '/',
-            section: '',
-            ativo: true,
-          },
-          {
-            display: 'Clientes',
-            icon: <span className="material-symbols-outlined">how_to_reg</span>,
-            to: '/cliente',
-            ativo: true,
-            section: '',
-          },
-          {
-            display: 'Produtos',
-            icon: <span className="material-symbols-outlined">shopping_cart</span>,
-            to: '/produtos',
-            ativo: true,
-            section: '',
-          },
-          {
-            display: 'Promoções',
-            icon: <i className='bx bx-receipt'></i>,
-            to: '/promocao',
-            section: '',
-            cardHeight: '62px',
-            ativo: true,
-          },
-          {
-            display: 'Grupo de Pagamento',
-            icon: <span className="material-symbols-outlined">account_balance_wallet</span>,
-            to: '/grupo-pagamento',
-            section: '',
-            cardHeight: '62px',
-            ativo: true
-          },
-          {
-            display: 'Grupo de Usuarios',
-            icon: <span className="material-symbols-outlined">group</span>,
-            to: '/grupo-usuario',
-            section: '',
-            cardHeight: '62px',
-            ativo: true
-          },
-          {
-            display: 'Permissões',
-            icon: <span className="material-symbols-outlined">back_hand</span>,
-            to: '/permissao',
-            section: '',
-            cardHeight: '62px',
-            ativo: true
-          },
-          {
-            display: 'Rede',
-            icon: <span className="material-symbols-outlined">apartment</span>,
-            to: '/grupo-empresa',
-            section: '',
-            cardHeight: '62px',
-            ativo: true
-          },
-          {
-            display: 'Super Usuarios',
-            icon: <span className="material-symbols-outlined">person</span>,
-            to: '/usuario-relacao',
-            section: '',
-            cardHeight: '62px',
-            ativo: false
-          },
-        ]
-    }) 
-  }
-
+  
   admin_sidebar(){
     
     var fill_list = [];
