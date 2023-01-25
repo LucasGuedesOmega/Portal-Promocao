@@ -108,14 +108,22 @@ export class SideBar extends React.Component {
           },
           {
             display: 'Grupo de Usuarios',
-            icon: <span class="material-symbols-outlined">group</span>,
+            icon: <span className="material-symbols-outlined">group</span>,
             to: '/grupo-usuario',
             section: '',
             cardHeight: '62px',
             ativo: true
           },
           {
-            display: 'Grupos de Empresas',
+            display: 'Permissões',
+            icon: <span className="material-symbols-outlined">back_hand</span>,
+            to: '/permissao',
+            section: '',
+            cardHeight: '62px',
+            ativo: true
+          },
+          {
+            display: 'Rede',
             icon: <span className="material-symbols-outlined">apartment</span>,
             to: '/grupo-empresa',
             section: '',

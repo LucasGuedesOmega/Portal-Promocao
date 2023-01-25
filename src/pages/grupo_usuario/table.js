@@ -197,7 +197,9 @@ export class Table extends React.Component{
         })
         .catch((error)=>{
           console.log(error)
-          if (error.response.data.error === "Token expirado"){
+          if (error.response.data.erros[0] === "Sem conexao com a api ou falta fazer login."){
+            window.location.href='/login'
+          }else if (error.response.data.error === "Token expirado"){
             window.location.href="/login"
           } else if (error.response.data.error === "não autorizado"){
             window.location.href='/login'

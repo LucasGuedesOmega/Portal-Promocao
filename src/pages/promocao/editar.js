@@ -118,8 +118,6 @@ class Editar extends React.Component{
             id_grupo_pagamento: null,
             status: false,
 
-            showAlert: false,
-
             tokenDecode: jwtDecode(this.props.token),
 
             gruposPagamento: [],
@@ -303,7 +301,7 @@ class Editar extends React.Component{
 
             if (error.response.data.error === "Token expirado"){
                 window.location.href="/login"
-            } else if (error.response.data.error === "n�o autorizado"){
+            } else if (error.response.data.error === "não autorizado"){
                 window.location.href='/login'
             } else if (error.name === "AxiosError"){
                 window.location.href='/login'
@@ -367,7 +365,7 @@ class Editar extends React.Component{
                 }
             })
             .catch((error)=>{
-                console.log(error, 'ola')
+                console.log(error)
                 if (error.name === "AxiosError"){
                     window.location.href="/login"
                 }
@@ -785,9 +783,9 @@ class Editar extends React.Component{
                                         <li className='header-empresas'>
                                             <div className='row'>
                                                 <button className={this.state.marcarTodos?'marcar-todos':'desliga-marcar-todos'} onClick={()=>{this.marcarTodos()}} >
-                                                    {this.state.marcarTodos?(<span class="material-symbols-outlined clickIcon">remove_done</span>)
+                                                    {this.state.marcarTodos?(<span className="material-symbols-outlined clickIcon">remove_done</span>)
                                                     :
-                                                    (<span class="material-symbols-outlined clickIcon">verified</span>)
+                                                    (<span className="material-symbols-outlined clickIcon">verified</span>)
                                                     }
                                                 </button>
                                                 <div className='col-sm'>Marcado</div>
@@ -803,9 +801,9 @@ class Editar extends React.Component{
                                                             <div className='row'>
                                                                 <div className='col-sm col-traco'>-</div>
                                                                 <div className='col-sm'>
-                                                                    {value.checked?(<span class="material-symbols-outlined">verified</span>)
+                                                                    {value.checked?(<span className="material-symbols-outlined">verified</span>)
                                                                     :
-                                                                    (<span class="material-symbols-outlined">remove_done</span>)
+                                                                    (<span className="material-symbols-outlined">remove_done</span>)
                                                                     }
                                                                     
                                                                 </div>

@@ -43,7 +43,7 @@ export default class Dashboard extends React.Component{
             console.log(error)
             if (error.response.data.error === "Token expirado"){
                 window.location.href="/login"
-            } else if (error.response.data.error === "n„o autorizado"){
+            } else if (error.response.data.error === "n√£o autorizado"){
                 window.location.href='/login'
             } else if (error.name === "AxiosError"){
                 window.location.href='/login'
@@ -77,7 +77,7 @@ export default class Dashboard extends React.Component{
             console.log(error)
             if (error.response.data.error === "Token expirado"){
                 window.location.href="/login"
-            } else if (error.response.data.error === "n„o autorizado"){
+            } else if (error.response.data.error === "n√£o autorizado"){
                 window.location.href='/login'
             } else if (error.name === "AxiosError"){
                 window.location.href='/login'
@@ -88,8 +88,31 @@ export default class Dashboard extends React.Component{
     render(){
         return (
             <div className="dashboard">
-                <div className='dashboard__dash'>
-                    <div className="row mt-2">
+                <div className='row row-card-header-dash'>
+                    <div className='col-sm '>
+                        <div className='caoluna'>
+                            <div className="card card-body"></div>
+                        </div>
+                    </div>
+                    <div className='col-sm '>
+                        <div className='caoluna'>
+                            <div className="card card-body"></div>
+                        </div>
+                    </div>
+                    <div className='col-sm '>
+                        <div className='caoluna'>
+                            <div className="card card-body"></div>
+                        </div>
+                    </div>
+                    <div className='col-sm '>
+                        <div className='caoluna'>
+                            <div className="card card-body"></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div className='row dashboard__dash'>
+                    <div className="row">
                         <div className="col-sm">
                             <div className="card dashboard__dash__card">
                                 <div className="card card-body">
@@ -98,7 +121,7 @@ export default class Dashboard extends React.Component{
                             </div>
                         </div>
                     </div>
-                    <div className="row mt-2">
+                    <div className="row">
                         <div className="col-sm">
                             <div className="card dashboard__dash__card">
                                 <div className="card card-body">
@@ -114,7 +137,7 @@ export default class Dashboard extends React.Component{
                             </div>
                         </div>
                     </div>
-                    <div className="row mt-2">
+                    <div className="row">
                         <div className="col-sm">
                             <div className="card dashboard__dash__card">
                                 <div className="card card-body">

@@ -41,9 +41,7 @@ class Editar extends React.Component{
 
             id_grupo_empresa: this.props.id_grupo_empresa,
             descricao: null,
-            status: null,
-
-            showAlert: false 
+            status: null
         }
 
         this.submitForm = this.submitForm.bind(this);

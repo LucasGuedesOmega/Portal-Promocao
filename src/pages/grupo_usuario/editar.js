@@ -78,8 +78,6 @@ class Editar extends React.Component{
             nome: null,
             status: false,
             id_permissao: null,
-            
-            showAlert: false,
             permissoes: [],
             descricao_permissao: null,
 
@@ -162,11 +160,13 @@ class Editar extends React.Component{
         .then((results)=>{  
             if (results.data.length > 0){
                 for(let i=0; i<results.data.length; i++){
-                    permissaoDict = {
-                        value: results.data[i].id_permissao,
-                        text: results.data[i].nome
+                    if(results.data[i].status){
+                        permissaoDict = {
+                            value: results.data[i].id_permissao,
+                            text: results.data[i].nome
+                        }
+                        permissaoList.push(permissaoDict)
                     }
-                    permissaoList.push(permissaoDict)
                 }
                 this.setState({
                     permissoes: permissaoList
@@ -244,7 +244,6 @@ class Editar extends React.Component{
                         icon: <span className="material-symbols-outlined">sentiment_dissatisfied</span>,
                     });
                 }
-                console.log(error)
                 if (error.response.data.error === "Token expirado"){
                     window.location.href="/login"
                 } else if (error.response.data.error === "não autorizado"){
@@ -318,16 +317,16 @@ class Editar extends React.Component{
         
                         <div className="row mt-3">
                             <div className="col-sm">
-                                <Flex css={{ alignItems: 'left', float: 'left', marginTop: 9, marginLeft: 15}} className='semana__col__check'>
-                                    <Label htmlFor="s1" css={{ paddingRight: 15 }}>
+                                <Flex>
+                                    <Label htmlFor="s7" css={{ paddingRight: 5 }}>
                                         Status
                                     </Label>
-                                    <Switch name='status' checked={this.state.user_app_portal} onCheckedChange={(value)=>{this.handleCheckValue(value, 'status')}} id="s1">
+                                    <Switch name='status' checked={this.state.status} onCheckedChange={(value)=>{this.handleCheckValue(value, 'status')}} id="s7">
                                         <SwitchThumb />
                                     </Switch>
                                 </Flex>
                             </div>
-                            <div className="col-sm  "></div>
+                            <div className="col-sm"></div>
                             <div className="col-sm ">
                                 <button onClick={this.submitForm} className="cadastro__formulario__enviar">Enviar</button>
                             </div>

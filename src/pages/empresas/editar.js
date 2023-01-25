@@ -39,8 +39,6 @@ class Editar extends React.Component{
             token_integracao: null,
             uf: null,
 
-            showAlert: false,
-
             usuario: null,
             senha: null
         }
@@ -77,9 +75,7 @@ class Editar extends React.Component{
             .catch((error)=>{
                 if (error.response.data.error === "Token expirado"){
                     window.location.href="/login"
-                } else if (error.response.data.error === "n„o autorizado"){
-                    window.location.href='/login'
-                } else if (error.name === "AxiosError"){
+                } else if (error.response.data.error === "n√£o autorizado"){
                     window.location.href='/login'
                 }
             })
@@ -150,11 +146,10 @@ class Editar extends React.Component{
 
                 if (error.response.data.error === "Token expirado"){
                     window.location.href="/login"
-                } else if (error.response.data.error === "n„o autorizado"){
-                    window.location.href='/login'
-                } else if (error.name === "AxiosError"){
+                } else if (error.response.data.error === "n√£o autorizado"){
                     window.location.href='/login'
                 }
+
 
             });
         }catch(err){

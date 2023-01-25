@@ -15,26 +15,26 @@ body{
     background-color: #f1f1f1;
     color: #2b2b2b;
     font-family: 'Roboto', sans-serif;
-    overflow-y: auto;
+    overflow-y: hidden;
     overflow-x: hidden;
 }
-body::-webkit-scrollbar{
-    background-color: transparent;
-}
+// body::-webkit-scrollbar{
+//     background-color: transparent;
+// }
 
-body::-webkit-scrollbar-button{
-    background-color: transparent;
-    height: 0;
-}
+// body::-webkit-scrollbar-button{
+//     background-color: transparent;
+//     height: 0;
+// }
 
-body::-webkit-scrollbar-thumb{
-    background-color: #26262c;
-    border-radius: 9px;
-}
+// body::-webkit-scrollbar-thumb{
+//     background-color: #26262c;
+//     border-radius: 9px;
+// }
 
-body::-webkit-scrollbar-thumb:hover{
-    background-color: #50505e;
-}
+// body::-webkit-scrollbar-thumb:hover{
+//     background-color: #50505e;
+// }
 
 a {
     text-decoration: none;
@@ -48,16 +48,6 @@ a {
 
 .card {
     border-radius: 10px !important;
-}
-
-.card .card-header{
-    background-color: #fff;
-    border-bottom: 0px;
-}
-
-.card .card-body{
-    border-radius: 0;
-    box-shadow:  0px 0px 0px 0px;
 }
 
 .card-footer{
@@ -157,54 +147,6 @@ a {
     background-color: #576891;
 }
 
-.dashboard{
-    height: 56rem;
-    place-items: center;
-    text-align: center;
-    justify-content: center;
-    padding-bottom: 15px;
-    position: relative;
-    width: 103%;
-    left: -3%;
-
-    &__dash{
-        max-height: 100%;
-        overflow-x: hidden;
-
-        &__card{
-            margin: 10px;
-            border: 0px;
-            -webkit-box-shadow: 6px 11px 29px -5px rgba(0,0,0,0.75);
-            -moz-box-shadow: 6px 11px 29px -5px rgba(0,0,0,0.75);
-            box-shadow: 6px 11px 29px -5px rgba(0,0,0,0.75);
-        }
-    }
-
-    &__dash::-webkit-scrollbar{
-        background-color: transparent;
-        margin: 0px !important;
-        padding: 2px !important;
-    }
-    
-    &__dash::-webkit-scrollbar-button{
-        background-color: transparent;
-        height: 0px;
-        margin: 0px !important;
-        padding: 0px !important;
-    }
-    
-    &__dash::-webkit-scrollbar-thumb{
-        background-color: #26262c;
-        border-radius: 9px;
-        margin: 0px !important;
-        padding: 0px !important;
-    }
-    
-    &__dash::-webkit-scrollbar-thumb:hover{
-        background-color: #50505e;
-    }
-}
-
 .form-label{
     float: left;
 }
@@ -217,7 +159,7 @@ a {
     transition: left 0.5s ease-in-out;
     background-color: #26262c;
     color: #ffffff; 
-    min-height: 60.55rem;
+    min-height: 65.55rem;
     display: block;
 
     &__logo{
@@ -770,4 +712,157 @@ color: #031446;
 
 .col-traco{
     max-width: 50px;
+}
+
+.card-header-dash{
+    flex: 1;
+    background-color: white;
+}
+
+.row-card-header-dash{
+    width: 99.3%;
+    padding: 1%;
+    place-items: center;
+    text-align: center;
+    justify-content: center;
+    background-color: rgba(255, 255, 255, 0.002);
+}
+
+.dashboard{
+    height: 56rem;
+    place-items: center;
+    text-align: center;
+    justify-content: center;
+    padding-bottom: 15px;
+    width: 99.3%;
+    flex-direction: row;
+
+    &__dash{
+        max-height: 100%;
+        overflow-x: hidden;
+        padding-bottom: 5%;
+        &__card{
+            margin: 10px;
+            border: 0px;
+            -webkit-box-shadow: 6px 11px 29px -5px rgba(0,0,0,0.75);
+            -moz-box-shadow: 6px 11px 29px -5px rgba(0,0,0,0.75);
+            box-shadow: 6px 11px 29px -5px rgba(0,0,0,0.75);
+        }
+    }
+
+    &__dash::-webkit-scrollbar{
+        background-color: transparent;
+        margin: 0px !important;
+        padding: 2px !important;
+    }
+    
+    &__dash::-webkit-scrollbar-button{
+        background-color: transparent;
+        height: 0px;
+        margin: 0px !important;
+        padding: 0px !important;
+    }
+    
+    &__dash::-webkit-scrollbar-thumb{
+        background-color: #26262c;
+        border-radius: 9px;
+        margin: 0px !important;
+        padding: 0px !important;
+    }
+    
+    &__dash::-webkit-scrollbar-thumb:hover{
+        background-color: #50505e;
+    }
+}
+
+.lista-telas{
+    border: 1px solid rgb(170, 170, 170);
+    border-radius: 5px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    box-shadow: 5px 4px 5px 4px rgba(0,0,0,0.234);
+    max-height: 10rem;
+    padding: 0px;
+    padding-right: 5px;
+}
+
+
+.lista-telas::-webkit-scrollbar{
+    background-color: transparent;
+    margin: 0px !important;
+    padding: 2px !important;
+}
+
+.lista-telas::-webkit-scrollbar-button{
+    background-color: transparent;
+    height: 0px;
+    margin: 0px !important;
+    padding: 0px !important;
+}
+
+.lista-telas::-webkit-scrollbar-thumb{
+    background-color: #26262c;
+    border-radius: 9px;
+    margin: 0px !important;
+    padding: 0px !important;
+}
+
+.lista-telas::-webkit-scrollbar-thumb:hover{
+    background-color: #50505e;
+}
+
+.linha-marcada{
+    list-style: none;
+    align-items: center;
+    background-color: #434343;
+    color: white;
+    margin: 0.5%;
+    width: 100%;
+    border-radius: 5px;
+}
+
+.linha{
+    list-style: none;
+    align-items: center;
+    margin: 0.5%;
+    width: 100%;
+    border-radius: 5px;
+}
+.content-buttons-passar{
+    max-width: 5%;
+    max-height: 5%;
+    height: 2%;
+    align-self: center;
+    align-items: center;
+}
+
+.button-passar{
+    float: left;
+    width: 100%;
+    margin-bottom: 2.5%;
+    align-items: center;
+    justify-content: center;
+    border: 0px;
+    background-color: transparent;
+}
+.button-passar:hover{
+    color: #35d81c;
+}
+.button-passar:active{
+    color: #b9b5b5;
+}
+.button-desfazer-passar{
+    float: left;
+    width: 100%;
+    margin-top: 2.5%;
+    align-items: center;
+    justify-content: center;
+    border: 0px;
+    background-color: transparent;
+}
+.button-desfazer-passar:hover{
+    color: #de2424;
+}
+.button-desfazer-passar:active{
+    color: #b9b5b5;
 }
