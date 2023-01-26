@@ -5,29 +5,29 @@ import { useParams } from "react-router-dom";
 import toast, { Toaster } from 'react-hot-toast';
 import InputMask from 'react-input-mask';
 import { useNavigate } from 'react-router-dom';
-import jwtDecode from 'jwt-decode';
 import { styled } from '@stitches/react';
 import { blackA } from '@radix-ui/colors';
 import * as SwitchPrimitive from '@radix-ui/react-switch';
+import jwtDecode from 'jwt-decode';
 
-export function EditarPermissao(){
+export function EditarFuncionario(){
 
-    const { id_permissao } = useParams();
+    const { id_funcionario } = useParams();
     let token = localStorage.getItem('tokenApi');
     const navigate = useNavigate();
 
     return (
-        <Editar id_permissao={id_permissao} token={token} navigate={navigate}/>
+        <Editar id_funcionario={id_funcionario} token={token} navigate={navigate}/>
     );
 };
 
-export function CadastrarPermissao(){
+export function CadastrarFuncionario(){
 
     let token = localStorage.getItem('tokenApi');
     const navigate = useNavigate();
 
     return (
-        <Editar id_permissao={null} token={token} navigate={navigate}/>
+        <Editar id_funcionario={null} token={token} navigate={navigate}/>
     );
 };
 
@@ -69,370 +69,358 @@ const Label = styled('label', {
   userSelect: 'none',
 });
 
-
 class Editar extends React.Component{
     constructor(props){
         super(props);
         this.state = {
-            id_permissao: this.props.id_permissao,
+
+            id_funcionario: this.props.id_funcionario,
             nome: null,
-            telas: [],
-            telas_selecionadas: [],
+            cpf: null,
+            e_mail: null,
+            telefone: null,
+            status: false,
+            id_empresa: null,
+
             tokenDecode: jwtDecode(this.props.token),
-            delete_list: [],
-            status: false
+
+            showAlert: false, 
+            
+            empresas: [],
+            grupos_usuarios: [],
+            username: null,
+            senha: null,
+            status_usuario: false,
+            user_app: false,
+            id_empresa_usuario: null,
+            id_usuario: null,
+            id_grupo_usuario: null,
+            descricao_empresa: null,
+            descricao_grupo_usuario: null,
         }
+
     }
 
-    async componentDidMount(){
+    componentDidMount(){
 
-        this.get_telas()
-
-        if (this.state.id_permissao){
-            await this.get_permissao()
-            await this.get_permissao_tela()
+        if (this.state.id_funcionario){
+            this.get_funcionario();
         }
-    
+        
+        this.preenche_select_empresa();
+        this.preenche_select_grupo_usuario();
+
+    }
+
+    async get_funcionario(){
+        await api.get(`api/v1/funcionario?id_funcionario=${this.state.id_funcionario}`,  { headers: { Authorization: this.props.token}})
+        .then((results)=>{
+            if (results.data.length > 0){
+                this.setState({
+                    id_funcionario: results.data[0].id_funcionario,
+                    nome: results.data[0].nome,
+                    cpf: results.data[0].cpf,
+                    e_mail: results.data[0].e_mail,
+                    telefone: results.data[0].telefone,
+                    status: results.data[0].status,
+                    id_empresa: results.data[0].id_empresa,
+                    id_usuario: results.data[0].id_usuario
+                }, ()=>{
+                    this.get_usuario()
+                })  
+            }
+        })
+        .catch((error)=>{
+            console.log(error)
+            if (error.response.data.error === "Token expirado"){
+                window.location.href="/login"
+            } else if (error.response.data.error === "não autorizado"){
+                window.location.href='/login'
+            }
+        })
+    }
+
+    get_usuario(){
+        if (this.state.id_usuario){
+            api.get(`api/v1/usuario?id_usuario=${this.state.id_usuario}`, { headers: { Authorization: this.props.token}})
+            .then((results)=>{
+                if (results.data.length > 0){
+                    this.setState({
+                        username: results.data[0].username,
+                        senha: results.data[0].senha,
+                        id_empresa_usuario: results.data[0].id_empresa,
+                        status_usuario: results.data[0].status,
+                        user_app: results.data[0].user_app,
+                        id_grupo_usuario: results.data[0].id_grupo_usuario
+                    }, ()=>{
+                        this.get_default_empresa()
+                        this.get_default_grupo_usuario()
+                    })
+
+                    
+                }
+            })
+            .catch((error)=>{
+                console.log(error)
+            })
+        }
         
     }
 
-    get_telas(){
-        let fill_list = [];
-        api.get(`api/v1/tela-acao`, { headers: { Authorization: this.props.token}})
-        .then((results)=>{
-    
-            if (results.data.length > 0){
-                
-                for(let i = 0; i < results.data.length; i++){
-                    results.data[i].checked = false;
-                    fill_list.push(results.data[i])
-                }
-                fill_list.sort((a, b)=>{
-                    if( a.nome > b.nome ){
-                        return 1;
-                    }
-                    if( a.nome < b.nome ){
-                        return - 1;
-                    }
-                    return 0;
-                })  
-                this.setState({
-                    telas: fill_list
-                })    
-            }
-        })
-        .catch((error)=>{
-            if (error.response.data.error === "Token expirado"){
-                window.location.href="/login"
-            } else if (error.response.data.error === "não autorizado"){
-                window.location.href='/login'
-            } else if (error.response.data.error === "Você não tem permissão"){
-                this.props.navigate(-1)
-            }
-        })
-    }
-
-    get_permissao(){
-        api.get(`api/v1/permissao?id_permissao=${this.state.id_permissao}`,  { headers: { Authorization: this.props.token}})
-        .then((results)=>{
-            if (results.data.length > 0){
-                this.setState({
-                    id_permissao: results.data[0].id_permissao,
-                    nome: results.data[0].nome,
-                    status: results.data[0].status
-                })
-            }
-
-        })
-        .catch((error)=>{
-            if (error.response.data.erros[0] === "Sem conexao com a api ou falta fazer login."){
-                window.location.href="/login"
-            } else if (error.response.data.error === "Token expirado"){
-                window.location.href="/login"
-            } else if (error.response.data.error === "não autorizado"){
-                window.location.href='/login'
-            }
-        })
-    }
-
-    async get_permissao_tela(){
-        let list_telas_acao = [];
-        await api.get(`api/v1/permissao-tela?id_permissao=${this.state.id_permissao}`, { headers: { Authorization: this.props.token}})
-        .then((results)=>{
-            if(results.data.length > 0){
-                for(let i = 0; i<results.data.length;i++){
-                    list_telas_acao.push(results.data[i])
-                }
-            }
-           
-        })
-        .catch((error)=>{
-            if (error.response.data.error === "Token expirado"){
-                window.location.href="/login"
-            } else if (error.response.data.error === "não autorizado"){
-                window.location.href='/login'
-            } else if (error.response.data.error === "Você não tem permissão"){
-                this.props.navigate(-1)
-            }
-        })
-
-        await this.get_telas_edit(list_telas_acao)
-    }
-    
-    async get_telas_edit(list){
-        let fill_list = [];
-        for(let i = 0; list.length > i; i++){
-            await api.get(`api/v1/tela-acao?id_tela_acao=${list[i].id_tela_acao}`, { headers: { Authorization: this.props.token}})
+    async get_default_empresa(){
+        if(this.state.id_empresa_usuario){
+            await api.get(`api/v1/empresa?id_empresa=${this.state.id_empresa_usuario}`, { headers: { Authorization: this.props.token}})
             .then((results)=>{
-                if(results.data.length>0){
-                    results.data[0].checked = false;
-                    fill_list.push(results.data[0])
+                if (results.data.length > 0){
+                    this.setState({
+                        descricao_empresa: results.data[0].razao_social
+                    })
                 }
             })
+            .catch((error)=>{
+                console.log(error)
+            })
         }
-
-        await this.setState({
-            telas_selecionadas: fill_list,
-        })
-
-        await this.comparaListas()
     }
 
-    async comparaListas(){
-        let telas = this.state.telas;
-        let telas_selecionadas = this.state.telas_selecionadas;
-
-        for(let i = 0; i < telas_selecionadas.length; i++){
-            for(let j = 0; j < telas.length; j++){
-
-                if(telas[j].id_tela_acao === telas_selecionadas[i].id_tela_acao){
-                    telas.splice(j, 1);
+    async get_default_grupo_usuario(){
+        if(this.state.id_grupo_usuario){
+            await api.get(`api/v1/grupo-usuario?id_grupo_usuario=${this.state.id_grupo_usuario}`,  { headers: { Authorization: this.props.token}})
+            .then((results)=>{
+                if(results.data.length > 0){
+                    this.setState({
+                        descricao_grupo_usuario: results.data[0].nome
+                    })
                 }
-            }
+            })
+            .catch((error)=>{
+                console.log(error)
+            })
+        }
+    }   
+
+    submitForm(){
+        
+        let messageError = null;
+
+        if (!this.state.nome){
+            messageError = 'Digite um nome!';
+        }else if (!this.state.cpf){
+            messageError = 'Digite um cpf!';
+        }else if(!this.state.e_mail){
+            messageError = 'Digite uma e_mail!'
+        }
+        
+        if(messageError){
+            toast(messageError, {
+                duration: 2000,
+                style:{
+                    marginRight: '1%',
+                    backgroundColor: '#851C00',
+                    color: 'white'
+                },
+                position: 'bottom-right',
+                icon: <span className="material-symbols-outlined">sentiment_dissatisfied</span>,
+            });
+
+            return;
         }
 
-        await this.setState({
-            telas: telas
+        var dados_funcionario = [
+            {
+                id_funcionario: this.state.id_funcionario,
+                nome: this.state.nome,
+                cpf: this.state.cpf,
+                e_mail: this.state.e_mail,
+                telefone: this.state.telefone,
+                status: this.state.status,
+                id_empresa: this.state.tokenDecode.id_empresa,
+                id_usuario: this.state.id_usuario,
+                id_grupo_empresa: this.state.tokenDecode.id_grupo_empresa
+            }
+        ]   
+        
+        let message;
+
+        try{
+            api.post('/api/v1/funcionario', dados_funcionario, { headers: { Authorization: this.props.token}})
+            .then((results) => {
+                if (results.data['Sucesso']){
+                    if (this.props.id_funcionario){
+                        message = 'Funcionario editado com sucesso!';
+                    }else{
+                        message = 'Funcionario cadastrado com sucesso!';
+                    }
+
+                    toast(message, {
+                        duration: 2000,
+                        style:{
+                            marginRight: '1%',
+                            backgroundColor: '#078518',
+                            color: 'white'
+                        },
+                        position: 'bottom-right',
+                        icon: <span className="material-symbols-outlined">sentiment_satisfied</span>,
+                    });
+                }
+            })
+            .catch((error)=>{
+                console.log(error)
+
+                if (error.response.data.error === "Token expirado"){
+                    window.location.href="/login";
+                } else if (error.response.data.error === "não autorizado"){
+                    window.location.href='/login';
+                }
+            })
+        }catch(err){
+            console.log(err)
+        }
+    }
+
+    submitFormUsuarios(){
+        let message = null;
+
+        if (!this.state.id_empresa_usuario){
+            message = 'Selecione uma empresa';
+        }else if (!this.state.username){
+            message = 'Digite um username!';
+        }else if(!this.state.senha){
+            message = 'Digite uma senha!'
+        }else if(!this.state.id_grupo_usuario){
+            message = 'Escolha um grupo de usuário!'
+        }
+
+        if(message){
+            toast(message, {
+                duration: 2000,
+                style:{
+                    marginRight: '1%',
+                    backgroundColor: '#851C00',
+                    color: 'white'
+                },
+                position: 'bottom-right',
+                icon: <span className="material-symbols-outlined">sentiment_dissatisfied</span>,
+            });
+            return;
+        }
+
+        var dados_usuario = [
+            {
+                id_usuario: this.state.id_usuario,
+                username: this.state.username,
+                senha: this.state.senha,
+                status: this.state.status_usuario,
+                user_admin: false,
+                user_app: this.state.user_app,
+                admin_posto: false,
+                id_empresa: this.state.id_empresa_usuario,
+                id_grupo_empresa: this.state.tokenDecode.id_grupo_empresa,
+                id_grupo_usuario: this.state.id_grupo_usuario,
+            }
+        ]       
+
+        try{
+            api.post('/api/v1/usuario', dados_usuario, { headers: { Authorization: this.props.token}})
+            .then((results) => {
+                if (results.data.Sucesso){
+                    this.setState({
+                        id_usuario: results.data.id
+                    }, ()=>this.submitForm())
+                }
+            })
+            .catch((error)=>{
+                console.log(error)
+                if (error.response.data.error === "Token expirado"){
+                    window.location.href="/login"
+                } else if (error.response.data.error === "não autorizado"){
+                    window.location.href='/login'
+                } else if (error.name === "AxiosError"){
+                    window.location.href='/login'
+                }
+
+            })
+        }catch(err){
+            console.log(err)
+        }
+    }
+
+    preenche_select_empresa(){
+
+        let empresaList = [];
+        let empresaDict;
+
+        api.get(`/api/v1/empresa?id_grupo_empresa=${this.state.tokenDecode.id_grupo_empresa}`, { headers: { Authorization: this.props.token}})
+        .then((results)=>{  
+            if (results.data.length > 0){
+                for(let i=0; i<results.data.length; i++){
+                    empresaDict = {
+                        value: results.data[i].id_empresa,
+                        text: results.data[i].razao_social
+                    }
+                    empresaList.push(empresaDict)
+                }
+                this.setState({
+                    empresas: empresaList
+                })
+            }
         })
+        .catch((error)=>{
+            console.log(error.response.data)
+            if(error.name === 'AxiosError'){
+                toast(error.response.data.Error, {
+                    duration: 2000,
+                    style:{
+                        marginRight: '1%',
+                        backgroundColor: '#851C00',
+                        color: 'white'
+                    },
+                    position: 'bottom-right',
+                    icon: <span className="material-symbols-outlined">sentiment_dissatisfied</span>,
+                });
+            } 
+
+            if (error.response.data.erros[0] === "Sem conexao com a api ou falta fazer login."){
+                window.location.href="/login";
+            } 
+            
+            if (error.response.data.error === "Token expirado"){
+                window.location.href="/login";
+            }
+        }) 
+    }
+
+    preenche_select_grupo_usuario(){
+        let fill_list = [];
+    
+        api.get(`api/v1/grupo-usuario`, {headers: {Authorization: this.props.token}})
+        .then((results)=>{
+            for(let i = 0; i < results.data.length; i++){
+                let fill_dict = {
+                    value: results.data[i].id_grupo_usuario,
+                    text: results.data[i].nome,
+                }
+
+                fill_list.push(fill_dict);
+            }
+
+            this.setState({
+                grupos_usuarios: fill_list
+            })
+        })
+        .catch((error)=>{   
+            console.log(error)
+        })  
     }
 
     handleNameValue(event){
         const target = event.target;
         const value = target.type === 'checkbox' ? target.checked: target.value;
         const name  = target.name;
-
         this.setState({
             [name]: value
         })
-    }
-
-    marcarLinhaEsquerda(item){
-        let fill_list = this.state.telas;
-
-        if(item.checked){
-            item.checked = false
-        }else{
-            item.checked = true
-        }
         
-        for(let i = 0; i < fill_list.length; i++){
-            if(fill_list[i].id_tela_acao === item.id_tela_acao){
-                fill_list[i].checked = item.checked
-            }
-        }
-
-        this.setState({
-            telas: fill_list
-        })
-    }
-
-    marcarLinhaDireita(item){
-        let fill_list = this.state.telas_selecionadas;
-
-        if(item.checked){
-            item.checked = false
-        }else{
-            item.checked = true
-        }
-        
-        for(let i = 0; i < fill_list.length; i++){
-            if(fill_list[i].id_tela_acao === item.id_tela_acao){
-                fill_list[i].checked = item.checked
-            }
-        }
-
-        this.setState({
-            telas_selecionadas: fill_list
-        })
-    }
-
-    passarSelecionados(){
-        let fill_list = this.state.telas_selecionadas;
-        let change_list = this.state.telas;
-        for(let i = 0; i < change_list.length; i++){
-            if(change_list[i].checked){
-                change_list[i].checked = false
-                fill_list.push(change_list[i]);
-                change_list.splice(i, 1);
-                i--
-            }
-        }
-        fill_list.sort((a, b)=>{
-            if( a.nome > b.nome ){
-                return 1;
-            }
-            if( a.nome < b.nome ){
-                return - 1;
-            }
-            return 0;
-        })
-        change_list.sort((a, b)=>{
-            if( a.nome > b.nome ){
-                return 1;
-            }
-            if( a.nome < b.nome ){
-                return - 1;
-            }
-            return 0;
-        })
-        this.setState({
-            telas_selecionadas: fill_list,
-            telas: change_list
-        })
-    }
-
-    voltarSelecionados(){
-        let fill_list = this.state.telas;
-        let change_list = this.state.telas_selecionadas;
-        let delete_list = this.state.delete_list;
-
-        for(let i = 0; i < change_list.length; i++){
-            if(change_list[i].checked){
-                change_list[i].checked = false
-                fill_list.push(change_list[i]);
-
-                if(delete_list.indexOf(change_list[i]) === -1){
-                    delete_list.push(change_list[i])
-                }
-                
-                change_list.splice(i, 1);
-                i--
-            }
-        }
-
-        fill_list.sort((a, b)=>{
-            if( a.nome > b.nome ){
-                return 1;
-            }
-            if( a.nome < b.nome ){
-                return - 1;
-            }
-            return 0;
-        })
-        
-        change_list.sort((a, b)=>{
-            if( a.nome > b.nome ){
-                return 1;
-            }
-            if( a.nome < b.nome ){
-                return - 1;
-            }
-            return 0;
-        })
-
-        this.setState({
-            telas_selecionadas: change_list,
-            telas: fill_list,
-            delete_list: delete_list
-        })
-    }
-    
-    submitForm(){
-        let dados_permissao = [
-            {
-                id_permissao: this.state.id_permissao,
-                nome: this.state.nome,
-                status: this.state.status,
-                id_empresa: this.state.tokenDecode.id_empresa,
-                id_grupo_empresa: this.state.tokenDecode.id_grupo_empresa
-            }   
-        ]
-
-        api.post('api/v1/permissao', dados_permissao, {headers: {Authorization: this.props.token}})
-        .then(async (results)=>{
-            
-            if(results.data[0].Sucesso){
-                this.setState({
-                    id_permissao: results.data[0].id
-                },(()=>{
-                    this.submitFormTelas()
-                }))
-                
-            }
-            
-        })
-        .catch((error)=>{
-            console.log(error)
-        })
-    }
-
-    submitFormTelas(){
-
-        let submit_list = [];
-        for(let i = 0; i< this.state.telas_selecionadas.length;i++){
-            let submit_dict = {
-                id_permissao: this.state.id_permissao,
-                id_tela_acao: this.state.telas_selecionadas[i].id_tela_acao,
-                tipo: 'I'
-            }
-
-            submit_list.push(submit_dict)
-        }
-
-        api.post('api/v1/permissao-tela', submit_list, {headers: {Authorization: this.props.token}})
-        .then((results)=>{
-
-            toast("Permissão cadastrada com sucesso", {
-                duration: 2000,
-                style:{
-                    marginRight: '1%',
-                    backgroundColor: '#078518',
-                    color: 'white'
-                },
-                position: 'bottom-right',
-                icon: <span className="material-symbols-outlined">sentiment_satisfied</span>,
-            });
-        })
-        .catch((error)=>{
-            console.log(error)
-        })
-
-        if(this.state.delete_list.length > 0){
-            this.delete_form()
-        }
-
-    }
-
-    delete_form(){
-        let delete_list = this.state.delete_list;
-        let submit_list = [];
-
-        for(let i = 0; i < delete_list.length; i++){
-            let submit_dict = {
-                id_permissao: this.state.id_permissao,
-                id_tela_acao: delete_list[i].id_tela_acao,
-                tipo: 'D'
-            }
-
-            submit_list.push(submit_dict)
-        }
-
-        api.post('api/v1/permissao-tela', submit_list, {headers: {Authorization: this.props.token}})
-        .then((results)=>{
-        })
-        .catch((error)=>{
-            console.log(error)
-        })
     }
 
     handleCheckValue(value, name){
@@ -442,12 +430,88 @@ class Editar extends React.Component{
     }
 
     render(){
+        let default_empresa;
+        if (this.state.id_empresa_usuario && this.state.descricao_empresa){
+            default_empresa = {value: this.state.id_empresa_usuario, text: this.state.descricao_empresa}
+        } else {
+            default_empresa = {value: 0, text: 'Selecione uma empresa'}
+        }
+
+        let default_grupo_usuario;
+        if (this.state.id_grupo_usuario && this.state.descricao_grupo_usuario){
+            default_grupo_usuario = {value: this.state.id_grupo_usuario, text: this.state.descricao_grupo_usuario}
+        } else {
+            default_grupo_usuario = {value: 0, text: 'Selecione um grupo de usuário'}
+        }
         return (
             <div className='cadastro'>
                 <div  className="cadastro__formulario" >
                     <div className="cadastro__formulario__header">
                         <div className="row">
-                            <div className="col-md-10"><h3 className="cadastro__formulario__header__titulo">Permissões</h3></div>
+                            <div className="col-md-10"><h3 className="cadastro__formulario__header__titulo">Usuário</h3></div>
+
+                        </div>
+                    </div>
+                    <hr />
+                    <div className="content w-100 cadastro__formulario__content">
+                        <div className="row mt-3">
+                            <div className="col-sm">
+                                <label className='cadastro__formulario__label'>Usename</label>
+                                <input className='form-control' defaultValue={this.state.username} name={'username'} onChange={(value)=>{this.handleNameValue(value)}} />
+                            </div>
+                            <div className="col-sm">
+                                <label className='cadastro__formulario__label'>Senha</label>
+                                <input type={'password'} className='form-control' defaultValue={this.state.senha} name={'senha'} onChange={(value)=>{this.handleNameValue(value)}} />
+                            </div>
+                        </div>
+                        <div className="row mt-3">
+                            <div className="col-sm">
+                                <select name='id_empresa_usuario' onChange={(value)=>{this.handleNameValue(value)}} className='form-select'>
+                                    <option defaultValue={default_empresa.value}>{default_empresa.text}</option>
+                                    { 
+                                        this.state.empresas.map((item, key)=>(
+                                            <option key={key} value={item.value}>{item.text}</option>
+                                        ))
+                                    }
+                                </select>
+                            </div>
+                            <div className='col-sm'>
+                                <select name='id_grupo_usuario' onChange={(value)=>{this.handleNameValue(value)}} className='form-select'>
+                                    <option defaultValue={default_grupo_usuario.value}>{default_grupo_usuario.text}</option>
+                                    { 
+                                        this.state.grupos_usuarios.map((item, key)=>(
+                                            <option key={key} value={item.value}>{item.text}</option>
+                                        ))
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                        <div className="row mt-3">
+                            <div className="col-sm semana__col">
+                                <Flex css={{ alignItems: 'left', float: 'left', maxWidth: '100px', marginTop: 9, marginLeft: 15}} >
+                                    <Label htmlFor="s9" css={{ paddingRight: 15 }}>
+                                        Status
+                                    </Label>
+                                    <Switch name='status_usuario' checked={this.state.status_usuario} onCheckedChange={(value)=>{this.handleCheckValue(value, 'status_usuario')}} id="s9">
+                                        <SwitchThumb />
+                                    </Switch>
+                                </Flex>
+                                <Flex css={{ alignItems: 'left', float: 'left', maxWidth: '100px', marginTop: 9, marginLeft: 15}} >
+                                    <Label htmlFor="s8" css={{ paddingRight: 15 }}>
+                                        App
+                                    </Label>
+                                    <Switch name='user_app' checked={this.state.user_app} onCheckedChange={(value)=>{this.handleCheckValue(value, 'user_app')}} id="s8">
+                                        <SwitchThumb />
+                                    </Switch>
+                                </Flex>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div  className="cadastro__formulario" >
+                    <div className="cadastro__formulario__header">
+                        <div className="row">
+                            <div className="col-md-10"><h3 className="cadastro__formulario__header__titulo">Funcionario</h3></div>
                         </div>
                     </div>
                     <hr />
@@ -455,56 +519,38 @@ class Editar extends React.Component{
                         <div className="row mt-3">
                             <div className="col-sm">
                                 <label className='cadastro__formulario__label'>Nome</label>
-                                <InputMask className='form-control' value={this.state.nome} name={'nome'} onChange={(value)=>{this.handleNameValue(value)}} />
+                                <InputMask className='form-control' defaultValue={this.state.nome} name={'nome'} onChange={(value)=>{this.handleNameValue(value)}} />
                             </div>
-                        </div>
-                        <div className='row mt-3'>
-                            <label className='cadastro__formulario__label'>Telas e Ações Permitidas</label>
-                            <ul className='lista-telas col-sm m-3' id="s1">
-                                
-                                {
-                                    this.state.telas.map((tela, key)=>(
-                                        <li htmlFor="s1" className={tela.checked? 'linha-marcada' : 'linha'} key={`E${key}`} onClick={()=>{this.marcarLinhaEsquerda(tela)}}>{tela.nome}</li>
-                                    ))
-                                }
-                            </ul>
-                            <div className='col-sm content-buttons-passar'>
-                                <button className='button-passar' onClick={()=>{this.passarSelecionados()}}>
-                                    <span className="material-symbols-outlined">keyboard_double_arrow_right</span>
-                                </button>
-                                <button className='button-desfazer-passar' onClick={()=>{this.voltarSelecionados()}}>
-                                    <span className="material-symbols-outlined">keyboard_double_arrow_left</span>
-                                </button>
-                            </div>
-                            
-                            <ul className='lista-telas col-sm m-3' id="s2">
-                                {
-                                    this.state.telas_selecionadas.map((item, key)=>(
-                                        <li htmlFor="s2" className={item.checked? 'linha-marcada' : 'linha'} key={`D${key}`} onClick={()=>{this.marcarLinhaDireita(item)}}>{item.nome}</li>
-                                    ))
-                                }
-                            </ul>
-                            <label>
-                                    Para usar as permissões selecione a tela ou a ação e passe para o lado direito.
-                            </label>
-                        </div>
-                        <div className="row mt-3">
                             <div className="col-sm">
-                                <Flex>
-                                    <Label htmlFor="s7" css={{ paddingRight: 5 }}>
+                                <label className='cadastro__formulario__label'>CPF</label>
+                                <InputMask mask="999.999.999-99" className='form-control' value={this.state.cpf} name={'cpf'} onChange={(value)=>{this.handleNameValue(value)}} />
+                            </div>
+                            <div className="col-sm">
+                                <label className='cadastro__formulario__label'>E-mail</label>
+                                <InputMask className='form-control' defaultValue={this.state.e_mail} name={'e_mail'} onChange={(value)=>{this.handleNameValue(value)}} />
+                            </div>
+                            <div className="col-sm">
+                                <label className='cadastro__formulario__label'>Telefone</label>
+                                <InputMask mask="(99)99999-9999" className='form-control' value={this.state.telefone} name={'telefone'} onChange={(value)=>{this.handleNameValue(value)}}/>
+                            </div>
+                        </div>
+        
+                        <div className="row mt-3">
+                            <div className="col-sm semana__col">
+                                <Flex css={{ alignItems: 'left', float: 'left', maxWidth: '100px', marginTop: 9, marginLeft: 4}} className='semana__col__check'>
+                                    <Label htmlFor="s8" css={{ paddingRight: 15 }}>
                                         Status
                                     </Label>
-                                    <Switch name='status' checked={this.state.status} onCheckedChange={(value)=>{this.handleCheckValue(value, 'status')}} id="s7">
+                                    <Switch name='status' checked={this.state.status} onCheckedChange={(value)=>{this.handleCheckValue(value, 'status')}} id="s1">
                                         <SwitchThumb />
                                     </Switch>
                                 </Flex>
                             </div>
-                            <div className="col-sm">
-                              
-                            </div>
-
-                            <div className="col-sm">
-                                <button onClick={()=>{this.submitForm()}} className="cadastro__formulario__enviar">Enviar</button>
+                            
+                            <div className="col-sm  "></div>
+                            
+                            <div className="col-sm ">
+                                <button onClick={()=>{this.submitFormUsuarios()}} className="cadastro__formulario__enviar">Enviar</button>
                             </div>
                         </div>
                     </div>

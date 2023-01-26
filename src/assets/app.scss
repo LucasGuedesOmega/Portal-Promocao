@@ -15,26 +15,26 @@ body{
     background-color: #f1f1f1;
     color: #2b2b2b;
     font-family: 'Roboto', sans-serif;
-    overflow-y: hidden;
+    overflow-y: auto;
     overflow-x: hidden;
 }
-// body::-webkit-scrollbar{
-//     background-color: transparent;
-// }
+body::-webkit-scrollbar{
+    background-color: transparent;
+}
 
-// body::-webkit-scrollbar-button{
-//     background-color: transparent;
-//     height: 0;
-// }
+body::-webkit-scrollbar-button{
+    background-color: transparent;
+    height: 0;
+}
 
-// body::-webkit-scrollbar-thumb{
-//     background-color: #26262c;
-//     border-radius: 9px;
-// }
+body::-webkit-scrollbar-thumb{
+    background-color: #26262c;
+    border-radius: 9px;
+}
 
-// body::-webkit-scrollbar-thumb:hover{
-//     background-color: #50505e;
-// }
+body::-webkit-scrollbar-thumb:hover{
+    background-color: #50505e;
+}
 
 a {
     text-decoration: none;
@@ -734,7 +734,7 @@ color: #031446;
     text-align: center;
     justify-content: center;
     padding-bottom: 15px;
-    width: 99.3%;
+    width: 99.1%;
     flex-direction: row;
 
     &__dash{

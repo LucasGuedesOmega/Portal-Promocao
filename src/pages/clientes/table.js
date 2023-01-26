@@ -157,7 +157,7 @@ export class Table extends React.Component{
 
     permissao(){
       this.setState({
-        url_cliente: `/api/v1/cliente?id_grupo_empresa=${this.state.token.id_grupo_empresa}`
+        url_cliente: `/api/v1/cliente`
       },(()=>{
         this.dados_table()
       })
@@ -181,10 +181,8 @@ export class Table extends React.Component{
              
               let url_editar = `/editar-cliente/${results.data[i].id_cliente}`
 
-              if (this.state.token.admin){
-                results.data[i].editar = <Link to={url_editar}><span className="material-symbols-outlined">edit</span></Link>
-              }
-
+              results.data[i].editar = <Link to={url_editar}><span className="material-symbols-outlined">edit</span></Link>
+              
               let cliente_dict = results.data[i]
 
               clienteList.push(cliente_dict)
@@ -232,16 +230,7 @@ export class Table extends React.Component{
                     />
                 </div>
               </div>
-              { this.state.token.admin ? 
-                (
-                  <button className='bt_cadastro' onClick={()=>{this.props.navigate(`/cadastrar-cliente`)}}>Cadastrar Cliente</button>
-                )
-                :
-                (
-                  <div></div>
-                )
-              }
-              
+              <button className='bt_cadastro' onClick={()=>{this.props.navigate(`/cadastrar-cliente`)}}>Cadastrar Cliente</button>
               <Toaster />
             </div>
         );

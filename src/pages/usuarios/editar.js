@@ -77,7 +77,7 @@ class Editar extends React.Component{
             id_empresa: 'null',
             id_grupo_empresa: 'null',
             id_grupo_usuario: 'null',
-            user_app_portal: false,
+            admin_posto: false,
 
             descricao_empresa: null,
             descricao_grupo_empresa: null,
@@ -113,7 +113,7 @@ class Editar extends React.Component{
                         status: results.data[0].status,
                         user_admin: results.data[0].user_admin,
                         user_app: results.data[0].user_app,
-                        user_app_portal: results.data[0].user_app_portal,
+                        admin_posto: results.data[0].admin_posto,
                         id_grupo_usuario: results.data[0].id_grupo_usuario,
                     })
 
@@ -286,13 +286,13 @@ class Editar extends React.Component{
                 status: this.state.status,
                 user_admin: this.state.user_admin,
                 user_app: this.state.user_app,
-                user_app_portal: this.state.user_app_portal,
+                admin_posto: this.state.admin_posto,
                 id_empresa: this.state.id_empresa,
                 id_grupo_empresa: this.state.id_grupo_empresa,
                 id_grupo_usuario: 'null'
             }
         ]       
-
+        
         let message;
 
         try{
@@ -346,8 +346,16 @@ class Editar extends React.Component{
 
     handleNameValue(event){
         const target = event.target;
-        const value = target.type === 'checkbox' ? target.checked: target.value;
+        let value = target.type === 'checkbox' ? target.checked: target.value;
         const name  = target.name;
+
+        if(value === 'Selecione uma empresa'){
+            value = 'null'
+        }
+
+        if(value === 'Selecione um grupo de empresa'){
+            value = 'null'
+        }
 
         this.setState({
             [name]: value
@@ -463,9 +471,9 @@ class Editar extends React.Component{
                                 </Flex>
                                 <Flex css={{ alignItems: 'left', float: 'left', marginTop: 9, marginLeft: 15}} className='semana__col__check'>
                                     <Label htmlFor="s3" css={{ paddingRight: 15 }}>
-                                        Portal e App
+                                        Admin Posto
                                     </Label>
-                                    <Switch name='user_app_portal' checked={this.state.user_app_portal} onCheckedChange={(value)=>{this.handleCheckValue(value, 'user_app_portal')}} id="s3">
+                                    <Switch name='admin_posto' checked={this.state.admin_posto} onCheckedChange={(value)=>{this.handleCheckValue(value, 'admin_posto')}} id="s3">
                                         <SwitchThumb />
                                     </Switch>
                                 </Flex>

@@ -10,65 +10,6 @@ import { useNavigate, Link } from "react-router-dom";
 import { Toaster } from 'react-hot-toast';
 import jwtDecode from 'jwt-decode';
 
-const columns = [
-  {
-    id: 1,
-    name: "ID",
-    selector: (row) => row.id_cliente,
-    sortable: true,
-    center: true,
-    reorder: true
-  },
-  {
-    id: 2,
-    name: "Nome",
-    selector: (row) => row.nome,
-    sortable: true,
-    center: true,
-    reorder: true
-  },
-  {
-    id: 3,
-    name: "CPF",
-    selector: (row) => row.cpf,
-    sortable: true,
-    center: true,
-    reorder: true
-  },
-  {
-    id: 4,
-    name: "E-mail",
-    selector: (row) => row.e_mail,
-    sortable: true,
-    center: true,
-    reorder: true
-  },
-  {
-    id: 5,
-    name: "Telefone",
-    selector: (row) => row.telefone,
-    sortable: true,
-    center: true,
-    reorder: true
-  },
-  {
-    id: 6,
-    name: "Status",
-    selector: (row) => row.status,
-    sortable: true,
-    center: true,
-    reorder: true
-  },
-  {
-    id: 7,
-    name: "Editar",
-    selector: (row) => row.editar,
-    sortable: true,
-    center: true,
-    reorder: true
-  }
-];
-
 const SCROLLBAR_SIZE = 10;
 
 const StyledScrollArea = styled(ScrollAreaPrimitive.Root, {
@@ -129,7 +70,7 @@ export const ScrollAreaScrollbar = StyledScrollbar;
 export const ScrollAreaThumb = StyledThumb;
 export const ScrollAreaCorner = StyledCorner;
 
-export function TableCliente(){
+export function TableFuncionarios(){
   let token = localStorage.getItem('tokenApi');
   const navigate = useNavigate();
 
@@ -142,10 +83,68 @@ export class Table extends React.Component{
     constructor(props){
         super(props);
         this.state = {
-            clientes_list: [],
+            funcionario_list: [],
             dados_table: [],
             token: jwtDecode(this.props.token),
-            url_cliente: null
+            url_funcionario: null,
+            columns: [
+              {
+                id: 1,
+                name: "ID",
+                selector: (row) => row.id_funcionario,
+                sortable: true,
+                center: true,
+                reorder: true
+              },
+              {
+                id: 2,
+                name: "Nome",
+                selector: (row) => row.nome,
+                sortable: true,
+                center: true,
+                reorder: true
+              },
+              {
+                id: 3,
+                name: "CPF",
+                selector: (row) => row.cpf,
+                sortable: true,
+                center: true,
+                reorder: true
+              },
+              {
+                id: 4,
+                name: "E-mail",
+                selector: (row) => row.e_mail,
+                sortable: true,
+                center: true,
+                reorder: true
+              },
+              {
+                id: 5,
+                name: "Telefone",
+                selector: (row) => row.telefone,
+                sortable: true,
+                center: true,
+                reorder: true
+              },
+              {
+                id: 6,
+                name: "Status",
+                selector: (row) => row.status,
+                sortable: true,
+                center: true,
+                reorder: true
+              },
+              {
+                id: 7,
+                name: "Editar",
+                selector: (row) => row.editar,
+                sortable: true,
+                center: true,
+                reorder: true
+              }
+            ]
         };
 
         this.dados_table = this.dados_table.bind(this)
@@ -157,59 +156,53 @@ export class Table extends React.Component{
 
     permissao(){
       this.setState({
-        url_cliente: `/api/v1/cliente?id_grupo_empresa=${this.state.token.id_grupo_empresa}`
+        url_funcionario: `/api/v1/funcionario`
       },(()=>{
         this.dados_table()
       })
       )
     }
 
-    dados_table(){
+    async dados_table(){
 
-      let clienteList = [];
-      try{
-        api.get(this.state.url_cliente, { headers: { Authorization: this.props.token}})
+        let funcionarioList = [];
+    
+        await api.get(this.state.url_funcionario, { headers: { Authorization: this.props.token}})
         .then((results)=>{
-          if (results.data.length > 0){
-            for (let i = 0; results.data.length > i; i++){
-              
-              if (results.data[i].status === true){
-                results.data[i].status = <span className="material-symbols-outlined" style={{color: 'rgb(85, 255, 100)'}}>thumb_up</span>;
-              }else{
-                results.data[i].status = <span className="material-symbols-outlined" style={{color: 'rgb(255, 50, 50)'}}>thumb_down</span>;
-              }
+            console.log(results)
+            if (results.data.length > 0){
              
-              let url_editar = `/editar-cliente/${results.data[i].id_cliente}`
+              for (let i = 0; results.data.length > i; i++){
+                  
+                if (results.data[i].status === true){
+                  results.data[i].status = <span className="material-symbols-outlined" style={{color: 'rgb(85, 255, 100)'}}>thumb_up</span>;
+                }else{
+                  results.data[i].status = <span className="material-symbols-outlined" style={{color: 'rgb(255, 50, 50)'}}>thumb_down</span>;
+                }
+                
+                let url_editar = `/editar-funcionario/${results.data[i].id_funcionario}`
 
-              if (this.state.token.admin){
                 results.data[i].editar = <Link to={url_editar}><span className="material-symbols-outlined">edit</span></Link>
+
+                let funcionario_dict = results.data[i]
+
+                funcionarioList.push(funcionario_dict)
               }
-
-              let cliente_dict = results.data[i]
-
-              clienteList.push(cliente_dict)
+              this.setState({
+                  funcionario_list: funcionarioList
+              })
             }
-            this.setState({
-              clientes_list: clienteList
-            })
-          }
         })
         .catch((error)=>{
           console.log(error)
-          if (error.response.data.error === "Token expirado"){
+          if(error.response.data[0].erros === 'Sem conexao com a api ou falta fazer login.'){
+            window.location.href="/login";
+          }else if (error.response.data.error === "Token expirado"){
             window.location.href="/login";
           } else if (error.response.data.error === "não autorizado"){
             window.location.href='/login';
-          } else if (error.name === "AxiosError"){
-            window.location.href='/login';
-          }
+          } 
         })
-
-      }catch(error){
-
-        console.log(error)
-
-      }
     }
 
     render(){
@@ -218,9 +211,9 @@ export class Table extends React.Component{
               <div>
                 <div className='tabela__formulario__table'>
                   <DataTable
-                    title="Clientes"
-                    columns={columns}
-                    data={this.state.clientes_list}
+                    title="Funcionários"
+                    columns={this.state.columns}
+                    data={this.state.funcionario_list}
                     defaultSortFieldId={1}
                     pagination
                     paginationComponentOptions={{
@@ -232,16 +225,7 @@ export class Table extends React.Component{
                     />
                 </div>
               </div>
-              { this.state.token.admin ? 
-                (
-                  <button className='bt_cadastro' onClick={()=>{this.props.navigate(`/cadastrar-cliente`)}}>Cadastrar Cliente</button>
-                )
-                :
-                (
-                  <div></div>
-                )
-              }
-              
+              <button className='bt_cadastro' onClick={()=>{this.props.navigate(`/cadastrar-funcionario`)}}>Cadastrar Funcionários</button>
               <Toaster />
             </div>
         );

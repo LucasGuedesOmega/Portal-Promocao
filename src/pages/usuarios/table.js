@@ -158,7 +158,7 @@ export class Table extends React.Component{
 
       try{
         
-        api.get('/api/v1/usuario?user_app_portal=true', { headers: { Authorization: this.props.token}})
+        api.get('/api/v1/usuario?admin_posto=true', { headers: { Authorization: this.props.token}})
         .then((results)=>{
           if (results.data.length > 0){
             for (let i = 0; results.data.length > i; i++){
@@ -198,7 +198,7 @@ export class Table extends React.Component{
           console.log(error)
           if (error.response.data.error === "Token expirado"){
             window.location.href="/login"
-          } else if (error.response.data.error === "n„o autorizado"){
+          } else if (error.response.data.error === "n√£o autorizado"){
             window.location.href='/login'
           } else if (error.name === "AxiosError"){
             window.location.href='/login'

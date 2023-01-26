@@ -132,7 +132,7 @@ export class Table extends React.Component{
 
     permissoes(){
       this.setState({
-        url_grupo_forma_pagamento: `/api/v1/grupo-forma-pagamento?id_grupo_empresa=${this.state.tokenDecode.id_grupo_empresa}`
+        url_grupo_forma_pagamento: `/api/v1/grupo-forma-pagamento`
       }, (()=>{
         this.dados_table()
       }))
@@ -173,7 +173,7 @@ export class Table extends React.Component{
           console.log(error)
           if (error.response.data.error === "Token expirado"){
             window.location.href="/login"
-          } else if (error.response.data.error === "não autorizado"){
+          } else if (error.response.data.error === "nï¿½o autorizado"){
             window.location.href='/login'
           } else if (error.name === "AxiosError"){
             window.location.href='/login'

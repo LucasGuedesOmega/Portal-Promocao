@@ -156,7 +156,7 @@ class Editar extends React.Component{
         let permissaoList = [];
         let permissaoDict;
 
-        api.get(`/api/v1/permissao?id_grupo_empresa=${this.state.tokenDecode.id_grupo_empresa}`, { headers: { Authorization: this.props.token}})
+        api.get(`/api/v1/permissao`, { headers: { Authorization: this.props.token}})
         .then((results)=>{  
             if (results.data.length > 0){
                 for(let i=0; i<results.data.length; i++){

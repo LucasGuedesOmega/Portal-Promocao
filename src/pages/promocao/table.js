@@ -178,7 +178,7 @@ class Table extends React.Component{
 
     permissao(){
       this.setState({
-        url_promocao: `/api/v1/promocao?id_grupo_empresa=${this.state.tokenDecode.id_grupo_empresa}`
+        url_promocao: `/api/v1/promocao`
       },(()=>{
         this.dados_table()
       })

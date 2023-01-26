@@ -142,7 +142,7 @@ export class Table extends React.Component{
 
     permissoes(){
       this.setState({
-          url_grupo_pagamento: `/api/v1/grupo-pagamento?id_grupo_empresa=${this.state.tokenDecode.id_grupo_empresa}`
+          url_grupo_pagamento: `/api/v1/grupo-pagamento`
       }, (()=>{
         this.dados_table()
       }))
@@ -185,9 +185,11 @@ export class Table extends React.Component{
           console.log(error)
           if (error.response.data.error === "Token expirado"){
             window.location.href="/login"
+          } else if(error.response.data.erros[0] === 'Sem conexao com a api ou falta fazer login.'){
+            window.location.href="/login"
           } else if (error.response.data.error === "não autorizado"){
             window.location.href='/login'
-          } if (error.response.data.error === 'Você não tem permissão'){
+          } else if (error.response.data.error === 'Você não tem permissão'){
             toast(error.response.data.Error, {
                 duration: 2000,
                 style:{

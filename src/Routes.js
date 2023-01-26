@@ -25,7 +25,8 @@ import { TableGrupoUsuario } from "./pages/grupo_usuario/table";
 import { CadastrarGrupoUsuario, EditarGrupoUsuario } from "./pages/grupo_usuario/editar";
 import { TablePermissao } from "./pages/permissao/table";
 import { CadastrarPermissao, EditarPermissao } from "./pages/permissao/editar";
-import { TableUsuariosPostos } from "./pages/usuarios-postos/table";
+import { TableFuncionarios } from "./pages/funcionarios/table";
+import { CadastrarFuncionario, EditarFuncionario } from "./pages/funcionarios/editar";
 
 export class AppRotas extends React.Component{
     constructor(props){
@@ -83,10 +84,10 @@ export class AppRotas extends React.Component{
                             <Route path="/permissao" element={<TablePermissao/>}/>
                             <Route path="/editar-permissao/:id_permissao" element={<EditarPermissao/>}/>
                             <Route path="/cadastrar-permissao" element={<CadastrarPermissao/>}/>
-                            
-                            <Route path="/usuarios-postos/:id_grupo_usuario" element={<TableUsuariosPostos/>}/>
-                            <Route path="/editar-usuario-posto/:id_grupo_usuario/:id_usuario" element={<EditarPermissao/>}/>
-                            <Route path="/cadastrar-usuario-posto/:id_grupo_usuario" element={<CadastrarPermissao/>}/>
+
+                            <Route path="/funcionarios" element={<TableFuncionarios/>}/>
+                            <Route path="/editar-funcionario/:id_funcionario" element={<EditarFuncionario/>}/>
+                            <Route path="/cadastrar-funcionario" element={<CadastrarFuncionario/>}/>
 
                             <Route path="/*" element={<Dashboard/>}/>
                         </Route>

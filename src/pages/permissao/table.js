@@ -66,7 +66,7 @@ export class Table extends React.Component{
     
     permissoes(){
       this.setState({
-        url_permissao: `api/v1/permissao?id_grupo_empresa=${this.state.tokenDecode.id_grupo_empresa}`
+        url_permissao: `api/v1/permissao`
       }, (()=>{
         this.dados_table()
       }))

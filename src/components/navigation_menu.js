@@ -5,6 +5,7 @@ import * as HoverCard from '@radix-ui/react-hover-card';
 import { styled, keyframes } from '@stitches/react';
 import { Link } from "react-router-dom";
 import jwtDecode from 'jwt-decode';
+import api from '../services/api';
 
 const slideDown = keyframes({
   '0%': { opacity: 0, transform: 'translateY(-10px)' },
@@ -22,7 +23,6 @@ const HoverCardContent = styled(HoverCard.Content, {
   '&[data-side="top"]': { animationName: slideDown },
   '&[data-side="bottom"]': { animationName: slideUp  },
 });
-
 
 export class AppNagivationMenu extends React.Component{
     constructor(props){
@@ -62,107 +62,148 @@ export class SideBar extends React.Component {
     this.state = {
       dados: props.dados,
       token: localStorage.getItem('tokenApi'),
-      sidebarNavItens: [
-        {
-          display: 'Dashboard',
-          icon: <i className='bx bx-home'></i>,
-          to: '/',
-          section: '',
-          ativo: true,
-        },
-        {
-          display: 'Clientes',
-          icon: <span className="material-symbols-outlined">how_to_reg</span>,
-          to: '/cliente',
-          ativo: true,
-          section: '',
-        },
-        {
-          display: 'Produtos',
-          icon: <span className="material-symbols-outlined">shopping_cart</span>,
-          to: '/produtos',
-          ativo: true,
-          section: '',
-        },
-        {
-          display: 'Promoções',
-          icon: <i className='bx bx-receipt'></i>,
-          to: '/promocao',
-          section: '',
-          cardHeight: '62px',
-          ativo: true,
-        },
-        {
-          display: 'Grupo de Pagamento',
-          icon: <span className="material-symbols-outlined">account_balance_wallet</span>,
-          to: '/grupo-pagamento',
-          section: '',
-          cardHeight: '62px',
-          ativo: true
-        },
-        {
-          display: 'Funcionários',
-          icon: <span className="material-symbols-outlined">business_center</span>,
-          to: '/funcionarios',
-          section: '',
-          cardHeight: '62px',
-          ativo: true
-        },
-        {
-          display: 'Grupo de Usuarios',
-          icon: <span className="material-symbols-outlined">group</span>,
-          to: '/grupo-usuario',
-          section: '',
-          cardHeight: '62px',
-          ativo: true
-        },
-        {
-          display: 'Permissões',
-          icon: <span className="material-symbols-outlined">back_hand</span>,
-          to: '/permissao',
-          section: '',
-          cardHeight: '62px',
-          ativo: true
-        },
-        {
-          display: 'Rede',
-          icon: <span className="material-symbols-outlined">apartment</span>,
-          to: '/grupo-empresa',
-          section: '',
-          cardHeight: '62px',
-          ativo: true
-        },
-        {
-          display: 'Super Usuarios',
-          icon: <span className="material-symbols-outlined">person</span>,
-          to: '/usuario-relacao',
-          section: '',
-          cardHeight: '62px',
-          ativo: false
-        },
-      ]
+      sidebarNavItens: []
     }
   }
   
-  admin_sidebar(){
+  async componentDidMount(){
+    await this.admin_sidebar()
+  }
+
+  async admin_sidebar(){
     
     var fill_list = [];
     var token_decode = jwtDecode(this.state.token);
-    let sidebarNavItens = this.state.sidebarNavItens
+    let sidebarNavItens = [
+      {
+        display: 'Dashboard',
+        icon: <i className='bx bx-home'></i>,
+        to: '/',
+        section: '',
+        ativo: true,
+        tela: 'DASHBOARD'
+      },
+      {
+        display: 'Clientes',
+        icon: <span className="material-symbols-outlined">how_to_reg</span>,
+        to: '/cliente',
+        ativo: true,
+        section: '',
+        tela: 'CLIENTE'
+      },
+      {
+        display: 'Produtos',
+        icon: <span className="material-symbols-outlined">shopping_cart</span>,
+        to: '/produtos',
+        ativo: true,
+        section: '',
+        tela: 'PRODUTO'
+      },
+      {
+        display: 'Promoções',
+        icon: <i className='bx bx-receipt'></i>,
+        to: '/promocao',
+        section: '',
+        cardHeight: '62px',
+        ativo: true,
+        tela: 'PROMOCAO'
+      },
+      {
+        display: 'Grupo de Pagamento',
+        icon: <span className="material-symbols-outlined">account_balance_wallet</span>,
+        to: '/grupo-pagamento',
+        section: '',
+        cardHeight: '62px',
+        ativo: true,
+        tela: 'GRUPO_PAGAMENTO'
+      },
+      {
+        display: 'Funcionários',
+        icon: <span className="material-symbols-outlined">business_center</span>,
+        to: '/funcionarios',
+        section: '',
+        cardHeight: '62px',
+        ativo: true,
+        tela: 'FUNCIONARIO'
+      },
+      {
+        display: 'Grupo de Usuarios',
+        icon: <span className="material-symbols-outlined">group</span>,
+        to: '/grupo-usuario',
+        section: '',
+        cardHeight: '62px',
+        ativo: true,
+        tela: 'GRUPO_USUARIO'
+      },
+      {
+        display: 'Permissões',
+        icon: <span className="material-symbols-outlined">back_hand</span>,
+        to: '/permissao',
+        section: '',
+        cardHeight: '62px',
+        ativo: true,
+        tela: 'PERMISSAO'
+      },
+      {
+        display: 'Rede',
+        icon: <span className="material-symbols-outlined">apartment</span>,
+        to: '/grupo-empresa',
+        section: '',
+        cardHeight: '62px',
+        ativo: true,
+        tela: 'REDE'
+      },
+      {
+        display: 'Super Usuarios',
+        icon: <span className="material-symbols-outlined">person</span>,
+        to: '/usuario-relacao',
+        section: '',
+        cardHeight: '62px',
+        ativo: false,
+        tela: null
+      },
+    ]
 
-    for (let i = 0; i <= sidebarNavItens.length; i++){
+    for (let i = 0; i < sidebarNavItens.length; i++){
       if (sidebarNavItens[i]){
         if (token_decode.admin === true){
           sidebarNavItens[i].ativo = true;
         }
       }
-
-      if (sidebarNavItens[i] && sidebarNavItens[i].ativo === true){
+      if (sidebarNavItens[i].tela !== null){
+        let dados_permissao;
+        if (sidebarNavItens[i].tela){
+          dados_permissao = {
+            tela: sidebarNavItens[i].tela
+          }
+        }
+  
+        await api.post('api/v1/valida-permissao', dados_permissao, {headers: {Authorization: this.state.token}})
+        .then((results)=>{
+          console.log(results.data[0].permissao)
+          sidebarNavItens[i].ativo = results.data[0].permissao;
+          
+        })
+        .catch((error)=>{
+          console.log(error)
+          if(error.response.data.erros[0] === 'Sem conexao com a api ou falta fazer login.'){
+            window.location.href="/login";
+          }else if (error.response.data.error === "Token expirado"){
+            window.location.href="/login";
+          } else if (error.response.data.error === "não autorizado"){
+            window.location.href='/login';
+          } 
+        })
+      }
+    
+      if (sidebarNavItens[i].ativo === true){
         fill_list.push(sidebarNavItens[i]);
       }
     }
 
-    return fill_list;
+    this.setState({
+      sidebarNavItens: fill_list
+    })
   }
 
   render (){
@@ -178,7 +219,7 @@ export class SideBar extends React.Component {
           <div className="sidebar__menu__indicator"></div>
           <div>
             {
-              this.admin_sidebar().map((item, index)=>(
+              this.state.sidebarNavItens.map((item, index)=>(
                 
                 <Link to={item.to} key={index}>
                   {item.card ? (

@@ -127,15 +127,6 @@ export class Table extends React.Component{
                 reorder: true,
                 ativo: false
               },
-              {
-                id: 5,
-                name: "Usuarios",
-                selector: (row) => row.usuarios,
-                sortable: true,
-                center: true,
-                reorder: true,
-                ativo: false
-              },
             ]
         };
 
@@ -148,7 +139,7 @@ export class Table extends React.Component{
 
     permissao(){
         this.setState({
-          url_grupo_usuario: `/api/v1/grupo-usuario?id_grupo_empresa=${this.state.tokenDecode.id_grupo_empresa}`
+          url_grupo_usuario: `/api/v1/grupo-usuario`
         }, (()=>{
           this.dados_table()
         }))
@@ -190,10 +181,6 @@ export class Table extends React.Component{
               let url_editar = `/editar-grupo-usuario/${results.data[i].id_grupo_usuario}`
 
               results.data[i].editar = <Link to={url_editar}><span className="material-symbols-outlined">edit</span></Link>
-              
-              let url_usuario_table = `/usuarios-postos/${results.data[i].id_grupo_usuario}`
-
-              results.data[i].usuarios = <Link to={url_usuario_table}><span className="material-symbols-outlined">person_add</span></Link>
 
               let grupo_usuario_dict = results.data[i]
 

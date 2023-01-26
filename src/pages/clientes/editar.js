@@ -106,8 +106,6 @@ class Editar extends React.Component{
         
         this.preenche_select_empresa();
 
-        console.log(this.state.id_usuario, this.state.nome, this.state.descricao_empresa);
-
     }
 
     get_cliente(){
@@ -295,8 +293,10 @@ class Editar extends React.Component{
                 status: this.state.status_usuario,
                 user_app: this.state.user_app,
                 user_admin: false,
+                admin_posto: false,
                 id_empresa: this.state.id_empresa_usuario,
-                id_grupo_empresa: this.state.tokenDecode.id_grupo_empresa
+                id_grupo_empresa: this.state.tokenDecode.id_grupo_empresa,
+                id_grupo_usuario: 'null'
             }
         ]       
 
