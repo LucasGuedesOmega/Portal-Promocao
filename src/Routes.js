@@ -44,8 +44,9 @@ export class AppRotas extends React.Component{
                     <Route path="/Login" element={<Login/>}></Route>
                     <Route element={<PrivateRoutes/>}>
                         <Route path="/" element={<PaginaPrincipal/>}>
-                            <Route path="/" element={<Dashboard/>}/>
-                        
+                            <Route path="/" element={<PrivateRoutes/>}/>
+
+                            <Route path="dash" element={<Dashboard/>}/>
                             <Route path="/cliente" element={<TableCliente/>}/>
                             <Route path="/cadastrar-cliente" element={<CadastrarCliente/>}/>
                             <Route path="/editar-cliente/:id_cliente" element={<EditarCliente/>}/>

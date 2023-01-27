@@ -182,16 +182,24 @@ export class NavbarClass extends React.Component{
         this.state = {            
             descricao_empresa: null,
 
-            tokenDecode: jwtDecode(this.props.token)
+            tokenDecode: jwtDecode(this.props.token),
+            loading: false
         }
     }
 
-    componentDidMount(){
-        this.get_empresa()
+    async componentDidMount(){
+        this.setState({
+            loading: true
+        })
+        await this.get_empresa()
+
+        this.setState({
+            loading: false
+        })
     }
 
-    get_empresa(){
-        api.get(`/api/v1/empresa?id_empresa=${this.state.tokenDecode.id_empresa}`, { headers: { Authorization: this.props.token}})
+    async get_empresa(){
+        await api.get(`/api/v1/empresa?id_empresa=${this.state.tokenDecode.id_empresa}`, { headers: { Authorization: this.props.token}})
         .then((results)=>{
             if (results.data.length > 0){
                 this.setState({
@@ -221,12 +229,12 @@ export class NavbarClass extends React.Component{
     }
 
     logout(){
-        localStorage.clear()
+        localStorage.removeItem("tokenApi")
         window.location.href="/login";
     }
 
     render(){
-        return (
+        return this.state.loading ? (<div className='loader-container'><div className="spinner"></div></div>):(
         
             <div className="navbar">
                 <div className="row navbar__row">

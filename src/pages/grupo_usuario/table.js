@@ -127,22 +127,66 @@ export class Table extends React.Component{
                 reorder: true,
                 ativo: false
               },
-            ]
+            ],
+            tela: 'GRUPO_USUARIO',
+            loading: false
         };
 
         this.dados_table = this.dados_table.bind(this)
     }
 
-    componentDidMount() {
-      this.permissao()
+    async componentDidMount() {
+      
+      this.setState({
+        loading: true
+      })
+      
+      await this.permissao()
+      
+      this.setState({
+        loading: false
+      })
     }
 
-    permissao(){
-        this.setState({
-          url_grupo_usuario: `/api/v1/grupo-usuario`
-        }, (()=>{
-          this.dados_table()
-        }))
+    async permissao(){
+      let dados_permissao = {
+        tela: this.state.tela
+      }
+
+      await api.post("api/v1/valida-permissao-tela", dados_permissao, {headers: {Authorization: this.props.token}})
+      .then((results)=>{  
+        if(results.data.length>0){
+          if (!results.data[0].permissao){
+            this.props.navigate('/')
+            toast("Não autorizado !!!", {
+                duration: 2000,
+                style:{
+                    marginRight: '1%',
+                    backgroundColor: '#851C00',
+                    color: 'white'
+                },
+                position: 'bottom-right',
+                icon: <span className="material-symbols-outlined">sentiment_dissatisfied</span>,
+            });
+          }
+        }
+      })
+      .catch((error)=>{
+          console.log(error)
+          if (error.response.data.error === "Token expirado"){
+            window.location.href="/login"
+          } else if (error.response.data.error === "não autorizado"){
+            window.location.href='/login'
+          } else if (error.response.data.erros[0] === 'Sem conexao com a api ou falta fazer login.'){
+            window.location.href='/login'
+          }
+      })
+
+      this.setState({
+        url_grupo_usuario: `/api/v1/grupo-usuario`
+      }, (()=>{
+        this.dados_table()
+      }))
     }
 
     get_admin_columns(){
@@ -222,7 +266,7 @@ export class Table extends React.Component{
     }
 
     render(){
-        return (
+        return this.state.loading ? (<div className='loader-container'><div className="spinner"></div></div>):(
             <div className='tabela'>
               <div>
                 <div className='tabela__formulario__table'>

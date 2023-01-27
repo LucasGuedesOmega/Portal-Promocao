@@ -7,83 +7,7 @@ import { mauve, blackA } from '@radix-ui/colors';
 import * as ScrollAreaPrimitive from '@radix-ui/react-scroll-area';
 import DataTable from "react-data-table-component";
 import { useNavigate, Link, useParams } from "react-router-dom";
-import { Toaster } from 'react-hot-toast';
-
-const columns = [
-  {
-    id: 1,
-    name: "ID",
-    selector: (row) => row.id_empresa,
-    sortable: true,
-    center: true,
-    reorder: true
-  },
-  {
-    id: 2,
-    name: "Razão Social",
-    selector: (row) => row.razao_social,
-    sortable: true,
-    center: true,
-    reorder: true
-  },
-  {
-    id: 3,
-    name: "CNPJ",
-    selector: (row) => row.cnpj,
-    sortable: true,
-    center: true,
-    reorder: true
-  },
-  {
-    id: 4,
-    name: "Endereco",
-    selector: (row) => row.endereco,
-    sortable: true,
-    center: true,
-    reorder: true
-  },
-  {
-    id: 5,
-    name: "Bairro",
-    selector: (row) => row.bairro,
-    sortable: true,
-    center: true,
-    reorder: true
-  },
-  {
-    id: 6,
-    name: "Numero",
-    selector: (row) => row.numero,
-    sortable: true,
-    center: true,
-    reorder: true
-  },
-  {
-    id: 7,
-    name: "Status",
-    selector: (row) => row.status,
-    sortable: true,
-    center: true,
-    reorder: true
-  },
-  {
-    id: 8,
-    name: "Token Itengração",
-    selector: (row) => row.token_integracao,
-    sortable: true,
-    center: true,
-    reorder: true,
-    maxWidth: '300px'
-  },
-  {
-    id: 9,
-    name: "Editar",
-    selector: (row) => row.editar,
-    sortable: true,
-    center: true,
-    reorder: true
-  }
-];
+import toast, { Toaster } from 'react-hot-toast';
 
 const SCROLLBAR_SIZE = 10;
 
@@ -155,7 +79,6 @@ export function TableEmpresa(){
   return <Table id_grupo_empresa={id_grupo_empresa} token={token} navigate={navigate}/>;
 }
 
-
 export class Table extends React.Component{
    
     constructor(props){
@@ -163,22 +86,139 @@ export class Table extends React.Component{
         this.state = {
             empresa_list: [],
             dados_table: [],
-            url_empresa: null
+            url_empresa: null,
+            tela: 'EMPRESA',
+            columns: [
+              {
+                id: 1,
+                name: "ID",
+                selector: (row) => row.id_empresa,
+                sortable: true,
+                center: true,
+                reorder: true
+              },
+              {
+                id: 2,
+                name: "Razão Social",
+                selector: (row) => row.razao_social,
+                sortable: true,
+                center: true,
+                reorder: true
+              },
+              {
+                id: 3,
+                name: "CNPJ",
+                selector: (row) => row.cnpj,
+                sortable: true,
+                center: true,
+                reorder: true
+              },
+              {
+                id: 4,
+                name: "Endereco",
+                selector: (row) => row.endereco,
+                sortable: true,
+                center: true,
+                reorder: true
+              },
+              {
+                id: 5,
+                name: "Bairro",
+                selector: (row) => row.bairro,
+                sortable: true,
+                center: true,
+                reorder: true
+              },
+              {
+                id: 6,
+                name: "Numero",
+                selector: (row) => row.numero,
+                sortable: true,
+                center: true,
+                reorder: true
+              },
+              {
+                id: 7,
+                name: "Status",
+                selector: (row) => row.status,
+                sortable: true,
+                center: true,
+                reorder: true
+              },
+              {
+                id: 8,
+                name: "Token Itengração",
+                selector: (row) => row.token_integracao,
+                sortable: true,
+                center: true,
+                reorder: true,
+                maxWidth: '300px'
+              },
+              {
+                id: 9,
+                name: "Editar",
+                selector: (row) => row.editar,
+                sortable: true,
+                center: true,
+                reorder: true
+              }
+            ],
+            loading: false
         };
 
         this.dados_table = this.dados_table.bind(this)
     }
 
-    componentDidMount() {
-      this.permissoes()
-    }
+    async componentDidMount() {
+      this.setState({
+        loading: true
+      })
+      await this.permissoes()
 
-    permissoes(){
       this.setState({
         url_empresa: `/api/v1/empresa?id_grupo_empresa=${this.props.id_grupo_empresa}`,
       }, (()=>{
         this.dados_table()
       }))
+
+      this.setState({
+        loading: false
+      })
+    }
+
+    async permissoes(){
+      let dados_permissao = {
+        tela: this.state.tela
+      }
+
+      await api.post("api/v1/valida-permissao-tela", dados_permissao, {headers: {Authorization: this.props.token}})
+      .then((results)=>{  
+        if(results.data.length>0){
+          if (!results.data[0].permissao){
+            this.props.navigate('/')
+            toast("Não autorizado !!!", {
+                duration: 2000,
+                style:{
+                    marginRight: '1%',
+                    backgroundColor: '#851C00',
+                    color: 'white'
+                },
+                position: 'bottom-right',
+                icon: <span className="material-symbols-outlined">sentiment_dissatisfied</span>,
+            });
+          }
+        }
+      })
+      .catch((error)=>{
+          console.log(error)
+          if (error.response.data.error === "Token expirado"){
+            window.location.href="/login"
+          } else if (error.response.data.error === "não autorizado"){
+            window.location.href='/login'
+          } else if (error.response.data.erros[0] === 'Sem conexao com a api ou falta fazer login.'){
+            window.location.href='/login'
+          }
+      })
     }
 
     dados_table(){
@@ -190,7 +230,6 @@ export class Table extends React.Component{
         api.get(this.state.url_empresa, { headers: { Authorization: this.props.token}})
         .then((results)=>{
           if (results.data.length > 0){
-            console.log(results)
             for (let i = 0; results.data.length > i; i++){
               
               if (results.data[i].status === true){
@@ -217,11 +256,9 @@ export class Table extends React.Component{
           console.log(error)
           if (error.response.data.error === "Token expirado"){
             window.location.href="/login"
-          } else if (error.response.data.error === "n�o autorizado"){
+          } else if (error.response.data.error === "não autorizado"){
             window.location.href='/login'
-          } else if (error.name === "AxiosError"){
-            window.location.href='/login'
-          }
+          } 
         })
 
       }catch(error){
@@ -230,14 +267,14 @@ export class Table extends React.Component{
     }
 
     render(){
-        return (
+        return this.state.loading ? (<div className='loader-container'><div className="spinner"></div></div>):(
             <div className='tabela'>
                 <div>
                   <div className='tabela__formulario__table'>
                       
                       <DataTable
-                        title="Empresas"
-                        columns={columns}
+                        title="Postos"
+                        columns={this.state.columns}
                         data={this.state.empresa_list}
                         defaultSortFieldId={1}
                         pagination

@@ -50,7 +50,7 @@ export class Editar extends React.Component{
             console.log(error)
             if (error.response.data.error === "Token expirado"){
                 window.location.href="/login"
-              } else if (error.response.data.error === "não autorizado"){
+              } else if (error.response.data.error === "nï¿½o autorizado"){
                 window.location.href='/login'
               } else if (error.name === "AxiosError"){
                 window.location.href='/login'
@@ -72,7 +72,7 @@ export class Editar extends React.Component{
         api.post('api/v1/usuario', dados, { headers: { Authorization: this.props.token}})
         .then((results)=>{
             if (results.data['Sucesso'] ){
-                toast('Usuário editado com sucesso!', {
+                toast('UsuÃ£rio editado com sucesso!', {
                     duration: 2000,
                     style:{
                         marginRight: '1%',
@@ -103,7 +103,7 @@ export class Editar extends React.Component{
                 window.location.href="/login"
             } else if (error.response.data.error === "Token expirado"){
                 window.location.href="/login"
-            } else if (error.response.data.error === "não autorizado"){
+            } else if (error.response.data.error === "nï¿½o autorizado"){
                 window.location.href='/login'
             }
         })

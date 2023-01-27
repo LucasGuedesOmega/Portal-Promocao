@@ -9,65 +9,6 @@ import DataTable from "react-data-table-component";
 import { useNavigate, Link } from "react-router-dom";
 import { Toaster } from 'react-hot-toast';
 
-const columns = [
-  {
-    id: 1,
-    name: "ID",
-    selector: (row) => row.id_usuario,
-    sortable: true,
-    center: true,
-    reorder: true
-  },
-  {
-    id: 2,
-    name: "Usuário",
-    selector: (row) => row.username,
-    sortable: true,
-    center: true,
-    reorder: true
-  },
-  {
-    id: 5,
-    name: "Empresa",
-    selector: (row) => row.id_empresa,
-    sortable: true,
-    center: true,
-    reorder: true
-  },
-  {
-    id: 6,
-    name: "Admin",
-    selector: (row) => row.user_admin,
-    sortable: true,
-    center: true,
-    reorder: true
-  },
-  {
-    id: 8,
-    name: "App",
-    selector: (row) => row.user_app,
-    sortable: true,
-    center: true,
-    reorder: true
-  },
-  {
-    id: 4,
-    name: "Status",
-    selector: (row) => row.status,
-    sortable: true,
-    center: true,
-    reorder: true
-  },
-  {
-    id: 7,
-    name: "Editar",
-    selector: (row) => row.editar,
-    sortable: true,
-    center: true,
-    reorder: true
-  }
-];
-
 const SCROLLBAR_SIZE = 10;
 
 const StyledScrollArea = styled(ScrollAreaPrimitive.Root, {
@@ -142,84 +83,140 @@ export class Table extends React.Component{
         super(props);
         this.state = {
             usuario_list: [],
-            dados_table: []
+            dados_table: [],
+            columns: [
+              {
+                id: 1,
+                name: "ID",
+                selector: (row) => row.id_usuario,
+                sortable: true,
+                center: true,
+                reorder: true
+              },
+              {
+                id: 2,
+                name: "Usuário",
+                selector: (row) => row.username,
+                sortable: true,
+                center: true,
+                reorder: true
+              },
+              {
+                id: 5,
+                name: "Empresa",
+                selector: (row) => row.id_empresa,
+                sortable: true,
+                center: true,
+                reorder: true
+              },
+              {
+                id: 6,
+                name: "Admin",
+                selector: (row) => row.user_admin,
+                sortable: true,
+                center: true,
+                reorder: true
+              },
+              {
+                id: 8,
+                name: "App",
+                selector: (row) => row.user_app,
+                sortable: true,
+                center: true,
+                reorder: true
+              },
+              {
+                id: 4,
+                name: "Status",
+                selector: (row) => row.status,
+                sortable: true,
+                center: true,
+                reorder: true
+              },
+              {
+                id: 7,
+                name: "Editar",
+                selector: (row) => row.editar,
+                sortable: true,
+                center: true,
+                reorder: true
+              }
+            ]
         };
 
         this.dados_table = this.dados_table.bind(this)
     }
 
-    componentDidMount() {
-      this.dados_table()
+    async componentDidMount() {
+      this.setState({
+        loading: true
+      })
+      await this.dados_table()
+      this.setState({
+        loading: false
+      })
     }
 
-    dados_table(){
+    async dados_table(){
 
       let usuarioList = [];
 
-      try{
-        
-        api.get('/api/v1/usuario?admin_posto=true', { headers: { Authorization: this.props.token}})
-        .then((results)=>{
-          if (results.data.length > 0){
-            for (let i = 0; results.data.length > i; i++){
-              
-              if (results.data[i].status === true){
-                results.data[i].status = <span className="material-symbols-outlined" style={{color: 'rgb(85, 255, 100)'}}>thumb_up</span>;
-              }else{
-                results.data[i].status = <span className="material-symbols-outlined" style={{color: 'rgb(255, 50, 50)'}}>thumb_down</span>;
-              }
-              
-              if (results.data[i].user_admin === true){
-                results.data[i].user_admin = <span className="material-symbols-outlined" style={{color: 'rgb(85, 255, 100)'}}>priority</span>;
-              }else{
-                results.data[i].user_admin = <span className="material-symbols-outlined" style={{color: 'rgb(255, 50, 50)'}}>dangerous</span>;
-              }
-
-              if (results.data[i].user_app === true){
-                results.data[i].user_app = <span className="material-symbols-outlined" style={{color: 'rgb(85, 255, 100)'}}>priority</span>;
-              }else{
-                results.data[i].user_app = <span className="material-symbols-outlined" style={{color: 'rgb(255, 50, 50)'}}>dangerous</span>;
-              }
-
-              let url_editar = `/editar-usuario/${results.data[i].id_usuario}`
-
-              results.data[i].editar = <Link to={url_editar}><span className="material-symbols-outlined">edit</span></Link>
-
-              let usuario_dict = results.data[i]
-
-              usuarioList.push(usuario_dict)
+      await api.get('/api/v1/usuario?admin_posto=true', { headers: { Authorization: this.props.token}})
+      .then((results)=>{
+        if (results.data.length > 0){
+          for (let i = 0; results.data.length > i; i++){
+            
+            if (results.data[i].status === true){
+              results.data[i].status = <span className="material-symbols-outlined" style={{color: 'rgb(85, 255, 100)'}}>thumb_up</span>;
+            }else{
+              results.data[i].status = <span className="material-symbols-outlined" style={{color: 'rgb(255, 50, 50)'}}>thumb_down</span>;
             }
-            this.setState({
-              usuario_list: usuarioList
-            })
-          }
-        })
-        .catch((error)=>{
-          console.log(error)
-          if (error.response.data.error === "Token expirado"){
-            window.location.href="/login"
-          } else if (error.response.data.error === "não autorizado"){
-            window.location.href='/login'
-          } else if (error.name === "AxiosError"){
-            window.location.href='/login'
-          }
-        })
+            
+            if (results.data[i].user_admin === true){
+              results.data[i].user_admin = <span className="material-symbols-outlined" style={{color: 'rgb(85, 255, 100)'}}>priority</span>;
+            }else{
+              results.data[i].user_admin = <span className="material-symbols-outlined" style={{color: 'rgb(255, 50, 50)'}}>dangerous</span>;
+            }
 
-      }catch(error){
+            if (results.data[i].user_app === true){
+              results.data[i].user_app = <span className="material-symbols-outlined" style={{color: 'rgb(85, 255, 100)'}}>priority</span>;
+            }else{
+              results.data[i].user_app = <span className="material-symbols-outlined" style={{color: 'rgb(255, 50, 50)'}}>dangerous</span>;
+            }
 
+            let url_editar = `/editar-usuario/${results.data[i].id_usuario}`
+
+            results.data[i].editar = <Link to={url_editar}><span className="material-symbols-outlined">edit</span></Link>
+
+            let usuario_dict = results.data[i]
+
+            usuarioList.push(usuario_dict)
+          }
+          this.setState({
+            usuario_list: usuarioList
+          })
+        }
+      })
+      .catch((error)=>{
         console.log(error)
-
-      }
+        if (error.response.data.error === "Token expirado"){
+          window.location.href="/login"
+        } else if (error.response.data.error === "não autorizado"){
+          window.location.href='/login'
+        } else if (error.name === "AxiosError"){
+          window.location.href='/login'
+        }
+      })
     }
 
     render(){
-        return (
+        return this.state.loading ? (<div className='loader-container'><div className="spinner"></div></div>):(
             <div className='tabela'>
               <div>
                 <div className='tabela__formulario__table'>
                   <DataTable
                       title="Usuarios"
-                      columns={columns}
+                      columns={this.state.columns}
                       data={this.state.usuario_list}
                       defaultSortFieldId={1}
                       pagination

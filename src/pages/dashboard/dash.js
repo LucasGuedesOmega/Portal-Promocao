@@ -12,22 +12,31 @@ export default class Dashboard extends React.Component{
             vendas_canceladas: null,
             vendas_emitidas: null,
             vendas: null,
-            ids_promocao: null
+            ids_promocao: null,
+            loading: false
         }
     }
 
-    componentDidMount(){
-        this.get_vendas()
+    async componentDidMount(){
+        this.setState({
+            loading: true
+        })
+
+        await this.get_vendas()
+
+        this.setState({
+            loading: false
+        })
     }
 
-    get_vendas(){
+    async get_vendas(){
         let vendas_concluidas = [];
         let vendas_canceladas = [];
         let vendas_emitidas = [];
         let vendas = [];
         let ids_promocao = [];
 
-        api.get(`api/v1/promocao`, {headers: { Authorization: localStorage.getItem('tokenApi')}})
+        await api.get(`api/v1/promocao`, {headers: { Authorization: localStorage.getItem('tokenApi')}})
         .then((results)=>{
             if (results.data.length > 0){
                 for(let i = 0; i<results.data.length; i++){
@@ -45,12 +54,12 @@ export default class Dashboard extends React.Component{
                 window.location.href="/login"
             } else if (error.response.data.error === "não autorizado"){
                 window.location.href='/login'
-            } else if (error.name === "AxiosError"){
+            } else if (error.response.data.erros === "Sem conexao com a api ou falta fazer login."){
                 window.location.href='/login'
             }
         })
 
-        api.get(`api/v1/vendas`, { headers: { Authorization: localStorage.getItem('tokenApi')}})
+        await api.get(`api/v1/vendas`, { headers: { Authorization: localStorage.getItem('tokenApi')}})
         .then((results)=>{
             if (results.data.length > 0){
                 for(let i = 0; i < results.data.length; i++){
@@ -70,7 +79,6 @@ export default class Dashboard extends React.Component{
                     vendas_concluidas: vendas_concluidas,
                     vendas: vendas
                 })
-                // console.log(this.state.vendas_concluidas, 'concluida', this.state.vendas_emitidas, 'emitida', this.state.vendas_canceladas, 'cancelada')
             } 
         })
         .catch((error)=>{
@@ -79,34 +87,70 @@ export default class Dashboard extends React.Component{
                 window.location.href="/login"
             } else if (error.response.data.error === "não autorizado"){
                 window.location.href='/login'
-            } else if (error.name === "AxiosError"){
+            } else if (error.response.data.erros === "Sem conexao com a api ou falta fazer login."){
                 window.location.href='/login'
             }
         })
     }
 
     render(){
-        return (
+        return this.state.loading ? (<div className='loader-container'><div className="spinner"></div></div>):(
             <div className="dashboard">
                 <div className='row row-card-header-dash'>
                     <div className='col-sm '>
-                        <div className='caoluna'>
-                            <div className="card card-body"></div>
+                        <div className='coluna'>
+                            <div className="card card-header-dash">
+                                <div className='content-card-header-dash'>
+                                    <div className='content-row-dash header-dash'>
+                                        <h5>CashBack Total</h5>
+                                    </div>
+                                    <div className='content-row-dash body-dash'>
+                                        <h6>0.00</h6>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <div className='col-sm '>
-                        <div className='caoluna'>
-                            <div className="card card-body"></div>
+                        <div className='coluna'>
+                            <div className="card card-header-dash">
+                                <div className='content-card-header-dash'>
+                                    <div className='content-row-dash header-dash'>
+                                        <h5>Descontos Total</h5>
+                                    </div>
+                                    <div className='content-row-dash body-dash'>
+                                        <h6>0.00</h6>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <div className='col-sm '>
-                        <div className='caoluna'>
-                            <div className="card card-body"></div>
+                        <div className='coluna'>
+                            <div className="card card-header-dash">
+                                <div className='content-card-header-dash'>
+                                    <div className='content-row-dash header-dash'>
+                                        <h5>Pontos Total</h5>
+                                    </div>
+                                    <div className='content-row-dash body-dash'>
+                                        <h6>0.00</h6>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <div className='col-sm '>
-                        <div className='caoluna'>
-                            <div className="card card-body"></div>
+                        <div className='coluna'>
+                            <div className="card card-header-dash">
+                                <div className='content-card-header-dash'>
+                                    <div className='content-row-dash header-dash'>
+                                        <h5>Resgatados Total</h5>
+                                    </div>
+                                    <div className='content-row-dash body-dash'>
+                                        <h6>0.00</h6>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>

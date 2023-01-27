@@ -6,91 +6,8 @@ import { styled } from '@stitches/react';
 import { mauve, blackA } from '@radix-ui/colors';
 import * as ScrollAreaPrimitive from '@radix-ui/react-scroll-area';
 import DataTable from "react-data-table-component";
-import { Toaster } from 'react-hot-toast';
+import toast, { Toaster } from 'react-hot-toast';
 import jwtDecode from 'jwt-decode';
-
-const columns = [
-  {
-    id: 1,
-    name: "ID",
-    selector: (row) => row.id_promocao,
-    sortable: true,
-    center: true,
-    reorder: true
-  },
-  {
-    id: 2,
-    name: "Titulo",
-    selector: (row) => row.titulo,
-    sortable: true,
-    center: true,
-    reorder: true
-  },
-  {
-    id: 3,
-    name: "Tipo",
-    selector: (row) => row.tipo,
-    sortable: true,
-    center: true,
-    reorder: true
-  },
-  {
-    id: 4,
-    name: "Desconto Total",
-    selector: (row) => row.desconto_total,
-    sortable: true,
-    center: true,
-    reorder: true
-  },
-  {
-    id: 5,
-    name: "Desconto Unidade",
-    selector: (row) => row.desconto_por_unidade,
-    sortable: true,
-    center: true,
-    reorder: true
-  },
-  {
-    id: 6,
-    name: "Produto",
-    selector: (row) => row.id_produto,
-    sortable: true,
-    center: true,
-    reorder: true
-  },
-  {
-    id: 7,
-    name: "Data inicio",
-    selector: (row) => row.data_format_ini,
-    sortable: true,
-    center: true,
-    reorder: true
-  },
-  {
-    id: 8,
-    name: "Data fim",
-    selector: (row) => row.data_format_fim,
-    sortable: true,
-    center: true,
-    reorder: true
-  },
-  {
-    id: 9,
-    name: "Status",
-    selector: (row) => row.status,
-    sortable: true,
-    center: true,
-    reorder: true
-  },
-  {
-    id: 10,
-    name: "Editar",
-    selector: (row) => row.editar,
-    sortable: true,
-    center: true,
-    reorder: true
-  },
-];
 
 const SCROLLBAR_SIZE = 10;
 
@@ -166,17 +83,141 @@ class Table extends React.Component{
             promocoes_list: [],
             dados_table: [],
             tokenDecode: jwtDecode(this.props.token),
-            url_promocao: null
+            url_promocao: null,
+            columns: [
+              {
+                id: 1,
+                name: "ID",
+                selector: (row) => row.id_promocao,
+                sortable: true,
+                center: true,
+                reorder: true
+              },
+              {
+                id: 2,
+                name: "Titulo",
+                selector: (row) => row.titulo,
+                sortable: true,
+                center: true,
+                reorder: true
+              },
+              {
+                id: 3,
+                name: "Tipo",
+                selector: (row) => row.tipo,
+                sortable: true,
+                center: true,
+                reorder: true
+              },
+              {
+                id: 4,
+                name: "Desconto Total",
+                selector: (row) => row.desconto_total,
+                sortable: true,
+                center: true,
+                reorder: true
+              },
+              {
+                id: 5,
+                name: "Desconto Unidade",
+                selector: (row) => row.desconto_por_unidade,
+                sortable: true,
+                center: true,
+                reorder: true
+              },
+              {
+                id: 6,
+                name: "Produto",
+                selector: (row) => row.id_produto,
+                sortable: true,
+                center: true,
+                reorder: true
+              },
+              {
+                id: 7,
+                name: "Data inicio",
+                selector: (row) => row.data_format_ini,
+                sortable: true,
+                center: true,
+                reorder: true
+              },
+              {
+                id: 8,
+                name: "Data fim",
+                selector: (row) => row.data_format_fim,
+                sortable: true,
+                center: true,
+                reorder: true
+              },
+              {
+                id: 9,
+                name: "Status",
+                selector: (row) => row.status,
+                sortable: true,
+                center: true,
+                reorder: true
+              },
+              {
+                id: 10,
+                name: "Editar",
+                selector: (row) => row.editar,
+                sortable: true,
+                center: true,
+                reorder: true
+              },
+            ],
+            tela: 'PROMOCAO',
+            loading: false
         };
 
         this.dados_table = this.dados_table.bind(this)
     }
 
-    componentDidMount() {
-      this.permissao()
+    async componentDidMount() {
+      this.setState({
+        loading: true
+      })
+      await this.permissao()
+      
+      this.setState({
+        loading: false
+      })
     }
 
-    permissao(){
+    async permissao(){
+      let dados_permissao = {
+        tela: this.state.tela
+      }
+
+      await api.post("api/v1/valida-permissao-tela", dados_permissao, {headers: {Authorization: this.props.token}})
+      .then((results)=>{  
+        if(results.data.length>0){
+          if (!results.data[0].permissao){
+            this.props.navigate('/')
+            toast("Não autorizado !!!", {
+                duration: 2000,
+                style:{
+                    marginRight: '1%',
+                    backgroundColor: '#851C00',
+                    color: 'white'
+                },
+                position: 'bottom-right',
+                icon: <span className="material-symbols-outlined">sentiment_dissatisfied</span>,
+            });
+          }
+        }
+      })
+      .catch((error)=>{
+          console.log(error)
+          if (error.response.data.error === "Token expirado"){
+            window.location.href="/login"
+          } else if (error.response.data.error === "não autorizado"){
+            window.location.href='/login'
+          } else if (error.response.data.erros[0] === 'Sem conexao com a api ou falta fazer login.'){
+            window.location.href='/login'
+          }
+      })
+
       this.setState({
         url_promocao: `/api/v1/promocao`
       },(()=>{
@@ -242,13 +283,13 @@ class Table extends React.Component{
     }
 
     render(){
-        return (
+        return this.state.loading ? (<div className='loader-container'><div className="spinner"></div></div>):(
             <div className='tabela'>
                 <div>
                   <div className='tabela__formulario__table'>
                     <DataTable
                       title="Promoções"
-                      columns={columns}
+                      columns={this.state.columns}
                       data={this.state.promocoes_list}
                       defaultSortFieldId={1}
                       pagination

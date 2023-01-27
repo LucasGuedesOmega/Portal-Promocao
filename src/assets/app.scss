@@ -47,7 +47,7 @@ a {
 }
 
 .card {
-    border-radius: 10px !important;
+    border-radius: 7px !important;
 }
 
 .card-footer{
@@ -159,7 +159,7 @@ a {
     transition: left 0.5s ease-in-out;
     background-color: #26262c;
     color: #ffffff; 
-    min-height: 65.55rem;
+    min-height: 70.55rem;
     display: block;
 
     &__logo{
@@ -865,4 +865,83 @@ color: #031446;
 }
 .button-desfazer-passar:active{
     color: #b9b5b5;
+}
+
+.loader-container {
+    width: 107%;
+    height: 50rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1;
+    position: relative;
+    left: -7%;
+}
+
+.spinner {
+    width: 80px;
+    height: 80px;
+    border: 8px solid;
+    border-color: #26262c transparent #26262c transparent;
+    border-radius: 50%;
+    animation: spin-anim 1.0s linear infinite;
+}
+
+@keyframes spin-anim {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+.loader-container-component {
+    width: 100%;
+    padding: 5%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1;
+    position: relative;
+}
+
+.spinner-component {
+    width: 50px;
+    height: 50px;
+    border: 3px solid;
+    border-color: #26262c transparent #26262c transparent;
+    border-radius: 50%;
+    animation: spin-anim-component 1.0s linear infinite;
+}
+
+@keyframes spin-anim-component {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(720deg);
+    }
+}
+
+.coluna .card-header-dash{
+    height: 10vh;
+}
+
+.content-card-header-dash{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    height: 15vh;
+    padding-top: 10px;
+}
+
+.content-row-dash{
+    flex: 1;
+    width: 100%;
+}
+
+.content-row-dash .header-dash{
+    width: 100%;
 }

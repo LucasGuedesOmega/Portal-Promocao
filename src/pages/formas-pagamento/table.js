@@ -8,65 +8,7 @@ import * as ScrollAreaPrimitive from '@radix-ui/react-scroll-area';
 import DataTable from "react-data-table-component";
 import { useNavigate, Link, useParams } from "react-router-dom";
 import jwtDecode from 'jwt-decode';
-
-const columns = [
-  {
-    id: 1,
-    name: "ID",
-    selector: (row) => row.id_forma_pagamento,
-    sortable: true,
-    center: true,
-    reorder: true
-  },
-  {
-    id: 2,
-    name: "Descrição",
-    selector: (row) => row.descricao,
-    sortable: true,
-    center: true,
-    reorder: true
-  },
-  {
-    id: 3,
-    name: "ID Externo",
-    selector: (row) => row.id_externo,
-    sortable: true,
-    center: true,
-    reorder: true
-  },
-  {
-    id: 4,
-    name: "ID empresa",
-    selector: (row) => row.id_empresa,
-    sortable: true,
-    center: true,
-    reorder: true
-  },
-  {
-    id: 5,
-    name: "Tipo",
-    selector: (row) => row.tipo,
-    sortable: true,
-    center: true,
-    reorder: true
-  },
-  {
-    id: 6,
-    name: "Status",
-    selector: (row) => row.status,
-    sortable: true,
-    center: true,
-    reorder: true
-  },
-  {
-    id: 7,
-    name: "Editar",
-    selector: (row) => row.editar,
-    sortable: true,
-    center: true,
-    reorder: true
-  }
-];
+import toast from 'react-hot-toast';
 
 const SCROLLBAR_SIZE = 10;
 
@@ -132,7 +74,7 @@ export function TableFormaPagamento(){
 
   let token = localStorage.getItem('tokenApi');
   const { id_grupo_pagamento } = useParams();
-  console.log(id_grupo_pagamento)
+
   const navigate = useNavigate();
 
   return <Table id_grupo_pagamento={id_grupo_pagamento} token={token} navigate={navigate}/>;
@@ -144,22 +86,122 @@ export class Table extends React.Component{
         this.state = {
             forma_pagamento_list: [],
             dados_table: [],
+            column:  [
+              {
+                id: 1,
+                name: "ID",
+                selector: (row) => row.id_forma_pagamento,
+                sortable: true,
+                center: true,
+                reorder: true
+              },
+              {
+                id: 2,
+                name: "Descrição",
+                selector: (row) => row.descricao,
+                sortable: true,
+                center: true,
+                reorder: true
+              },
+              {
+                id: 3,
+                name: "ID Externo",
+                selector: (row) => row.id_externo,
+                sortable: true,
+                center: true,
+                reorder: true
+              },
+              {
+                id: 4,
+                name: "ID empresa",
+                selector: (row) => row.id_empresa,
+                sortable: true,
+                center: true,
+                reorder: true
+              },
+              {
+                id: 5,
+                name: "Tipo",
+                selector: (row) => row.tipo,
+                sortable: true,
+                center: true,
+                reorder: true
+              },
+              {
+                id: 6,
+                name: "Status",
+                selector: (row) => row.status,
+                sortable: true,
+                center: true,
+                reorder: true
+              },
+              {
+                id: 7,
+                name: "Editar",
+                selector: (row) => row.editar,
+                sortable: true,
+                center: true,
+                reorder: true
+              }
+            ],
 
-            tokenDecode: jwtDecode(this.props.token)
+            tokenDecode: jwtDecode(this.props.token),
+            tela: 'FORMA_PAGAMENTO',
+            loading: false
         };
         this.dados_table = this.dados_table.bind(this);
     }
   
-    componentDidMount() {
-      this.permissoes()
-    }
-    
-    permissoes(){
+    async componentDidMount() {
+      this.setState({
+        loading: true
+      })
+      await this.permissoes()
+
       this.setState({
         url_forma_pagamento: `api/v1/grupo-forma-pagamento?id_grupo_pagamento=${this.props.id_grupo_pagamento}`
       }, (()=>{
         this.dados_table()
       }))
+      this.setState({
+        loading: false
+      })
+    }
+    
+    async permissoes(){
+
+      let dados_permissao = {
+        tela: this.state.tela
+      }
+
+      await api.post("api/v1/valida-permissao-tela", dados_permissao, {headers: {Authorization: this.props.token}})
+      .then((results)=>{  
+        if(results.data.length>0){
+          if (!results.data[0].permissao){
+            this.props.navigate('/')
+            toast("Não autorizado !!!", {
+                duration: 2000,
+                style:{
+                    marginRight: '1%',
+                    backgroundColor: '#851C00',
+                    color: 'white'
+                },
+                position: 'bottom-right',
+                icon: <span className="material-symbols-outlined">sentiment_dissatisfied</span>,
+            });
+          }
+        }
+      })
+      .catch((error)=>{
+          console.log(error)
+          if (error.response.data.error === "Token expirado"){
+            window.location.href="/login"
+          } else if (error.response.data.error === "não autorizado"){
+            window.location.href='/login'
+          } else if (error.response.data.erros[0] === 'Sem conexao com a api ou falta fazer login.'){
+            window.location.href='/login'
+          }
+      })
     }
 
     dados_table(){
@@ -210,14 +252,13 @@ export class Table extends React.Component{
     }
 
     render(){
-        console.log(this.state.forma_pagamento_list, 'ola')
-        return (
+        return this.state.loading ? (<div className='loader-container'><div className="spinner"></div></div>):(
             <div className='tabela'>
               <div>
                 <div className='tabela__formulario__table'>
                     <DataTable
                       title="Formas de Pagamento"
-                      columns={columns}
+                      columns={this.state.columns}
                       data={this.state.forma_pagamento_list}
                       defaultSortFieldId={1}
                       pagination

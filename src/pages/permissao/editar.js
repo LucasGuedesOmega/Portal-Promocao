@@ -80,7 +80,8 @@ class Editar extends React.Component{
             telas_selecionadas: [],
             tokenDecode: jwtDecode(this.props.token),
             delete_list: [],
-            status: false
+            status: false,
+            loading_permissao: false
         }
     }
 
@@ -89,11 +90,17 @@ class Editar extends React.Component{
         this.get_telas()
 
         if (this.state.id_permissao){
+
+            this.setState({
+                loading_permissao: true
+            })
             await this.get_permissao()
             await this.get_permissao_tela()
+
+            this.setState({
+                loading_permissao: false
+            })
         }
-    
-        
     }
 
     get_telas(){
@@ -132,8 +139,8 @@ class Editar extends React.Component{
         })
     }
 
-    get_permissao(){
-        api.get(`api/v1/permissao?id_permissao=${this.state.id_permissao}`,  { headers: { Authorization: this.props.token}})
+    async get_permissao(){
+        await api.get(`api/v1/permissao?id_permissao=${this.state.id_permissao}`,  { headers: { Authorization: this.props.token}})
         .then((results)=>{
             if (results.data.length > 0){
                 this.setState({
@@ -460,30 +467,40 @@ class Editar extends React.Component{
                         </div>
                         <div className='row mt-3'>
                             <label className='cadastro__formulario__label'>Telas e Ações Permitidas</label>
-                            <ul className='lista-telas col-sm m-3' id="s1">
-                                
-                                {
-                                    this.state.telas.map((tela, key)=>(
-                                        <li htmlFor="s1" className={tela.checked? 'linha-marcada' : 'linha'} key={`E${key}`} onClick={()=>{this.marcarLinhaEsquerda(tela)}}>{tela.nome}</li>
-                                    ))
-                                }
-                            </ul>
-                            <div className='col-sm content-buttons-passar'>
-                                <button className='button-passar' onClick={()=>{this.passarSelecionados()}}>
-                                    <span className="material-symbols-outlined">keyboard_double_arrow_right</span>
-                                </button>
-                                <button className='button-desfazer-passar' onClick={()=>{this.voltarSelecionados()}}>
-                                    <span className="material-symbols-outlined">keyboard_double_arrow_left</span>
-                                </button>
-                            </div>
+                            {
+                               this.state.loading_permissao ? (
+                                    <div className='loader-container-component'>
+                                        <div className="spinner-component"></div>
+                                    </div>
+                                ):(
+                                    <React.Fragment>
+                                        <ul className='lista-telas col-sm m-3' id="s1">
+                                            {
+                                                this.state.telas.map((tela, key)=>(
+                                                    <li htmlFor="s1" className={tela.checked? 'linha-marcada' : 'linha'} key={`E${key}`} onClick={()=>{this.marcarLinhaEsquerda(tela)}}>{tela.nome}</li>
+                                                ))
+                                            }
+                                        </ul>
+                                        <div className='col-sm content-buttons-passar'>
+                                            <button className='button-passar' onClick={()=>{this.passarSelecionados()}}>
+                                                <span className="material-symbols-outlined">keyboard_double_arrow_right</span>
+                                            </button>
+                                            <button className='button-desfazer-passar' onClick={()=>{this.voltarSelecionados()}}>
+                                                <span className="material-symbols-outlined">keyboard_double_arrow_left</span>
+                                            </button>
+                                        </div>
+                                        
+                                        <ul className='lista-telas col-sm m-3' id="s2">
+                                            {
+                                                this.state.telas_selecionadas.map((item, key)=>(
+                                                    <li htmlFor="s2" className={item.checked? 'linha-marcada' : 'linha'} key={`D${key}`} onClick={()=>{this.marcarLinhaDireita(item)}}>{item.nome}</li>
+                                                ))
+                                            }
+                                        </ul>
+                                    </React.Fragment>
+                                )
+                            }
                             
-                            <ul className='lista-telas col-sm m-3' id="s2">
-                                {
-                                    this.state.telas_selecionadas.map((item, key)=>(
-                                        <li htmlFor="s2" className={item.checked? 'linha-marcada' : 'linha'} key={`D${key}`} onClick={()=>{this.marcarLinhaDireita(item)}}>{item.nome}</li>
-                                    ))
-                                }
-                            </ul>
                             <label>
                                     Para usar as permissões selecione a tela ou a ação e passe para o lado direito.
                             </label>
