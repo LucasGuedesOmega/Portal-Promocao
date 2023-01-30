@@ -226,7 +226,7 @@ export class SideBar extends React.Component {
       <div className="sidebar col-sm-12 hidden-lg hidden-md hidden-xs">
         <div className='sidebar__logo'>
           <div className="row">
-            <div className="col-sm-10"><p>Promoção</p></div>
+            <Link to={'/'} className="col-sm-10"><p>Promoção</p></Link>
           </div>
         </div>
           <hr></hr>

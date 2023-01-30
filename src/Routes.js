@@ -27,6 +27,7 @@ import { TablePermissao } from "./pages/permissao/table";
 import { CadastrarPermissao, EditarPermissao } from "./pages/permissao/editar";
 import { TableFuncionarios } from "./pages/funcionarios/table";
 import { CadastrarFuncionario, EditarFuncionario } from "./pages/funcionarios/editar";
+import { PaginaInicial } from "./pages/blank/paginaInicial";
 
 export class AppRotas extends React.Component{
     constructor(props){
@@ -44,7 +45,7 @@ export class AppRotas extends React.Component{
                     <Route path="/Login" element={<Login/>}></Route>
                     <Route element={<PrivateRoutes/>}>
                         <Route path="/" element={<PaginaPrincipal/>}>
-                            <Route path="/" element={<PrivateRoutes/>}/>
+                            <Route path="/" element={<PaginaInicial/>}/>
 
                             <Route path="dash" element={<Dashboard/>}/>
                             <Route path="/cliente" element={<TableCliente/>}/>

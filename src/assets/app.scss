@@ -15,7 +15,7 @@ body{
     background-color: #f1f1f1;
     color: #2b2b2b;
     font-family: 'Roboto', sans-serif;
-    overflow-y: auto;
+    overflow-y: hidden;
     overflow-x: hidden;
 }
 body::-webkit-scrollbar{
@@ -42,7 +42,7 @@ a {
 }
 
 .container-main{
-    padding: 50px 0px 0px 370px;
+    padding: 3% 0px 0px 19%;
     height: 100% !important;
 }
 
@@ -63,18 +63,16 @@ a {
 }
 
 .tabela{
-    min-height: 56rem;
+    height: 84vh;
     place-items: center;
     text-align: center;
     justify-content: center;
     padding: 15px;
-    position: relative;
-    left: -7%;
-    min-width: 106.6%;
-
+    min-width: 100%;
+    overflow-y: auto;
+    margin-top: 1%;
     &__formulario__table{
         margin-top: 0.7%;
-        margin-left: 4%;
         background-color: #fff;
         box-shadow: rgb(0, 0, 0, 0.256) 1px 6px 6px 0px;
         border-radius: 7px;
@@ -91,29 +89,30 @@ a {
     
 }
 
-.tabelas::-webkit-scrollbar{
+.tabela::-webkit-scrollbar{
     background-color: transparent;
     margin: 0px !important;
     padding: 2px !important;
 }
 
-.tabelas::-webkit-scrollbar-button{
+.tabela::-webkit-scrollbar-button{
     background-color: transparent;
     height: 0px;
     margin: 0px !important;
     padding: 0px !important;
 }
 
-.tabelas::-webkit-scrollbar-thumb{
+.tabela::-webkit-scrollbar-thumb{
     background-color: #26262c;
     border-radius: 9px;
     margin: 0px !important;
     padding: 0px !important;
 }
 
-.tabelas::-webkit-scrollbar-thumb:hover{
+.tabela::-webkit-scrollbar-thumb:hover{
     background-color: #50505e;
 }
+
 .bt_apagar_empresa{
     background-color: #031446;
     border: 0px;
@@ -132,11 +131,9 @@ a {
     color: white;
     padding: 8px;
     border-radius: 7px;
-    margin: 5px;
-    margin-bottom: 0px;
-    width: 96%;
+    margin-top: 10px;
+    width: 100%;
     position: relative;
-    left: 2%;
 }
 
 .bt_cadastro:hover{
@@ -155,11 +152,11 @@ a {
     position: absolute;
     top: 0;
     left: 0;
-    width: 320px;
+    width: 18.7%;
     transition: left 0.5s ease-in-out;
     background-color: #26262c;
     color: #ffffff; 
-    min-height: 70.55rem;
+    min-height: 180%;
     display: block;
 
     &__logo{
@@ -211,15 +208,13 @@ a {
 }
 
 .navbar{
-    display: flex;
+    position: absolute;
+    bottom: 92%;
+    left: 18.9%;
     background-color: #fff;
-    margin-top: -49px;
-    margin-left: -50px;
     align-items: center;
-    justify-content: center;
     height: 72px;
-    position: relative;
-    min-width: 103%;
+    width: 82%;
 
     &__row {
         width: 100%;
@@ -227,11 +222,10 @@ a {
         &__column{
             text-align: left;
             align-items: center;
-            justify-content: center;
             font-size: 1.5rem;
             font-weight: 700;
             font-family: 'Roboto', sans-serif;
-            padding-left: 30px;
+            padding-top: 10px;
         }
         &__column2{
             text-align: center;
@@ -309,6 +303,7 @@ a {
     border-radius: 7px;
     width: 18rem;
     z-index: 1;
+
     &__menu{
         width: 100%;
         padding: 3px;
@@ -608,23 +603,21 @@ color: #031446;
 }
 
 .cadastro{
-    max-height: 56rem;
+    height: 84vh;
     place-items: center;
     text-align: center;
     justify-content: center;
     padding: 20px;
-    position: relative;
-    width: 107%;
-    left: -7%;
+    width: 100%;
     overflow-y: auto;
-    
+    margin-top: 1%;
+
     &__formulario{
         background-color: #fff;
         -webkit-box-shadow: 6px 11px 29px -5px rgba(0,0,0,0.75);
         -moz-box-shadow: 6px 11px 29px -5px rgba(0,0,0,0.75);
         box-shadow: 6px 11px 29px -5px rgba(0,0,0,0.75);
         border-radius: 7px;
-        margin-left: 4%;
         margin-top: 0.7%;
 
         &__content {
@@ -717,6 +710,8 @@ color: #031446;
 .card-header-dash{
     flex: 1;
     background-color: white;
+    border: 0px;
+    box-shadow: 5px 5px 5px 0px rgba(0,0,0,0.234);
 }
 
 .row-card-header-dash{
@@ -729,50 +724,40 @@ color: #031446;
 }
 
 .dashboard{
-    height: 56rem;
-    place-items: center;
+    height: 84vh;
     text-align: center;
     justify-content: center;
     padding-bottom: 15px;
-    width: 99.1%;
+    width: 100%;
     flex-direction: row;
+    overflow-x: hidden;
+    margin-inline: 0px !important;
+    margin-top: 2.3%;
+    
+}
 
-    &__dash{
-        max-height: 100%;
-        overflow-x: hidden;
-        padding-bottom: 5%;
-        &__card{
-            margin: 10px;
-            border: 0px;
-            -webkit-box-shadow: 6px 11px 29px -5px rgba(0,0,0,0.75);
-            -moz-box-shadow: 6px 11px 29px -5px rgba(0,0,0,0.75);
-            box-shadow: 6px 11px 29px -5px rgba(0,0,0,0.75);
-        }
-    }
+.dashboard::-webkit-scrollbar{
+    background-color: transparent;
+    margin: 0px !important;
+    padding: 2px !important;
+}
 
-    &__dash::-webkit-scrollbar{
-        background-color: transparent;
-        margin: 0px !important;
-        padding: 2px !important;
-    }
-    
-    &__dash::-webkit-scrollbar-button{
-        background-color: transparent;
-        height: 0px;
-        margin: 0px !important;
-        padding: 0px !important;
-    }
-    
-    &__dash::-webkit-scrollbar-thumb{
-        background-color: #26262c;
-        border-radius: 9px;
-        margin: 0px !important;
-        padding: 0px !important;
-    }
-    
-    &__dash::-webkit-scrollbar-thumb:hover{
-        background-color: #50505e;
-    }
+.dashboard::-webkit-scrollbar-button{
+    background-color: transparent;
+    height: 0px;
+    margin: 0px !important;
+    padding: 0px !important;
+}
+
+.dashboard::-webkit-scrollbar-thumb{
+    background-color: #26262c;
+    border-radius: 9px;
+    margin: 0px !important;
+    padding: 0px !important;
+}
+
+.dashboard::-webkit-scrollbar-thumb:hover{
+    background-color: #50505e;
 }
 
 .lista-telas{
@@ -874,8 +859,6 @@ color: #031446;
     justify-content: center;
     align-items: center;
     z-index: 1;
-    position: relative;
-    left: -7%;
 }
 
 .spinner {
@@ -923,7 +906,14 @@ color: #031446;
         transform: rotate(720deg);
     }
 }
-
+.row-card-header-dash{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    padding: 0px;
+    margin-top: 10px;
+}
 .coluna .card-header-dash{
     height: 10vh;
 }
@@ -933,7 +923,7 @@ color: #031446;
     justify-content: center;
     align-items: center;
     flex-direction: column;
-    height: 15vh;
+    height: 10vh;
     padding-top: 10px;
 }
 
@@ -944,4 +934,52 @@ color: #031446;
 
 .content-row-dash .header-dash{
     width: 100%;
+}
+
+.content-pagina-inicial{
+    width: 100%;
+    height: 10vh;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.titulo-pagina-inicial{
+    color: #26262c;
+    padding: 15px;
+}
+
+.line-chart{
+    min-height: 100%;
+}
+
+.card-chart{
+    background-color: white;
+    max-width: 100% !important;
+    height: 50vh;
+    border-radius: 7px;
+    margin: 10px;
+    box-shadow: 5px 5px 5px 0px rgba(0,0,0,0.234);
+}
+
+.chart{
+    max-width: 100% !important;
+    height: 50vh !important;
+}
+
+.row-chart{
+    margin-inline: 5px;
+    padding: 0px;
+}
+
+.footer-page{
+    position: absolute;
+    top: 92%;
+    left: 18.8%;
+    width: 81.7%;
+    padding: 15px;
+    padding-top: 25px;
+    justify-content: center;
+    align-items: center;
+    background-color: white;
 }

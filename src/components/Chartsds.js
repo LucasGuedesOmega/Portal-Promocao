@@ -52,7 +52,7 @@ export class LineChart extends React.Component{
     render (){
         return (
             <div>
-                <Line data={this.preenche_dados()}/>
+                <Line className="chart" data={this.preenche_dados()}/>
             </div>
         )
     }
@@ -108,7 +108,7 @@ export class BarChart extends React.Component{
     render(){
         return (
             <div>
-                <Bar data={this.preenche_dados()} style={{maxHeight: 500, maxWidth: '100%'}}/>
+                <Bar className="chart" data={this.preenche_dados()}/>
             </div>
         );
     }
@@ -165,7 +165,7 @@ export class DoughnutChart extends React.Component{
     render(){
         return (
             <div>
-                <Doughnut data={this.preenche_dados()} title={'TESTTE'} />
+                <Doughnut className="chart" data={this.preenche_dados()} title={'TESTTE'} />
             </div>
         )
     }
@@ -220,7 +220,7 @@ export class RadarChart extends React.Component{
     render(){
         return (
             <div>
-                <Radar data={this.preenche_dados()} style={{maxHeight: 360}}/>
+                <Radar className="chart" data={this.preenche_dados()}/>
             </div>
         )
     }
@@ -276,7 +276,7 @@ export class PieChart extends React.Component{
     render(){
         return (
             <div>
-                <Pie data={this.preenche_dados()}/>
+                <Pie className="chart" data={this.preenche_dados()}/>
             </div>
         )
     }
@@ -332,7 +332,7 @@ export class PolarAreaChart extends React.Component{
     render(){
         return (
             <div>
-                <PolarArea data={this.preenche_dados()} style={{maxHeight: 500, maxWidth: '100%'}}/>
+                <PolarArea className="chart" data={this.preenche_dados()}/>
             </div>
         )
     }

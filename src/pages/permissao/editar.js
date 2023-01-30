@@ -189,16 +189,14 @@ class Editar extends React.Component{
     async get_telas_edit(list){
         let fill_list = [];
         for(let i = 0; list.length > i; i++){
-            await api.get(`api/v1/tela-acao?id_tela_acao=${list[i].id_tela_acao}`, { headers: { Authorization: this.props.token}})
-            .then((results)=>{
-                if(results.data.length>0){
-                    results.data[0].checked = false;
-                    fill_list.push(results.data[0])
+            for(let x = 0; x < this.state.telas.length; x++){
+                if(this.state.telas[x].id_tela_acao === list[i].id_tela_acao){
+                    fill_list.push(this.state.telas[x])
                 }
-            })
+            }
         }
 
-        await this.setState({
+        this.setState({
             telas_selecionadas: fill_list,
         })
 
@@ -218,7 +216,7 @@ class Editar extends React.Component{
             }
         }
 
-        await this.setState({
+        this.setState({
             telas: telas
         })
     }

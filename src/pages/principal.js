@@ -10,6 +10,9 @@ export function PaginaPrincipal(){
             <NavBar/>
             <AppNagivationMenu/>
             <Outlet/>
+            <div className='footer-page' >
+                <p> © Omega Informática, codificado por Lucas Guedes.</p>
+            </div>
         </div>
     )
 }

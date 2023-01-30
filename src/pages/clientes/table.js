@@ -145,15 +145,6 @@ export class Table extends React.Component{
                 center: true,
                 reorder: true,
                 esconde: false
-              },
-              {
-                id: 7,
-                name: "Editar",
-                selector: (row) => row.editar,
-                sortable: true,
-                center: true,
-                reorder: true,
-                esconde: false
               }
             ],
             tela: 'CLIENTE',
@@ -175,11 +166,33 @@ export class Table extends React.Component{
       })
     }
 
+    async coluna_editar(){
+      let columns = this.state.columns;
+      console.log(this.state.editar)
+      if(this.state.editar){
+        columns.push(
+          {
+            id: 7,
+            name: "Editar",
+            selector: (row) => row.editar,
+            sortable: true,
+            center: true,
+            reorder: true,
+            esconde: false
+          }
+        )
+      }
+      
+      this.setState({
+        columns: columns
+      })
+    }
+
     async permissao(){
       let dados_permissao = {
         tela: this.state.tela
-      }
-
+      };
+      
       await api.post("api/v1/valida-permissao-tela", dados_permissao, {headers: {Authorization: this.props.token}})
       .then((results)=>{  
         if(results.data.length>0){
@@ -195,7 +208,15 @@ export class Table extends React.Component{
                 position: 'bottom-right',
                 icon: <span className="material-symbols-outlined">sentiment_dissatisfied</span>,
             });
+            return;
           }
+
+          this.setState({
+            cadastrar: results.data[0].cadastro,
+            editar: results.data[0].editar
+          }, (async ()=>{
+            await this.coluna_editar()
+          }))
         }
       })
       .catch((error)=>{

@@ -156,18 +156,12 @@ class Table extends React.Component{
                 sortable: true,
                 center: true,
                 reorder: true
-              },
-              {
-                id: 10,
-                name: "Editar",
-                selector: (row) => row.editar,
-                sortable: true,
-                center: true,
-                reorder: true
-              },
+              }
             ],
             tela: 'PROMOCAO',
-            loading: false
+            loading: false,
+            cadastrar: true,
+            editar: true
         };
 
         this.dados_table = this.dados_table.bind(this)
@@ -184,11 +178,33 @@ class Table extends React.Component{
       })
     }
 
+    async coluna_editar(){
+      let columns = this.state.columns;
+
+      if(this.state.editar){
+        columns.push(
+          {
+            id: 10,
+            name: "Editar",
+            selector: (row) => row.editar,
+            sortable: true,
+            center: true,
+            reorder: true,
+            esconde: false
+          }
+        )
+      }
+      
+      this.setState({
+        columns: columns
+      })
+    }
+
     async permissao(){
       let dados_permissao = {
         tela: this.state.tela
-      }
-
+      };
+      
       await api.post("api/v1/valida-permissao-tela", dados_permissao, {headers: {Authorization: this.props.token}})
       .then((results)=>{  
         if(results.data.length>0){
@@ -204,7 +220,15 @@ class Table extends React.Component{
                 position: 'bottom-right',
                 icon: <span className="material-symbols-outlined">sentiment_dissatisfied</span>,
             });
+            return;
           }
+
+          this.setState({
+            cadastrar: results.data[0].cadastro,
+            editar: results.data[0].editar
+          }, (async ()=>{
+            await this.coluna_editar()
+          }))
         }
       })
       .catch((error)=>{

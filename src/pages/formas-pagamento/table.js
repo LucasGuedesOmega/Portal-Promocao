@@ -8,7 +8,7 @@ import * as ScrollAreaPrimitive from '@radix-ui/react-scroll-area';
 import DataTable from "react-data-table-component";
 import { useNavigate, Link, useParams } from "react-router-dom";
 import jwtDecode from 'jwt-decode';
-import toast from 'react-hot-toast';
+import toast, { Toaster } from 'react-hot-toast';
 
 const SCROLLBAR_SIZE = 10;
 
@@ -134,20 +134,14 @@ export class Table extends React.Component{
                 sortable: true,
                 center: true,
                 reorder: true
-              },
-              {
-                id: 7,
-                name: "Editar",
-                selector: (row) => row.editar,
-                sortable: true,
-                center: true,
-                reorder: true
               }
             ],
 
             tokenDecode: jwtDecode(this.props.token),
             tela: 'FORMA_PAGAMENTO',
-            loading: false
+            loading: false,
+            cadastrar: true,
+            editar: true
         };
         this.dados_table = this.dados_table.bind(this);
     }
@@ -156,7 +150,7 @@ export class Table extends React.Component{
       this.setState({
         loading: true
       })
-      await this.permissoes()
+      await this.permissao()
 
       this.setState({
         url_forma_pagamento: `api/v1/grupo-forma-pagamento?id_grupo_pagamento=${this.props.id_grupo_pagamento}`
@@ -168,12 +162,33 @@ export class Table extends React.Component{
       })
     }
     
-    async permissoes(){
+    async coluna_editar(){
+      let columns = this.state.column;
+      
+      if(this.state.editar){
+        columns.push(
+          {
+            id: 7,
+            name: "Editar",
+            selector: (row) => row.editar,
+            sortable: true,
+            center: true,
+            reorder: true,
+            esconde: false
+          }
+        )
+      }
+      
+      this.setState({
+        columns: columns
+      })
+    }
 
+    async permissao(){
       let dados_permissao = {
         tela: this.state.tela
-      }
-
+      };
+      
       await api.post("api/v1/valida-permissao-tela", dados_permissao, {headers: {Authorization: this.props.token}})
       .then((results)=>{  
         if(results.data.length>0){
@@ -189,7 +204,15 @@ export class Table extends React.Component{
                 position: 'bottom-right',
                 icon: <span className="material-symbols-outlined">sentiment_dissatisfied</span>,
             });
+            return;
           }
+
+          this.setState({
+            cadastrar: results.data[0].cadastro,
+            editar: results.data[0].editar
+          }, (async ()=>{
+            await this.coluna_editar()
+          }))
         }
       })
       .catch((error)=>{
@@ -271,7 +294,16 @@ export class Table extends React.Component{
                       />
                 </div>
               </div>
-              <button className='bt_cadastro' onClick={()=>{this.props.navigate(`/cadastrar-forma-pagamento/${this.props.id_grupo_pagamento}`)}}>Cadastrar Forma de Pagamento</button>
+              {this.state.cadastrar?
+              (
+                <button className='bt_cadastro' onClick={()=>{this.props.navigate(`/cadastrar-forma-pagamento/${this.props.id_grupo_pagamento}`)}}>Cadastrar Forma de Pagamento</button>
+              ):(
+                <div></div>
+              )
+
+              }
+              
+              <Toaster/>
             </div>
         );
     }

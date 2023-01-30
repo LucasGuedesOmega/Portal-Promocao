@@ -96,112 +96,96 @@ export default class Dashboard extends React.Component{
     render(){
         return this.state.loading ? (<div className='loader-container'><div className="spinner"></div></div>):(
             <div className="dashboard">
-                <div className='row row-card-header-dash'>
-                    <div className='col-sm '>
-                        <div className='coluna'>
-                            <div className="card card-header-dash">
-                                <div className='content-card-header-dash'>
-                                    <div className='content-row-dash header-dash'>
-                                        <h5>CashBack Total</h5>
-                                    </div>
-                                    <div className='content-row-dash body-dash'>
-                                        <h6>0.00</h6>
-                                    </div>
+                <div className='row p-0 row-chart'>
+                    <div className='col-sm'>
+                        <div className="card card-header-dash">
+                            <div className='content-card-header-dash'>
+                                <div className='content-row-dash header-dash'>
+                                    <h5>CashBack Total</h5>
+                                </div>
+                                <div className='content-row-dash body-dash'>
+                                    <h4>0.00</h4>
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div className='col-sm '>
-                        <div className='coluna'>
-                            <div className="card card-header-dash">
-                                <div className='content-card-header-dash'>
-                                    <div className='content-row-dash header-dash'>
-                                        <h5>Descontos Total</h5>
-                                    </div>
-                                    <div className='content-row-dash body-dash'>
-                                        <h6>0.00</h6>
-                                    </div>
+                        <div className="card card-header-dash">
+                            <div className='content-card-header-dash'>
+                                <div className='content-row-dash header-dash'>
+                                    <h5>Descontos Total</h5>
+                                </div>
+                                <div className='content-row-dash body-dash'>
+                                    <h4>0.00</h4>
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div className='col-sm '>
-                        <div className='coluna'>
-                            <div className="card card-header-dash">
-                                <div className='content-card-header-dash'>
-                                    <div className='content-row-dash header-dash'>
-                                        <h5>Pontos Total</h5>
-                                    </div>
-                                    <div className='content-row-dash body-dash'>
-                                        <h6>0.00</h6>
-                                    </div>
+                        <div className="card card-header-dash">
+                            <div className='content-card-header-dash'>
+                                <div className='content-row-dash header-dash'>
+                                    <h5>Pontos Total</h5>
+                                </div>
+                                <div className='content-row-dash body-dash'>
+                                    <h4>0.00</h4>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div className='col-sm '>
-                        <div className='coluna'>
-                            <div className="card card-header-dash">
-                                <div className='content-card-header-dash'>
-                                    <div className='content-row-dash header-dash'>
-                                        <h5>Resgatados Total</h5>
-                                    </div>
-                                    <div className='content-row-dash body-dash'>
-                                        <h6>0.00</h6>
-                                    </div>
+                    <div className='col-sm'>
+                        <div className="card card-header-dash">
+                            <div className='content-card-header-dash'>
+                                <div className='content-row-dash header-dash'>
+                                    <h5>Resgatados Total</h5>
+                                </div>
+                                <div className='content-row-dash body-dash'>
+                                    <h4>0.00</h4>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
                 
-                <div className='row dashboard__dash'>
-                    <div className="row">
-                        <div className="col-sm">
-                            <div className="card dashboard__dash__card">
-                                <div className="card card-body">
-                                    <BarChart data={[10, 20, 5, 75, 60]} labels={['Teste1', 'Teste1', 'Teste1', 'Teste1', 'Teste1']}/>
-                                </div>
-                            </div>
+    
+                <div className="row p-0 row-chart">
+                    <div className="col-sm-8 p-0 m-0">
+                        <div className="card-chart">
+                            <LineChart data={[10, 20, 5, 75, 60]} labels={['Teste1', 'Teste1', 'Teste1', 'Teste1', 'Teste1']}/>
                         </div>
                     </div>
-                    <div className="row">
-                        <div className="col-sm">
-                            <div className="card dashboard__dash__card">
-                                <div className="card card-body">
-                                    <LineChart data={[10, 20, 5, 80, 60]} labels={['Teste1', 'Teste1', 'Teste1', 'Teste1', 'Teste1']}/>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="col-sm">
-                            <div className="card dashboard__dash__card">
-                                <div className="card card-body">
-                                    <RadarChart data={[20, 20, 20, 20]} labels={['Teste1', 'Teste1', 'Teste1', 'Teste1']}/>
-                                </div>
-                            </div>
+                    <div className="col-sm-4 p-0 m-0">
+                        <div className="card-chart">
+                            <PieChart data={[20, 20, 20, 20]} labels={['Teste1', 'Teste1', 'Teste1', 'Teste1']}/>
                         </div>
                     </div>
-                    <div className="row">
-                        <div className="col-sm">
-                            <div className="card dashboard__dash__card">
-                                <div className="card card-body">
-                                    <DoughnutChart data={[10, 20, 5, 80, 60]} labels={['Teste1', 'Teste1', 'Teste1', 'Teste1', 'Teste1']}/>
-                                </div>
-                            </div>
+                </div>
+                <div className="row p-0 row-chart">
+                    <div className="col-sm-8 p-0 m-0">
+                        <div className="card-chart">
+                            <BarChart data={[10, 20, 5, 75, 60]} labels={['Teste1', 'Teste1', 'Teste1', 'Teste1', 'Teste1']}/>
                         </div>
-                        <div className="col-sm">
-                            <div className="card dashboard__dash__card">
-                                <div className="card card-body">
-                                    <PieChart data={[10, 20, 5, 80, 60]} labels={['Teste1', 'Teste1', 'Teste1', 'Teste1', 'Teste1']}/>
-                                </div>
-                            </div>
+                    </div>
+                    <div className="col-sm-4 p-0 m-0">
+                        <div className="card-chart">
+                            <RadarChart data={[20, 20, 20, 20]} labels={['Teste1', 'Teste1', 'Teste1', 'Teste1']}/>
                         </div>
-                        <div className="col-sm">
-                            <div className="card dashboard__dash__card">
-                                <div className="card card-body">
-                                    <PolarAreaChart data={[10, 20, 5, 80, 60]} labels={['Teste1', 'Teste1', 'Teste1', 'Teste1', 'Teste1']}/>
-                                </div>
-                            </div>
+                    </div>
+                </div>
+                <div className="row p-0 row-chart">
+                    <div className="col-sm p-0 m-0">
+                        <div className="card-chart">
+                            <DoughnutChart data={[10, 20, 5, 80, 60]} labels={['Teste1', 'Teste1', 'Teste1', 'Teste1', 'Teste1']}/>
+                        </div>
+                    </div>
+                    <div className="col-sm p-0 m-0">
+                        <div className="card-chart">
+                            <PieChart data={[10, 20, 5, 80, 60]} labels={['Teste1', 'Teste1', 'Teste1', 'Teste1', 'Teste1']}/>
+                        </div>
+                    </div>
+                    <div className="col-sm p-0 m-0">
+                        <div className="card-chart">
+                        <PolarAreaChart data={[10, 20, 5, 80, 60]} labels={['Teste1', 'Teste1', 'Teste1', 'Teste1', 'Teste1']}/>
                         </div>
                     </div>
                 </div>

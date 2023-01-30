@@ -238,7 +238,7 @@ export class NavbarClass extends React.Component{
         
             <div className="navbar">
                 <div className="row navbar__row">
-                    <div className="col-lg-4 navbar__row__column1">
+                    <div className="col-lg-4 navbar__row__column">
                         <div><h5>{this.state.descricao_empresa}</h5></div> 
                     </div>
                     <div className="col-lg-4 navbar__row__column2">
