@@ -293,24 +293,24 @@ export class Table extends React.Component{
     render(){
         return this.state.loading ? (<div className='loader-container'><div className="spinner"></div></div>):(
             <div className='tabela'>
-                <div>
-                  <div className='tabela__formulario__table'>
-                      
-                      <DataTable
-                        title="Postos"
-                        columns={this.state.columns}
-                        data={this.state.empresa_list}
-                        defaultSortFieldId={1}
-                        pagination
-                        paginationComponentOptions={{
-                          rowsPerPageText: "Linhas por paginas",
-                          rangeSeparatorText: "de",
-                        }}
-                        className='tabelas'
-                        noDataComponent={<div><p style={{float: 'left', marginRight: '10px'}}>Sem resultados</p><span style={{float: 'left'}} className="material-symbols-outlined mb-3">filter_list_off</span></div>}
-                        />
-                  </div>
+ 
+                <div className='tabela__formulario__table'>
+                    
+                    <DataTable
+                      title="Postos"
+                      columns={this.state.columns}
+                      data={this.state.empresa_list}
+                      defaultSortFieldId={1}
+                      pagination
+                      paginationComponentOptions={{
+                        rowsPerPageText: "Linhas por paginas",
+                        rangeSeparatorText: "de",
+                      }}
+                      className='tabelas'
+                      noDataComponent={<div><p style={{float: 'left', marginRight: '10px'}}>Sem resultados</p><span style={{float: 'left'}} className="material-symbols-outlined mb-3">filter_list_off</span></div>}
+                      />
                 </div>
+     
                 {
                   this.state.cadastrar ? (<button className='bt_cadastro' onClick={()=>{this.props.navigate(`/cadastrar-empresa/${this.props.id_grupo_empresa}`)}}>Cadastrar Empresa</button>)
                   :

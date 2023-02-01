@@ -72,7 +72,7 @@ class Editar extends React.Component{
                     window.location.href="/login"
                 } else if (error.response.data.error === "Token expirado"){
                     window.location.href="/login"
-                } else if (error.response.data.error === "n�o autorizado"){
+                } else if (error.response.data.error === "não autorizado"){
                     window.location.href='/login'
                 }
             })
@@ -166,19 +166,6 @@ class Editar extends React.Component{
                     <hr />
                     <div className="content w-100 cadastro__formulario__content">
                         <div className="row mt-3">
-                            {this.state.id_grupo_empresa ? 
-                                (
-                                    <div className="col-sm">
-                                        <label className='cadastro__formulario__label'>ID</label>
-                                        <InputMask className='form-control' defaultValue={this.state.id_grupo_empresa} name={'id_grupo_empresa'} onChange={(value)=>{this.handleNameValue(value)}} />
-                                    </div>
-                                ) 
-                                :
-                                (
-                                    <div></div>
-                                )
-                            }
-                            
                             <div className="col-sm">
                                 <label className='cadastro__formulario__label'>Descrição</label>
                                 <InputMask className='form-control' value={this.state.descricao} name={'descricao'} onChange={(value)=>{this.handleNameValue(value)}} />

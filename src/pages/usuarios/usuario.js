@@ -66,7 +66,11 @@ export class Editar extends React.Component{
             e_mail: this.state.e_mail,
             status: this.state.status,
             user_admin: this.state.user_admin,
-            id_empresa: this.state.tokenDecode.id_empresa
+            user_app: false,
+            admin_posto: false,
+            id_empresa: this.state.tokenDecode.id_empresa,
+            id_grupo_usuario: this.state.tokenDecode.id_grupo_usuario,
+            id_grupo_empresa: this.state.tokenDecode.id_grupo_empresa
         }
 
         api.post('api/v1/usuario', dados, { headers: { Authorization: this.props.token}})
@@ -103,7 +107,7 @@ export class Editar extends React.Component{
                 window.location.href="/login"
             } else if (error.response.data.error === "Token expirado"){
                 window.location.href="/login"
-            } else if (error.response.data.error === "n�o autorizado"){
+            } else if (error.response.data.error === "não autorizado"){
                 window.location.href='/login'
             }
         })

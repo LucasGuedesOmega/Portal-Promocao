@@ -168,7 +168,7 @@ export class Table extends React.Component{
 
     async coluna_editar(){
       let columns = this.state.columns;
-      console.log(this.state.editar)
+
       if(this.state.editar){
         columns.push(
           {

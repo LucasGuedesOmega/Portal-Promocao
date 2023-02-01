@@ -6,7 +6,7 @@ export class PaginaInicial extends React.Component{
     render(){
         return (
             <div className='content-pagina-inicial'>
-                <h3 className='titulo-pagina-inicial'>Bem vindo ao melhor sistema de promoção!</h3>
+                <h3 className='titulo-pagina-inicial'>Bem vindo ao melhor sistema de promoção para postos!</h3>
             </div>
         );
     }

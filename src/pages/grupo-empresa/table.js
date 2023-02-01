@@ -129,7 +129,8 @@ export class Table extends React.Component{
             tela: 'REDE',
             loading: false,
             cadastrar: true,
-            editar: true
+            editar: true,
+            conta_renderiza: 0
         };
 
         this.dados_table = this.dados_table.bind(this)
@@ -149,8 +150,10 @@ export class Table extends React.Component{
 
     async coluna_editar(){
       let columns = this.state.columns;
+      
+      let contador = this.state.conta_renderiza;
 
-      if(this.state.editar){
+      if(this.state.editar && contador === 0){
         columns.push(
           {
             id: 4,
@@ -162,10 +165,12 @@ export class Table extends React.Component{
             esconde: false
           }
         )
+        contador ++
       }
       
       this.setState({
-        columns: columns
+        columns: columns,
+        conta_renderiza: contador
       })
     }
 
@@ -254,18 +259,20 @@ export class Table extends React.Component{
             for (let i = 0; results.data.length > i; i++){
               
               if (results.data[i].status === true){
-                results.data[i].status = <span className="material-symbols-outlined" style={{color: 'rgb(85, 255, 100)'}}>thumb_up</span>;
+                results.data[i].status = <span key={`s${results.data[i].id_grupo_empresa}`} className="material-symbols-outlined" style={{color: 'rgb(85, 255, 100)'}}>thumb_up</span>;
               }else{
-                results.data[i].status = <span className="material-symbols-outlined" style={{color: 'rgb(255, 50, 50)'}}>thumb_down</span>;
+                results.data[i].status = <span key={`s${results.data[i].id_grupo_empresa}`}className="material-symbols-outlined" style={{color: 'rgb(255, 50, 50)'}}>thumb_down</span>;
               }
              
               let url_editar = `/editar-grupo-empresa/${results.data[i].id_grupo_empresa}`
 
-              results.data[i].editar = <Link to={url_editar}><span className="material-symbols-outlined">edit</span></Link>
+              results.data[i].editar = <Link key={`l1${results.data[i].id_grupo_empresa}`} to={url_editar}><span key={`e${results.data[i].id_grupo_empresa}`} className="material-symbols-outlined">edit</span></Link>
               
               let url_empresa = `/empresa/${results.data[i].id_grupo_empresa}`
 
-              results.data[i].empresa = <Link to={url_empresa}><span className="material-symbols-outlined">apartment</span></Link>
+              results.data[i].empresa = <Link key={`l2${results.data[i].id_grupo_empresa}`} to={url_empresa}><span key={`c${results.data[i].id_grupo_empresa}`} className="material-symbols-outlined">apartment</span></Link>
+              
+              results.data[i].key = `R${i}`
 
               let grupo_empresa_dict = results.data[i]
 
@@ -303,6 +310,9 @@ export class Table extends React.Component{
                     title="Redes"
                     columns={this.get_admin_columns()}
                     data={this.state.grupo_empresa_list}
+                    rowsCount={this.state.grupo_empresa_list.length}
+                    cellCount={this.get_admin_columns().length}
+                    key={'TG1'}
                     defaultSortFieldId={1}
                     pagination
                     paginationComponentOptions={{

@@ -99,7 +99,8 @@ class Table extends React.Component{
                 selector: (row) => row.titulo,
                 sortable: true,
                 center: true,
-                reorder: true
+                reorder: true,
+                width: '200px'
               },
               {
                 id: 3,
@@ -111,7 +112,7 @@ class Table extends React.Component{
               },
               {
                 id: 4,
-                name: "Desconto Total",
+                name: "Desconto T.",
                 selector: (row) => row.desconto_total,
                 sortable: true,
                 center: true,
@@ -119,7 +120,7 @@ class Table extends React.Component{
               },
               {
                 id: 5,
-                name: "Desconto Unidade",
+                name: "Desconto U.",
                 selector: (row) => row.desconto_por_unidade,
                 sortable: true,
                 center: true,
@@ -139,7 +140,8 @@ class Table extends React.Component{
                 selector: (row) => row.data_format_ini,
                 sortable: true,
                 center: true,
-                reorder: true
+                reorder: true,
+                width: '200px'
               },
               {
                 id: 8,
@@ -147,7 +149,8 @@ class Table extends React.Component{
                 selector: (row) => row.data_format_fim,
                 sortable: true,
                 center: true,
-                reorder: true
+                reorder: true,
+                width: '200px'
               },
               {
                 id: 9,

@@ -7,16 +7,20 @@ export class LineChart extends React.Component{
         super(props);
         this.state = {
             labels: this.props.labels,
-            data: this.props.data
+            data: this.props.data,
+            titulos: this.props.titulos
         }
     }
 
     preenche_dados(){
-        let dados = {
-            labels: this.state.labels,
-            datasets: [
-                {
-                    data: this.state.data,
+        let lista_dados = []
+   
+        for (let i = 0; i < this.state.data.length; i++){
+            lista_dados.push(
+                {   
+                    label: this.state.titulos[i],
+                    data: this.state.data[i],
+                    tension: 0.1,
                     backgroundColor: [
                         'rgba(3, 80, 245, 0.3)',
                         'rgba(54, 162, 235, 0.3)',
@@ -43,7 +47,12 @@ export class LineChart extends React.Component{
                     ],
                     borderWidth: 1
                 }
-            ]
+            )
+        }
+        
+        let dados = {
+            labels: this.state.labels,
+            datasets: lista_dados
         }
 
         return dados
@@ -63,43 +72,32 @@ export class BarChart extends React.Component{
         super(props);
         this.state = {
             labels: this.props.labels,
-            data: this.props.data
+            data: this.props.data,
+            titulos: this.props.titulos,
+            backgroundColor: this.props.backgroundColor,
+            borderColor: this.props.borderColor
         }
     }
 
     preenche_dados(){
-        let dados = {
-            labels: this.state.labels,
-            datasets: [
-                {
-                    data: this.state.data,
-                    backgroundColor: [
-                        'rgba(3, 80, 245, 0.3)',
-                        'rgba(54, 162, 235, 0.3)',
-                        'rgba(255, 206, 86, 0.3)',
-                        'rgba(75, 192, 192, 0.3)',
-                        'rgba(153, 102, 255, 0.3)',
-                        'rgba(2, 99, 132, 0.3)',
-                        'rgba(54, 2, 235, 0.3)',
-                        'rgba(255, 4, 86, 0.3)',
-                        'rgba(75, 192, 3, 0.3)',
-                        'rgba(153, 102, 1, 0.3)',
-                    ],
-                    borderColor: [
-                        'rgba(3, 80, 245, 0.9)',
-                        'rgba(54, 162, 235, 0.9)',
-                        'rgba(255, 206, 86, 0.9)',
-                        'rgba(75, 192, 192, 0.9)',
-                        'rgba(153, 102, 255, 0.9)',
-                        'rgba(2, 99, 132, 0.9)',
-                        'rgba(54, 2, 235, 0.9)',
-                        'rgba(255, 4, 86, 0.9)',
-                        'rgba(75, 192, 3, 0.9)',
-                        'rgba(153, 102, 1, 0.9)',
-                    ],
+        let lista_dados = []
+   
+        for (let i = 0; i < this.state.data.length; i++){
+            lista_dados.push(
+                {   
+                    label: this.state.titulos[i],
+                    data: this.state.data[i],
+                    tension: 0.1,
+                    backgroundColor: this.state.backgroundColor[i],
+                    borderColor: this.state.borderColor[i],
                     borderWidth: 1
                 }
-            ]
+            )
+        }
+        
+        let dados = {
+            labels: this.state.labels,
+            datasets: lista_dados
         }
 
         return dados
@@ -128,6 +126,7 @@ export class DoughnutChart extends React.Component{
             labels: this.state.labels,
             datasets: [
                 {
+                    
                     data: this.state.data,
                     backgroundColor: [
                         'rgba(3, 80, 245, 0.3)',
@@ -184,6 +183,7 @@ export class RadarChart extends React.Component{
             labels: this.state.labels,
             datasets: [
                 {
+                    label: '1',
                     data: this.state.data,
                     backgroundColor: [
                         'rgba(255, 99, 132, 0.3)',
@@ -210,6 +210,7 @@ export class RadarChart extends React.Component{
                         'rgba(153, 102, 1, 1)',
                     ],
                     borderWidth: 1,
+                    fill: true
                 }
             ]
         }

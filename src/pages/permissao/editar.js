@@ -365,8 +365,8 @@ class Editar extends React.Component{
 
         api.post('api/v1/permissao', dados_permissao, {headers: {Authorization: this.props.token}})
         .then(async (results)=>{
-            
-            if(results.data[0].Sucesso){
+            console.log(results, 'oola')
+            if(results.data[0].Sucesso){    
                 this.setState({
                     id_permissao: results.data[0].id
                 },(()=>{
@@ -396,7 +396,7 @@ class Editar extends React.Component{
 
         api.post('api/v1/permissao-tela', submit_list, {headers: {Authorization: this.props.token}})
         .then((results)=>{
-
+            console.log(results, 'ola')
             toast("Permissão cadastrada com sucesso", {
                 duration: 2000,
                 style:{
@@ -472,7 +472,7 @@ class Editar extends React.Component{
                                     </div>
                                 ):(
                                     <React.Fragment>
-                                        <ul className='lista-telas col-sm m-3' id="s1">
+                                        <ul className='lista-telas col-sm' id="s1">
                                             {
                                                 this.state.telas.map((tela, key)=>(
                                                     <li htmlFor="s1" className={tela.checked? 'linha-marcada' : 'linha'} key={`E${key}`} onClick={()=>{this.marcarLinhaEsquerda(tela)}}>{tela.nome}</li>
@@ -488,7 +488,7 @@ class Editar extends React.Component{
                                             </button>
                                         </div>
                                         
-                                        <ul className='lista-telas col-sm m-3' id="s2">
+                                        <ul className='lista-telas col-sm' id="s2">
                                             {
                                                 this.state.telas_selecionadas.map((item, key)=>(
                                                     <li htmlFor="s2" className={item.checked? 'linha-marcada' : 'linha'} key={`D${key}`} onClick={()=>{this.marcarLinhaDireita(item)}}>{item.nome}</li>

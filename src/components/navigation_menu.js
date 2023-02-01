@@ -129,7 +129,7 @@ export class SideBar extends React.Component {
       },
       {
         display: 'Promoções',
-        icon: <i className='bx bx-receipt'></i>,
+        icon: <span class="material-symbols-outlined">storefront</span>,
         to: '/promocao',
         section: '',
         cardHeight: '62px',
@@ -223,10 +223,10 @@ export class SideBar extends React.Component {
 
   render (){
     return (
-      <div className="sidebar col-sm-12 hidden-lg hidden-md hidden-xs">
+      <div className="sidebar">
         <div className='sidebar__logo'>
           <div className="row">
-            <Link to={'/'} className="col-sm-10"><p>Promoção</p></Link>
+            <Link to={'/'} className="col-sm-10 text-logo"><p>Promoção</p></Link>
           </div>
         </div>
           <hr></hr>
@@ -238,8 +238,8 @@ export class SideBar extends React.Component {
                 
                 <Link to={item.to} key={index}>
                   {item.card ? (
-                    <HoverCard.Root openDelay={0}>
-                      <HoverCard.Trigger className={`sidebar__menu__item ${this.state.dados.activeIndex === index ? 'active': ''}`}>
+                    <HoverCard.Root title={item.display} openDelay={0}>
+                      <HoverCard.Trigger  className={`sidebar__menu__item ${this.state.dados.activeIndex === index ? 'active': ''}`}>
                         <div className="sidebar__menu__item__icon">
                           {item.icon}
                         </div>
@@ -267,7 +267,7 @@ export class SideBar extends React.Component {
                       </HoverCardContent>
                     </HoverCard.Root>
                   ) : (
-                    <div className={`sidebar__menu__item ${this.state.dados.activeIndex === index ? 'active': ''}`} >
+                    <div title={item.display} className={`sidebar__menu__item ${this.state.dados.activeIndex === index ? 'active': ''}`} >
                       <div className="sidebar__menu__item__icon">
                         {item.icon}
                       </div>

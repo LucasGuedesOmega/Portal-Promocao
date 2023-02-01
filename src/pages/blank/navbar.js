@@ -1,12 +1,9 @@
 import jwtDecode from 'jwt-decode';
 import React from 'react'
-import { Link, useNavigate} from 'react-router-dom';
+import { useNavigate} from 'react-router-dom';
 import api from '../../services/api';
 import { styled, keyframes } from '@stitches/react';
 import { violet } from '@radix-ui/colors';
-import {
-    HamburgerMenuIcon
-} from '@radix-ui/react-icons';
 import * as DropdownMenuPrimitive from '@radix-ui/react-dropdown-menu';
 import toast, { Toaster } from 'react-hot-toast';
 
@@ -150,21 +147,6 @@ export const DropdownMenuSeparator = StyledSeparator;
 export const DropdownMenuSub = DropdownMenuPrimitive.Sub;
 export const DropdownMenuSubTrigger = StyledSubTrigger;
 export const DropdownMenuSubContent = SubContent;
-
-const IconButton = styled('button', {
-    all: 'unset',
-    fontFamily: 'inherit',
-    borderRadius: '100%',
-    height: 35,
-    width: 35,
-    display: 'inline-flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    color: 'black',
-    backgroundColor: 'white',
-    '&:hover': { backgroundColor: 'rgb(235, 235, 235)' },
-    '&:focus': { boxShadow: `0 0 0 2px black` },
-});
   
 
 export function NavBar(){
@@ -183,7 +165,10 @@ export class NavbarClass extends React.Component{
             descricao_empresa: null,
 
             tokenDecode: jwtDecode(this.props.token),
-            loading: false
+            loading: false,
+
+            nome: null,
+            username: null
         }
     }
 
@@ -192,7 +177,7 @@ export class NavbarClass extends React.Component{
             loading: true
         })
         await this.get_empresa()
-
+        await this.get_usuaario()
         this.setState({
             loading: false
         })
@@ -212,6 +197,8 @@ export class NavbarClass extends React.Component{
                 window.location.href="/login";
             } else if (error.response.data.error === "não autorizado"){
                 window.location.href='/login';
+            }else if(error.response.data.erros[0] === 'Sem conexao com a api ou falta fazer login.'){
+                window.location.href='/login';
             } else if (error.response.data.error === 'Você não tem permissão'){
                 toast(error.response.data.Error, {
                     duration: 2000,
@@ -228,39 +215,123 @@ export class NavbarClass extends React.Component{
         })
     }
 
+    async get_usuaario(){
+        console.log(this.state.tokenDecode)
+        await api.get(`api/v1/funcionario?id_usuario=${this.state.tokenDecode.id_usuario}`, {headers: {Authorization: this.props.token}})
+        .then((results)=>{
+            if (results.data.length > 0){
+                this.setState({
+                    nome: results.data[0].nome
+                })
+            }
+        }).catch((error)=>{
+            console.log(error)
+            if (error.response.data.error === "Token expirado"){
+                window.location.href="/login";
+            } else if (error.response.data.error === "não autorizado"){
+                window.location.href='/login';
+            }else if(error.response.data.erros[0] === 'Sem conexao com a api ou falta fazer login.'){
+                window.location.href='/login';
+            } else if (error.response.data.error === 'Você não tem permissão'){
+                toast(error.response.data.Error, {
+                    duration: 2000,
+                    style:{
+                        marginRight: '1%',
+                        backgroundColor: '#851C00',
+                        color: 'white'
+                    },
+                    position: 'bottom-right',
+                    icon: <span className="material-symbols-outlined">sentiment_satisfied</span>,
+                });
+                this.props.navigate(-1)
+            }
+        })
+
+        await api.get(`api/v1/usuario?id_usuario=${this.state.tokenDecode.id_usuario}`, {headers: {Authorization: this.props.token}})
+        .then((results)=>{
+            console.log(results)
+            if (results.data.length > 0){
+                this.setState({
+                    username: results.data[0].username
+                })
+            }
+        }).catch((error)=>{
+            console.log(error)
+            if (error.response.data.error === "Token expirado"){
+                window.location.href="/login";
+            } else if (error.response.data.error === "não autorizado"){
+                window.location.href='/login';
+            }else if(error.response.data.erros[0] === 'Sem conexao com a api ou falta fazer login.'){
+                window.location.href='/login';
+            } else if (error.response.data.error === 'Você não tem permissão'){
+                toast(error.response.data.Error, {
+                    duration: 2000,
+                    style:{
+                        marginRight: '1%',
+                        backgroundColor: '#851C00',
+                        color: 'white'
+                    },
+                    position: 'bottom-right',
+                    icon: <span className="material-symbols-outlined">sentiment_satisfied</span>,
+                });
+                this.props.navigate(-1)
+            }
+        })
+
+    }
+
     logout(){
         localStorage.removeItem("tokenApi")
         window.location.href="/login";
     }
 
     render(){
-        return this.state.loading ? (<div className='loader-container'><div className="spinner"></div></div>):(
-        
-            <div className="navbar">
-                <div className="row navbar__row">
-                    <div className="col-lg-4 navbar__row__column">
-                        <div><h5>{this.state.descricao_empresa}</h5></div> 
-                    </div>
-                    <div className="col-lg-4 navbar__row__column2">
-                        <div></div>
-                    </div>
-                    <div className="col-lg-4 navbar__row__column3">
-                        <DropdownMenu>
-                            <DropdownMenuTrigger asChild>
-                                <IconButton aria-label="Customise options">
-                                    <HamburgerMenuIcon />
-                                </IconButton>
-                            </DropdownMenuTrigger>
+        let descricao_permissao_usuario;
+        if(this.state.tokenDecode.admin){
+            descricao_permissao_usuario = 'Administrador'
+        }else if (this.state.tokenDecode.admin_posto){
+            descricao_permissao_usuario = 'Admin Posto'
+        }else{
+            descricao_permissao_usuario = 'Funcionario'
+        }
 
-                            <DropdownMenuContent className={'content-dropdown'} sideOffset={5}>
-                                <DropdownMenuItem className='item-dropdown'>
-                                    <Link type='button' to={'/usuario'} className="a-usuario">Meu Usuário</Link>
-                                </DropdownMenuItem>
-                                <DropdownMenuItem className='item-dropdown'>
-                                    <button className='bt_logout' onClick={()=>{this.logout()}}>Sair</button>
-                                </DropdownMenuItem>
-                            </DropdownMenuContent>
-                        </DropdownMenu>
+        return (
+            <div className="navbar">
+                <div className="row-navbar">
+                    <div className="coluna-navbar">
+                        <div className='titulo-navbar'> 
+                            <h5>{this.state.descricao_empresa}</h5>
+                        </div> 
+                    </div>
+                    <div className="coluna-navbar">
+                        <div className='menu-navbar'>
+                            <div class="dropdown">
+                                <button class="dropbtn">
+                                    <span class="material-symbols-outlined">
+                                    menu
+                                    </span>
+                                </button>
+                                <div class="dropdown-content">
+                                    <div className='div-info-user'>
+                                        <p>
+                                            {
+                                            this.state.nome ? (this.state.nome) : (this.state.username)
+                                            }
+                                        </p>
+                                        <label>
+                                            {descricao_permissao_usuario}
+                                            </label>
+                                    </div>
+                                    <button className='btn-dropdown-content'>
+                                        <p>Usuário</p>
+                                    </button>
+                                    <button className='btn-dropdown-content' onClick={()=>{this.logout()}}>
+                                        <p>Sair </p>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        
                     </div>
                 </div>
                 <Toaster/>

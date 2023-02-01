@@ -224,12 +224,11 @@ class Table extends React.Component{
       await this.dados_table()
     }
 
-    dados_table(){
+    async dados_table(){
 
       let produtoList = [];
 
-      
-      api.get('/api/v1/integracao/produto/lista', { headers: { Authorization: this.props.token}})
+      await api.get('/api/v1/integracao/produto/lista', { headers: { Authorization: this.props.token}})
       .then((results)=>{
         for (let i = 0; results.data.length > i; i++){
           
