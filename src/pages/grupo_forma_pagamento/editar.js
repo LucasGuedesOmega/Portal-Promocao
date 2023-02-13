@@ -169,7 +169,7 @@ class Editar extends React.Component{
                     window.location.href="/login"
                 } else if (error.response.data.error === "Token expirado"){
                     window.location.href="/login"
-                } else if (error.response.data.error === "n�o autorizado"){
+                } else if (error.response.data.error === "não autorizado"){
                     window.location.href='/login'
                 }
 

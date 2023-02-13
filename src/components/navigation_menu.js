@@ -1,28 +1,8 @@
 import React from 'react'
 
-import * as HoverCard from '@radix-ui/react-hover-card';
-
-import { styled, keyframes } from '@stitches/react';
 import { Link } from "react-router-dom";
 import jwtDecode from 'jwt-decode';
 import api from '../services/api';
-
-const slideDown = keyframes({
-  '0%': { opacity: 0, transform: 'translateY(-10px)' },
-  '100%': { opacity: 1, transform: 'translateY(0)' },
-});
-
-const slideUp = keyframes({
-  '0%': { opacity: 0, transform: 'translateY(10px)' },
-  '100%': { opacity: 1, transform: 'translateY(0)' },
-});
-
-const HoverCardContent = styled(HoverCard.Content, {
-  animationDuration: '0.6s',
-  animationTimingFunction: 'cubic-bezier(0.16, 1, 0.3, 1)',
-  '&[data-side="top"]': { animationName: slideDown },
-  '&[data-side="bottom"]': { animationName: slideUp  },
-});
 
 export class AppNagivationMenu extends React.Component{
     constructor(props){
@@ -63,7 +43,8 @@ export class SideBar extends React.Component {
       dados: props.dados,
       token: localStorage.getItem('tokenApi'),
       sidebarNavItens: [],
-      telas_api_list: []
+      telas_api_list: [],
+      espande_esconde: false
     }
   }
   
@@ -128,8 +109,16 @@ export class SideBar extends React.Component {
         tela: 'PRODUTO'
       },
       {
+        display: 'Relatórios',
+        icon: <span className="material-symbols-outlined">lab_profile</span>,
+        to: '/relatorios',
+        ativo: false,
+        section: '',
+        tela: 'RELATORIOS'
+      },
+      {
         display: 'Promoções',
-        icon: <span class="material-symbols-outlined">storefront</span>,
+        icon: <span className="material-symbols-outlined">storefront</span>,
         to: '/promocao',
         section: '',
         cardHeight: '62px',
@@ -221,67 +210,58 @@ export class SideBar extends React.Component {
     })
   }
 
+  espande_esconde(){
+    if(this.state.espande_esconde){
+      document.documentElement.style.setProperty('--position', '18.9%')
+      document.documentElement.style.setProperty('--width', '81.2%')
+      this.setState({
+        espande_esconde: false
+      })
+      
+    }else{
+      document.documentElement.style.setProperty('--position', '100px')
+      document.documentElement.style.setProperty('--width', '94.3%')
+      this.setState({
+        espande_esconde: true
+      })
+    }
+  }  
+
   render (){
     return (
-      <div className="sidebar">
-        <div className='sidebar__logo'>
-          <div className="row">
-            <Link to={'/'} className="col-sm-10 text-logo"><p>Promoção</p></Link>
-          </div>
-        </div>
-          <hr></hr>
-        <div className='sidebar__menu'>
-          <div className="sidebar__menu__indicator"></div>
-          <div>
-            {
-              this.state.sidebarNavItens.map((item, index)=>(
-                
-                <Link to={item.to} key={index}>
-                  {item.card ? (
-                    <HoverCard.Root title={item.display} openDelay={0}>
-                      <HoverCard.Trigger  className={`sidebar__menu__item ${this.state.dados.activeIndex === index ? 'active': ''}`}>
-                        <div className="sidebar__menu__item__icon">
-                          {item.icon}
-                        </div>
-                        <div className="sidebar__menu__item__text">
-                          {item.display}
-                        </div>
-                      </HoverCard.Trigger>
-                      <HoverCardContent side='right' className='cardSidebar' style={{height: item.cardHeight}}>
-                          <div className="cardSidebar__menu">
-                            {
-                              item.card.map((card_item, card_index)=>(
-                                <Link to={card_item.to} key={card_index}>
-                                  <div className="cardSidebar__menu__item">
-                                    <div className="cardSidebar__menu__item__icon">
-                                      {card_item.icon}
-                                    </div>
-                                    <div className="cardSidebar__menu__item__text">
-                                      {card_item.display}
-                                    </div>
-                                  </div>
-                                </Link>
-                              ))
-                            }
-                          </div>
-                      </HoverCardContent>
-                    </HoverCard.Root>
-                  ) : (
-                    <div title={item.display} className={`sidebar__menu__item ${this.state.dados.activeIndex === index ? 'active': ''}`} >
-                      <div className="sidebar__menu__item__icon">
-                        {item.icon}
-                      </div>
-                      <div className="sidebar__menu__item__text">
-                        {item.display}
-                      </div>
-                    </div>
-                  )}
-                  
-                </Link>))
-            }
-          </div>
-        </div> 
+    <div className={this.state.espande_esconde ? "sidebar-collapsed" : "sidebar"}>
+      <div className={this.state.espande_esconde ? "sidebar__logo__collapsed" : 'sidebar__logo'}>
+        <Link to={'/'} className="col-sm-10 text-logo">
+          {
+            this.state.espande_esconde ? (<p></p>) : (<p>Promoção</p>)
+          }
+        </Link>
       </div>
+      <div className='sidebar__menu'>
+        <div>
+          {
+          this.state.sidebarNavItens.map((item, index)=>(
+            <Link to={item.to} key={index}>
+              <div title={item.display} className={`sidebar__menu__item ${this.state.dados.activeIndex === index ? 'active': ''}`} >
+                <div className={this.state.espande_esconde ? "sidebar__menu__item__icon__collapsed":"sidebar__menu__item__icon"}>
+                  {item.icon}
+                </div>
+                <div className={this.state.espande_esconde ? "sidebar__menu__item__text__collapsed" : "sidebar__menu__item__text"}>
+                  {item.display}
+                </div>
+              </div>     
+            </Link>))
+           }
+        </div>
+      </div> 
+      <div className='sidebar__footer' >
+        <button className='bt-colapse' onClick={()=>{this.espande_esconde()}} >
+          <div >
+            <img alt='arrow' width={25} height={25}  className={this.state.espande_esconde ? "arrow-invertido" : "arrow"} src={require('../assets/images/arrow.png')} />
+          </div>
+        </button>
+      </div>
+    </div>
     );
   }
   

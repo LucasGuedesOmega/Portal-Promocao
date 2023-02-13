@@ -152,11 +152,8 @@ export class Table extends React.Component{
       })
       await this.permissao()
 
-      this.setState({
-        url_forma_pagamento: `api/v1/grupo-forma-pagamento?id_grupo_pagamento=${this.props.id_grupo_pagamento}`
-      }, (()=>{
-        this.dados_table()
-      }))
+      this.dados_table()
+      
       this.setState({
         loading: false
       })
@@ -227,41 +224,41 @@ export class Table extends React.Component{
       })
     }
 
-    dados_table(){
+    async dados_table(){
       let formaPagamentoList = [];
-      api.get(this.state.url_forma_pagamento, { headers: { Authorization: this.props.token}})
+      await api.get(`api/v1/grupo-pagamento?id_grupo_pagamento=${this.props.id_grupo_pagamento}`, { headers: { Authorization: this.props.token}})
       .then(async (results)=>{
-        if(results.data.length>0){
-          for (let i = 0; results.data.length>i;i++){
-            await api.get(`api/v1/forma-pagamento?id_forma_pagamento=${results.data[i].id_forma_pagamento}`, { headers: { Authorization: this.props.token}})
-            .then((results_forma_pagamento)=>{
-              if(results_forma_pagamento.data.length > 0){
 
-                if (results_forma_pagamento.data[0].status === true){
-                  results_forma_pagamento.data[0].status = <span className="material-symbols-outlined" style={{color: 'rgb(85, 255, 100)'}}>thumb_up</span>;
-                }else{
-                  results_forma_pagamento.data[0].status = <span className="material-symbols-outlined" style={{color: 'rgb(255, 50, 50)'}}>thumb_down</span>;
-                }
-               
-                let url_editar = `/editar-forma-pagamento/${results.data[0].id_forma_pagamento}/${this.props.id_grupo_pagamento}`
-  
-                results_forma_pagamento.data[0].editar = <Link to={url_editar}><span className="material-symbols-outlined">edit</span></Link>
-                
-                let forma_pagamento_dict = results_forma_pagamento.data[0]
+        for (let i = 0; results.data.length>i;i++){
+          await api.get(`api/v1/forma-pagamento`, { headers: { Authorization: this.props.token}})
+          .then((results_forma_pagamento)=>{
 
-                formaPagamentoList.push(forma_pagamento_dict)
+            if(results_forma_pagamento.data.length > 0){
+
+              if (results_forma_pagamento.data[0].status === true){
+                results_forma_pagamento.data[0].status = <span className="material-symbols-outlined" style={{color: 'rgb(85, 255, 100)'}}>thumb_up</span>;
+              }else{
+                results_forma_pagamento.data[0].status = <span className="material-symbols-outlined" style={{color: 'rgb(255, 50, 50)'}}>thumb_down</span>;
               }
-            })
-            .catch((error)=>{
-              console.log(error)
-            })
-          }
 
-          this.setState({
-            forma_pagamento_list: formaPagamentoList
+              let url_editar = `/editar-forma-pagamento/${results_forma_pagamento.data[0].id_forma_pagamento}/${this.props.id_grupo_pagamento}`
+
+              results_forma_pagamento.data[0].editar = <Link to={url_editar}><span className="material-symbols-outlined">edit</span></Link>
+              
+              let forma_pagamento_dict = results_forma_pagamento.data[0]
+
+              formaPagamentoList.push(forma_pagamento_dict)
+            }
           })
-          
+          .catch((error)=>{
+            console.log(error)
+          })
         }
+        this.setState({
+          forma_pagamento_list: formaPagamentoList
+        })
+          
+        
       }).catch((error)=>{
         console.log(error)
         if (error.response.data.error === "Token expirado"){

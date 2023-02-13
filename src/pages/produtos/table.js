@@ -93,7 +93,7 @@ class Table extends React.Component{
                 sortable: true,
                 center: false,
                 reorder: true,
-                width: '60px',
+                width: '4%',
                 headerStyle: (selector, id) => {
                   return { textAlign: "center" };   // removed partial line here
                 },
@@ -105,16 +105,16 @@ class Table extends React.Component{
                 sortable: true,
                 center: false,
                 reorder: true,
-                width: '104px',
+                width: '7%',
               },
               {
                 id: 3,
                 name: "Descrição",
                 selector: (row) => row.descricao,
                 sortable: true,
-                center: true,
+                center: false,
                 reorder: true,
-                width: '370px',
+                width: '30%',
               },
               {
                 id: 4,
@@ -122,7 +122,7 @@ class Table extends React.Component{
                 selector: (row) => row.modalidade_produto,
                 sortable: true,
                 reorder: true,
-                width: '115px',
+                width: '9%',
               },
               {
                 id: 5,
@@ -131,7 +131,7 @@ class Table extends React.Component{
                 sortable: true,
                 center: false,
                 reorder: true,
-                width: '137px',
+                width: '10%',
               },
               {
                 id: 6,
@@ -140,7 +140,7 @@ class Table extends React.Component{
                 sortable: true,
                 center: false,
                 reorder: true,
-                width: '78px',
+                width: '7%',
               },
               {
                 id: 7,
@@ -149,7 +149,7 @@ class Table extends React.Component{
                 sortable: true,
                 center: false,
                 reorder: true,
-                width: '135px',
+                width: '9%',
               },
               {
                 id: 8,
@@ -158,7 +158,7 @@ class Table extends React.Component{
                 sortable: true,
                 center: false,
                 reorder: true,
-                width: '100px',
+                width: '9%',
               },
               {
                 id: 9,

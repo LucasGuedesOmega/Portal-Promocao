@@ -69,13 +69,13 @@ class Editar extends React.Component{
         super(props);
         this.state = {
             id_forma_pagamento: this.props.id_forma_pagamento,
+            id_grupo_pagamento: this.props.id_grupo_pagamento,
             id_grupo_empresa: null,
             status: null,
             tipo: null,
             id_externo: null,
             descricao: null,
             id_empresa: null,
-            id_grupo_forma_pagamento: null,
             tokenDeconde: jwtDecode(this.props.token),
 
             formasPagamento: []
@@ -119,7 +119,8 @@ class Editar extends React.Component{
                         tipo: results.data[0].tipo,
                         id_externo: results.data[0].id_externo,
                         descricao: results.data[0].descricao,
-                        id_empresa: results.data[0].id_empresa,       
+                        id_empresa: results.data[0].id_empresa,  
+                        id_grupo_pagamento: results.data[0].id_grupo_pagamento     
                     })
                 }
             })
@@ -127,7 +128,7 @@ class Editar extends React.Component{
                 console.log(error)
                 if (error.response.data.error === "Token expirado"){
                     window.location.href="/login"
-                  } else if (error.response.data.error === "n�o autorizado"){
+                  } else if (error.response.data.error === "não autorizado"){
                     window.location.href='/login'
                   } else if (error.name === "AxiosError"){
                     window.location.href='/login'
@@ -150,64 +151,31 @@ class Editar extends React.Component{
                 descricao: this.state.descricao,
                 id_empresa: this.state.tokenDeconde.id_empresa,     
                 id_grupo_empresa: this.state.tokenDeconde.id_grupo_empresa,     
+                id_grupo_pagamento: this.state.id_grupo_pagamento,     
             }
         ]   
 
         let message;
 
-      
         api.post('/api/v1/forma-pagamento', dados_forma_pagamento, { headers: { Authorization: this.props.token}})
         .then(async (results) => {
             if (results.data['Sucesso']){
-                var dados_grupo_forma_pagamento = []
-                api.get(`api/v1/grupo-forma-pagamento?id_forma_pagamento=${results.data['id']}&id_grupo_pagamento=${this.props.id_grupo_pagamento}`)
-                .then(async (results)=>{
-                    if(results.data.length > 0){
-
-                        let dict = {   
-                            id_grupo_forma_pagamento: results.data[0].id_grupo_forma_pagamento,
-                            id_grupo_pagamento: this.props.id_grupo_pagamento,
-                            id_forma_pagamento: results.data['id'],
-                            id_empresa: this.state.tokenDeconde.id_empresa, 
-                            id_grupo_empresa: this.state.tokenDeconde.id_grupo_empresa, 
-                        }
-                        
-                        dados_grupo_forma_pagamento.push(dict)
-                    }else{
-                        let dict = {   
-                            id_grupo_pagamento: this.props.id_grupo_pagamento,
-                            id_forma_pagamento: results.data['id'],
-                            id_empresa: this.state.tokenDeconde.id_empresa, 
-                            id_grupo_empresa: this.state.tokenDeconde.id_grupo_empresa, 
-                        }
-                        dados_grupo_forma_pagamento.push(dict)
-                    }
-                }).catch((error)=>{
-                    console.log(error)
-                })
+                if (this.state.id_forma_pagamento){
+                    message = 'Forma de pagamento editada com sucesso!'
+                } else{
+                    message = 'Forma de pagamento cadastrada com sucesso!'
+                }
                 
-                api.post('/api/v1/grupo-forma-pagamento', dados_grupo_forma_pagamento, { headers: { Authorization: this.props.token}})
-                .then((results)=>{
-                    if (this.state.id_forma_pagamento){
-                        message = 'Forma de Pagamento editada com sucesso!'
-                    } else{
-                        message = 'Forma de pagamento cadastrada com sucesso!'
-                    }
-                    
-                    toast(message, {
-                        duration: 2000,
-                        style:{
-                            marginRight: '1%',
-                            backgroundColor: '#078518',
-                            color: 'white'
-                        },
-                        position: 'bottom-right',
-                        icon: <span className="material-symbols-outlined">sentiment_satisfied</span>,
-                    });
-                })
-                .catch((error)=>{
-                    console.log(error)
-                })
+                toast(message, {
+                    duration: 2000,
+                    style:{
+                        marginRight: '1%',
+                        backgroundColor: '#078518',
+                        color: 'white'
+                    },
+                    position: 'bottom-right',
+                    icon: <span className="material-symbols-outlined">sentiment_satisfied</span>,
+                });
             }
         })
         .catch((error)=>{
@@ -247,7 +215,7 @@ class Editar extends React.Component{
                 <div  className="cadastro__formulario" >
                     <div className="cadastro__formulario__header">
                         <div className="row">
-                            <div className="col-md-10"><h3 className="cadastro__formulario__header__titulo">{this.state.descricao}</h3></div>
+                            <div className="col-md-10"><h3 className="cadastro__formulario__header__titulo">Formas de Pagamento</h3></div>
                         </div>
                     </div>
                     <hr />

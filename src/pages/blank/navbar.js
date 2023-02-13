@@ -216,7 +216,6 @@ export class NavbarClass extends React.Component{
     }
 
     async get_usuaario(){
-        console.log(this.state.tokenDecode)
         await api.get(`api/v1/funcionario?id_usuario=${this.state.tokenDecode.id_usuario}`, {headers: {Authorization: this.props.token}})
         .then((results)=>{
             if (results.data.length > 0){
@@ -249,7 +248,6 @@ export class NavbarClass extends React.Component{
 
         await api.get(`api/v1/usuario?id_usuario=${this.state.tokenDecode.id_usuario}`, {headers: {Authorization: this.props.token}})
         .then((results)=>{
-            console.log(results)
             if (results.data.length > 0){
                 this.setState({
                     username: results.data[0].username
@@ -305,13 +303,13 @@ export class NavbarClass extends React.Component{
                     </div>
                     <div className="coluna-navbar">
                         <div className='menu-navbar'>
-                            <div class="dropdown">
-                                <button class="dropbtn">
-                                    <span class="material-symbols-outlined">
+                            <div className="dropdown">
+                                <button className="dropbtn">
+                                    <span className="material-symbols-outlined">
                                     menu
                                     </span>
                                 </button>
-                                <div class="dropdown-content">
+                                <div className="dropdown-content">
                                     <div className='div-info-user'>
                                         <p>
                                             {

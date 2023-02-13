@@ -160,7 +160,7 @@ class Editar extends React.Component{
                 <div  className="cadastro__formulario" >
                     <div className="cadastro__formulario__header">
                         <div className="row">
-                            <div className="col-md-10"><h3 className="cadastro__formulario__header__titulo">{this.state.descricao}</h3></div>
+                            <div className="col-md-10"><h3 className="cadastro__formulario__header__titulo">Rede</h3></div>
                         </div>
                     </div>
                     <hr />

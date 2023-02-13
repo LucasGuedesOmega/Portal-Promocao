@@ -28,6 +28,8 @@ import { CadastrarPermissao, EditarPermissao } from "./pages/permissao/editar";
 import { TableFuncionarios } from "./pages/funcionarios/table";
 import { CadastrarFuncionario, EditarFuncionario } from "./pages/funcionarios/editar";
 import { PaginaInicial } from "./pages/blank/paginaInicial";
+import { Relatorios } from "./pages/relatorios/relatorios";
+import { RelatoriosRelacao } from "./pages/relatorios";
 
 export class AppRotas extends React.Component{
     constructor(props){
@@ -53,6 +55,9 @@ export class AppRotas extends React.Component{
                             <Route path="/editar-cliente/:id_cliente" element={<EditarCliente/>}/>
 
                             <Route path="/produtos" element={<TableProduto/>}/>
+
+                            <Route path="/relatorios" element={<Relatorios/>}/>
+                            <Route path="/relatorios/relacao/:tipo/:filtro" element={<RelatoriosRelacao/>}/>
 
                             <Route path="/promocao" element={<TablePromocao/>}/>
                             <Route path="/cadastrar-promocao" element={<CadastrarPromocao/>}/>

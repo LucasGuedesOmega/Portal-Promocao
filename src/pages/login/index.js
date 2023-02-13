@@ -126,6 +126,7 @@ class LoginClass extends React.Component{
                                 <ReCAPTCHA 
                                 sitekey={process.env.REACT_APP_SITE_KEY}
                                 onChange={(results)=>{this.onCaptchaChange(results)}}
+                                className="recaptcha"
                                 />
                             </div>
                             <div className="row card-row">

@@ -25,11 +25,16 @@
     "bootstrap": "^5.2.1",
     "bootstrap-icons": "^1.9.1",
     "boxicons": "^2.1.1",
+    "bv-react-data-report": "^2.0.1",
     "chart.js": "^3.9.1",
     "datatables.net": "^1.12.1",
     "datatables.net-dt": "^1.12.1",
+    "html2canvas": "^1.4.1",
+    "i18n-react": "^0.7.0",
     "jquery": "^3.6.1",
     "js-cookie": "^3.0.1",
+    "js-file-download": "^0.4.12",
+    "jspdf": "^2.5.1",
     "jwt-decode": "^3.1.2",
     "node-sass": "^7.0.3",
     "react": "^18.2.0",
@@ -76,6 +81,7 @@
     ]
   },
   "devDependencies": {
-    "@faker-js/faker": "^7.6.0"
+    "@faker-js/faker": "^7.6.0",
+    "webpack-cli": "^5.0.1"
   }
 }
