@@ -265,6 +265,8 @@ export class Table extends React.Component{
               let url_editar = `/editar-empresa/${results.data[i].id_empresa}/${this.props.id_grupo_empresa}`
 
               results.data[i].editar = <Link to={url_editar}><span className="material-symbols-outlined">edit</span></Link>
+              
+              results.data[i].cnpj = results.data[i].cnpj.replace(/\D/g, '').replace(/^(\d{2})(\d{3})?(\d{3})?(\d{4})?(\d{2})?/, "$1.$2.$3/$4-$5")
 
               let empresa_dict = results.data[i]
 

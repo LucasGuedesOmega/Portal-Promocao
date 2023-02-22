@@ -22,8 +22,8 @@ class LoginClass extends React.Component{
     constructor(props){
         super(props);
         this.state = {
-            username: null,
-            senha: null,
+            username: 'adminposto',
+            senha: '2112',
             tokenCaptcha: null,
         }
     }

@@ -38,6 +38,7 @@ class Editar extends React.Component{
             status: null,
             token_integracao: null,
             uf: null,
+            cidade: null,
 
             usuario: null,
             senha: null
@@ -68,7 +69,8 @@ class Editar extends React.Component{
                         razao_social: results.data[0].razao_social,
                         status: results.data[0].status,
                         token_integracao: results.data[0].token_integracao,
-                        uf: results.data[0].uf,           
+                        uf: results.data[0].uf,        
+                        cidade: results.data[0].cidade   
                     })
                 }
             })
@@ -112,7 +114,8 @@ class Editar extends React.Component{
                 razao_social: this.state.razao_social,
                 status: this.state.status,
                 token_integracao: this.state.token_integracao,
-                uf: this.state.uf
+                uf: this.state.uf,
+                cidade: this.state.cidade
             }
         ]   
 
@@ -150,6 +153,17 @@ class Editar extends React.Component{
                     window.location.href='/login'
                 }
 
+                toast(error.response.data.Error, {
+                    duration: 2000,
+                    style:{
+                        marginRight: '1%',
+                        backgroundColor: '#851C00',
+                        color: 'white'
+                    },
+                    position: 'bottom-right',
+                    icon: <span className="material-symbols-outlined">sentiment_dissatisfied</span>,
+                });
+                
 
             });
         }catch(err){
@@ -232,8 +246,9 @@ class Editar extends React.Component{
                         </div>
                         <div className="row mt-3">
                             <div className="col-sm">
-                                <label className='cadastro__formulario__label'>Endereço</label>
+                                <label className='cadastro__formulario__label'>Rua</label>
                                 <InputMask className='form-control' defaultValue={this.state.endereco} name={'endereco'} onChange={(value)=>{this.handleNameValue(value)}} />
+                                <label className='informacao-campo'>Sem abreviações.</label>
                             </div>
                             <div className="col-sm">
                                 <label className='cadastro__formulario__label'>Bairro</label>
@@ -242,6 +257,10 @@ class Editar extends React.Component{
                             <div className="col-sm">
                                 <label className='cadastro__formulario__label'>Numero</label>
                                 <InputMask type={'number'}  className='form-control' defaultValue={this.state.numero} name={'numero'} onChange={(value)=>{this.handleNameValue(value)}} />
+                            </div>
+                            <div className="col-sm">
+                                <label className='cadastro__formulario__label'>Cidade</label>
+                                <input className='form-control' defaultValue={this.state.cidade} name={'cidade'} onChange={(value)=>{this.handleNameValue(value)}} />
                             </div>
                             <div className="col-sm">
                                 <label className='cadastro__formulario__label'>CEP</label>

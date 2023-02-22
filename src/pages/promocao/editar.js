@@ -809,7 +809,7 @@ class Editar extends React.Component{
                                                                 </div>
                                                                 <div className='col-sm'>{value.id_empresa}</div>
                                                                 <div className='col-sm'>{value.razao_social}</div>
-                                                                <div className='col-sm'>{value.cnpj}</div>
+                                                                <div className='col-sm'>{value.cnpj.replace(/\D/g, '').replace(/^(\d{2})(\d{3})?(\d{3})?(\d{4})?(\d{2})?/, "$1.$2.$3/$4-$5")}</div>
                                                             </div>
                                                         </li>
                                                     )

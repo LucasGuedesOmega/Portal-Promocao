@@ -24,123 +24,90 @@ class Tela extends React.Component{
             <div className='content-relatorios'>
                 <div className='section-relatorios'>
                     <div className='content-titulo-section'>
-                        <h1>Vendas</h1>
+                        <h1>Vendas</h1><img src={require('../../assets/images/cartao-magnetico.png')} alt='relatorios' height={35} width={35}/>
                     </div>
                     <hr></hr>
                     <div className='content-buttons-section'>
                         <button className='button-relatorios' onClick={()=>{this.props.navigate('/relatorios/relacao/vendas/rede')}}>
                             <div className='header-button-relatorio' >
-                                <p>Rede</p>
+                                <p>Vendas com voucher</p>
                             </div>
                             <div className='body-button-relatorio' >
-                                <img src={require('../../assets/images/relatorio.png')}  alt='relatorios' height={50} width={50}/>
+                                <img src={require('../../assets/images/acordo.png')}  alt='relatorios' height={50} width={50}/>
                             </div>
                             <div className='footer-button-relatorio' >
-                                <p> Todas as vendas da Rede </p>
-                            </div>
-                        </button>
-                        <button className='button-relatorios' onClick={()=>{this.props.navigate('/relatorios/relacao/vendas/postos')}}>
-                            <div className='header-button-relatorio' >
-                                <p>Postos</p>
-                            </div>
-                            <div className='body-button-relatorio' >
-                                <img src={require('../../assets/images/estacao-gas.png')} alt='gas-station' height={70} width={80}/>
-                            </div>
-                            <div className='footer-button-relatorio' >
-                                <p> Vendas por postos </p>
-                            </div>
-                        </button>
-                        <button className='button-relatorios' onClick={()=>{this.props.navigate('/relatorios/relacao/vendas/clientes')}}>
-                            <div className='header-button-relatorio' >
-                                <p>Clientes</p>
-                            </div>
-                            <div className='body-button-relatorio' >
-                                <img src={require('../../assets/images/cliente.png')}  alt='relatorios' height={50} width={50}/>
-                            </div>
-                            <div className='footer-button-relatorio' >
-                                <p> Vendas por clientes </p>
+                                <p> Todas as vendas da Rede que usaram voucher </p>
                             </div>
                         </button>
                     </div>
                 </div>  
                 <div className='section-relatorios'>
                     <div className='content-titulo-section'>
-                        <h1>Descontos e Cashbacks</h1>
+                        <h1>Descontos e Cashbacks</h1><img src={require('../../assets/images/super-oferta.png')} alt='relatorios' height={35} width={35}/>
                     </div>
                     <hr></hr>
                     <div className='content-buttons-section'>
+                        <button className='button-relatorios' onClick={()=>{this.props.navigate('/relatorios/relacao/descontos/rede')}}>
+                            <div className='header-button-relatorio' >
+                                <p>Descontos</p>
+                            </div>
+                            <div className='body-button-relatorio' >
+                                <img src={require('../../assets/images/etiqueta-de-desconto.png')}  alt='relatorios' height={50} width={50}/>
+                            </div>
+                            <div className='footer-button-relatorio' >
+                                <p> Todos os descontos da Rede </p>
+                            </div>
+                        </button>
+                        <button className='button-relatorios' onClick={()=>{this.props.navigate('/relatorios/relacao/cashback/rede')}}>
+                            <div className='header-button-relatorio' >
+                                <p>Cashbacks</p>
+                            </div>
+                            <div className='body-button-relatorio' >
+                                <img src={require('../../assets/images/dinheiro-de-volta.png')}  alt='relatorios' height={50} width={50}/>
+                            </div>
+                            <div className='footer-button-relatorio' >
+                                <p> Todos os cashbacks da Rede </p>
+                            </div>
+                        </button>
                         <button className='button-relatorios' onClick={()=>{this.props.navigate('/relatorios/relacao/descontos-cashback/rede')}}>
                             <div className='header-button-relatorio' >
-                                <p>Rede</p>
+                                <p>Pontos</p>
                             </div>
                             <div className='body-button-relatorio' >
-                                <img src={require('../../assets/images/relatorio.png')}  alt='relatorios' height={50} width={50}/>
+                                <img src={require('../../assets/images/pontuacao-de-credito-empresarial.png')}  alt='relatorios' height={50} width={50}/>
                             </div>
                             <div className='footer-button-relatorio' >
-                                <p> Todos os cashbacks e descontos da Rede </p>
-                            </div>
-                        </button>
-                        <button className='button-relatorios' onClick={()=>{this.props.navigate('/relatorios/relacao/descontos-cashback/postos')}}>
-                            <div className='header-button-relatorio' >
-                                <p>Postos</p>
-                            </div>
-                            <div className='body-button-relatorio' >
-                                <img src={require('../../assets/images/estacao-gas.png')} alt='gas-station' height={70} width={80}/>
-                            </div>
-                            <div className='footer-button-relatorio' >
-                                <p> Descontos e Cashbacks por postos </p>
-                            </div>
-                        </button>
-                        <button className='button-relatorios' onClick={()=>{this.props.navigate('/relatorios/relacao/descontos-cashback/clientes')}} >
-                            <div className='header-button-relatorio' >
-                                <p>Clientes</p>
-                            </div>
-                            <div className='body-button-relatorio' >
-                                <img src={require('../../assets/images/cliente.png')}  alt='relatorios' height={50} width={50}/>
-                            </div>
-                            <div className='footer-button-relatorio' >
-                                <p> Descontos e Cashbacks por clientes </p>
+                                <p> Todos os pontos de cada cliente da Rede </p>
                             </div>
                         </button>
                     </div>
                 </div>  
                 <div className='section-relatorios'>
                     <div className='content-titulo-section'>
-                        <h1>Resgates</h1>
+                        <h1>Resgates</h1><img src={require('../../assets/images/forma-de-pagamento.png')} alt='relatorios' height={35} width={35}/>
                     </div>
                     <hr></hr>
                     <div className='content-buttons-section'>
                         <button className='button-relatorios' onClick={()=>{this.props.navigate('/relatorios/relacao/resgates/rede')}}>
                             <div className='header-button-relatorio' >
-                                <p>Rede</p>
+                                <p>Cashbacks</p>
                             </div>
                             <div className='body-button-relatorio' >
-                                <img src={require('../../assets/images/relatorio.png')}  alt='relatorios' height={50} width={50}/>
+                                <img src={require('../../assets/images/dinheiro-de-volta.png')}  alt='relatorios' height={50} width={50}/>
                             </div>
                             <div className='footer-button-relatorio' >
-                                <p> Resgate de cashbacks e pontos da Rede </p>
+                                <p> Resgate de cashbacks Rede </p>
                             </div>
                         </button>
-                        <button className='button-relatorios' onClick={()=>{this.props.navigate('/relatorios/relacao/resgates/postos')}}>
+                        <button className='button-relatorios' onClick={()=>{this.props.navigate('/relatorios/relacao/resgates/rede')}}>
                             <div className='header-button-relatorio' >
-                                <p>Postos</p>
+                                <p>Pontos</p>
                             </div>
                             <div className='body-button-relatorio' >
-                                <img src={require('../../assets/images/estacao-gas.png')} alt='gas-station' height={70} width={80}/>
+                                <img src={require('../../assets/images/pontuacao-de-credito-empresarial.png')}  alt='relatorios' height={50} width={50}/>
                             </div>
                             <div className='footer-button-relatorio' >
-                                <p> Resgate Cashbacks e pontos por postos </p>
-                            </div>
-                        </button>
-                        <button className='button-relatorios' onClick={()=>{this.props.navigate('/relatorios/relacao/resgates/clientes')}}>
-                            <div className='header-button-relatorio' >
-                                <p>Clientes</p>
-                            </div>
-                            <div className='body-button-relatorio' >
-                                <img src={require('../../assets/images/cliente.png')}  alt='relatorios' height={50} width={50}/>
-                            </div>
-                            <div className='footer-button-relatorio' >
-                                <p> Resgate de Cashbacks e pontos por clientes </p>
+                                <p> Resgate de pontos da Rede </p>
                             </div>
                         </button>
                     </div>
