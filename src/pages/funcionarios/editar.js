@@ -92,7 +92,6 @@ class Editar extends React.Component{
             senha: null,
             status_usuario: false,
             user_app: false,
-            id_empresa_usuario: null,
             id_usuario: null,
             id_grupo_usuario: null,
             descricao_empresa: null,
@@ -101,10 +100,10 @@ class Editar extends React.Component{
 
     }
 
-    componentDidMount(){
+    async componentDidMount(){
 
         if (this.state.id_funcionario){
-            this.get_funcionario();
+            await this.get_funcionario();
         }
         
         this.preenche_select_empresa();
@@ -141,46 +140,41 @@ class Editar extends React.Component{
     }
 
     get_usuario(){
-        if (this.state.id_usuario){
-            api.get(`api/v1/usuario?id_usuario=${this.state.id_usuario}`, { headers: { Authorization: this.props.token}})
-            .then((results)=>{
-                if (results.data.length > 0){
-                    this.setState({
-                        username: results.data[0].username,
-                        senha: results.data[0].senha,
-                        id_empresa_usuario: results.data[0].id_empresa,
-                        status_usuario: results.data[0].status,
-                        user_app: results.data[0].user_app,
-                        id_grupo_usuario: results.data[0].id_grupo_usuario
-                    }, ()=>{
-                        this.get_default_empresa()
-                        this.get_default_grupo_usuario()
-                    })
-
-                    
-                }
-            })
-            .catch((error)=>{
-                console.log(error)
-            })
-        }
-        
+       
+        api.get(`api/v1/usuario?id_usuario=${this.state.id_usuario}`, { headers: { Authorization: this.props.token}})
+        .then((results)=>{
+            if (results.data.length > 0){
+                this.setState({
+                    username: results.data[0].username,
+                    senha: results.data[0].senha,
+                    status_usuario: results.data[0].status,
+                    user_app: results.data[0].user_app,
+                    id_grupo_usuario: results.data[0].id_grupo_usuario
+                }, ()=>{
+                    this.get_default_empresa()
+                    this.get_default_grupo_usuario()
+                })
+            }
+        })
+        .catch((error)=>{
+            console.log(error)
+        })   
     }
 
     async get_default_empresa(){
-        if(this.state.id_empresa_usuario){
-            await api.get(`api/v1/empresa?id_empresa=${this.state.id_empresa_usuario}`, { headers: { Authorization: this.props.token}})
-            .then((results)=>{
-                if (results.data.length > 0){
-                    this.setState({
-                        descricao_empresa: results.data[0].razao_social
-                    })
-                }
-            })
-            .catch((error)=>{
-                console.log(error)
-            })
-        }
+     
+        await api.get(`api/v1/empresa?id_empresa=${this.state.id_empresa}`, { headers: { Authorization: this.props.token}})
+        .then((results)=>{
+            if (results.data.length > 0){
+                this.setState({
+                    descricao_empresa: results.data[0].razao_social
+                })
+            }
+        })
+        .catch((error)=>{
+            console.log(error)
+        })
+        
     }
 
     async get_default_grupo_usuario(){
@@ -234,12 +228,12 @@ class Editar extends React.Component{
                 e_mail: this.state.e_mail,
                 telefone: this.state.telefone,
                 status: this.state.status,
-                id_empresa: this.state.tokenDecode.id_empresa,
+                id_empresa: this.state.id_empresa,
                 id_usuario: this.state.id_usuario,
                 id_grupo_empresa: this.state.tokenDecode.id_grupo_empresa
             }
         ]   
-        
+
         let message;
 
         try{
@@ -281,7 +275,7 @@ class Editar extends React.Component{
     submitFormUsuarios(){
         let message = null;
 
-        if (!this.state.id_empresa_usuario){
+        if (!this.state.id_empresa){
             message = 'Selecione uma empresa';
         }else if (!this.state.username){
             message = 'Digite um username!';
@@ -314,7 +308,6 @@ class Editar extends React.Component{
                 user_admin: false,
                 user_app: this.state.user_app,
                 admin_posto: false,
-                id_empresa: this.state.id_empresa_usuario,
                 id_grupo_empresa: this.state.tokenDecode.id_grupo_empresa,
                 id_grupo_usuario: this.state.id_grupo_usuario,
             }
@@ -431,8 +424,8 @@ class Editar extends React.Component{
 
     render(){
         let default_empresa;
-        if (this.state.id_empresa_usuario && this.state.descricao_empresa){
-            default_empresa = {value: this.state.id_empresa_usuario, text: this.state.descricao_empresa}
+        if (this.state.id_empresa && this.state.descricao_empresa){
+            default_empresa = {value: this.state.id_empresa, text: this.state.descricao_empresa}
         } else {
             default_empresa = {value: 0, text: 'Selecione uma empresa'}
         }
@@ -466,7 +459,7 @@ class Editar extends React.Component{
                         </div>
                         <div className="row mt-3">
                             <div className="col-sm">
-                                <select name='id_empresa_usuario' onChange={(value)=>{this.handleNameValue(value)}} className='form-select'>
+                                <select name='id_empresa' onChange={(value)=>{this.handleNameValue(value)}} className='form-select'>
                                     <option defaultValue={default_empresa.value}>{default_empresa.text}</option>
                                     { 
                                         this.state.empresas.map((item, key)=>(

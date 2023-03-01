@@ -174,7 +174,6 @@ class Editar extends React.Component{
                         desconto_por_unidade: results.data[0].desconto_por_unidade,
                         id_produto: results.data[0].id_produto,
                         id_grupo_empresa: results.data[0].id_grupo_empresa,
-                        id_empresa: results.data[0].id_empresa,
                         quantidade: results.data[0].quantidade,
                         data_ini: results.data[0].data_ini,
                         data_fim: results.data[0].data_fim,
@@ -236,7 +235,7 @@ class Editar extends React.Component{
         let produtoList = [];
         let produtoDict;
 
-        api.get(`/api/v1/integracao/produto/lista?id_empresa=${this.state.tokenDecode.id_empresa}`, { headers: { Authorization: this.props.token}})
+        api.get(`/api/v1/integracao/produto/lista?id_grupo_empresa=${this.state.tokenDecode.id_grupo_empresa}`, { headers: { Authorization: this.props.token}})
         .then((results)=>{  
             if (results.data.length > 0){
                 for(let i=0; i<results.data.length; i++){
@@ -281,7 +280,7 @@ class Editar extends React.Component{
         let gruposPagamentoList = [];
         let grupoPagamentoDict;
 
-        api.get(`/api/v1/grupo-pagamento?id_empresa=${this.state.tokenDecode.id_empresa}`, { headers: { Authorization: this.props.token}})
+        api.get(`/api/v1/grupo-pagamento?id_grupo_empresa=${this.state.tokenDecode.id_grupo_empresa}`, { headers: { Authorization: this.props.token}})
         .then((results)=>{  
             if (results.data.length > 0){
                 for(let i=0; i<results.data.length; i++){
@@ -320,7 +319,6 @@ class Editar extends React.Component{
                 desconto_por_unidade: this.state.desconto_por_unidade,
                 id_produto: this.state.id_produto,
                 id_grupo_empresa: this.state.tokenDecode.id_grupo_empresa,
-                id_empresa: this.state.tokenDecode.id_empresa,
                 quantidade: this.state.quantidade,
                 data_ini: this.state.data_ini,
                 data_fim: this.state.data_fim,
@@ -338,42 +336,35 @@ class Editar extends React.Component{
         ]   
         let message;
 
-        try{
-            api.post('/api/v1/promocao', dados_promocao, { headers: { Authorization: this.props.token}})
-            .then(async (results) => {
-                if (results.data['Sucesso']){
-                    if (this.state.id_promocao){
-                        message = 'Promoção editada com sucesso!'
-                    } else{
-                        message = 'Promoção cadastrada com sucesso!'
-                    }
-                    
-                    toast(message, {
-                        duration: 2000,
-                        style:{
-                            marginRight: '1%',
-                            backgroundColor: '#078518',
-                            color: 'white'
-                        },
-                        position: 'bottom-right',
-                        icon: <span className="material-symbols-outlined">sentiment_satisfied</span>,
-                    });
-    
-                    await this.submitFormEmpresas(results.data.id);
+        api.post('/api/v1/promocao', dados_promocao, { headers: { Authorization: this.props.token}})
+        .then(async (results) => {
+            if (results.data['Sucesso']){
+                if (this.state.id_promocao){
+                    message = 'Promoção editada com sucesso!'
+                } else{
+                    message = 'Promoção cadastrada com sucesso!'
+                }
+                
+                toast(message, {
+                    duration: 2000,
+                    style:{
+                        marginRight: '1%',
+                        backgroundColor: '#078518',
+                        color: 'white'
+                    },
+                    position: 'bottom-right',
+                    icon: <span className="material-symbols-outlined">sentiment_satisfied</span>,
+                });
 
-                    this.componentDidMount();
-                }
-            })
-            .catch((error)=>{
-                console.log(error)
-                if (error.name === "AxiosError"){
-                    window.location.href="/login"
-                }
-            })
+                await this.submitFormEmpresas(results.data.id);
+
+                this.componentDidMount();
+            }
+        })
+        .catch((error)=>{
+            console.log(error)
             
-        }catch(err){
-            console.log(err)
-        }
+        })
     }
 
     async submitFormEmpresas(id){

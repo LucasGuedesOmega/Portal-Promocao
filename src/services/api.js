@@ -1,7 +1,7 @@
 import axios from "axios"
 
 const api = axios.create({
-    baseURL: 'http://192.168.15.20:5080'
+    baseURL: 'http://172.19.10.30:5080'
 });
 
 api.defaults.headers.post['Content-Type'] = 'application/json;charset=utf-8';

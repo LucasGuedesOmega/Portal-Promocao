@@ -176,42 +176,9 @@ export class NavbarClass extends React.Component{
         this.setState({
             loading: true
         })
-        await this.get_empresa()
         await this.get_usuaario()
         this.setState({
             loading: false
-        })
-    }
-
-    async get_empresa(){
-        await api.get(`/api/v1/empresa?id_empresa=${this.state.tokenDecode.id_empresa}`, { headers: { Authorization: this.props.token}})
-        .then((results)=>{
-            if (results.data.length > 0){
-                this.setState({
-                    descricao_empresa: results.data[0].razao_social
-                })
-            }
-        }).catch((error)=>{
-            console.log(error)
-            if (error.response.data.error === "Token expirado"){
-                window.location.href="/login";
-            } else if (error.response.data.error === "não autorizado"){
-                window.location.href='/login';
-            }else if(error.response.data.erros[0] === 'Sem conexao com a api ou falta fazer login.'){
-                window.location.href='/login';
-            } else if (error.response.data.error === 'Você não tem permissão'){
-                toast(error.response.data.Error, {
-                    duration: 2000,
-                    style:{
-                        marginRight: '1%',
-                        backgroundColor: '#851C00',
-                        color: 'white'
-                    },
-                    position: 'bottom-right',
-                    icon: <span className="material-symbols-outlined">sentiment_satisfied</span>,
-                });
-                this.props.navigate(-1)
-            }
         })
     }
 
@@ -298,7 +265,7 @@ export class NavbarClass extends React.Component{
                 <div className="row-navbar">
                     <div className="coluna-navbar">
                         <div className='titulo-navbar'> 
-                            <h5>{this.state.descricao_empresa}</h5>
+                            <h5>{this.state.descricao_grupo_empresa}</h5>
                         </div> 
                     </div>
                     <div className="coluna-navbar">

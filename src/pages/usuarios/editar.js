@@ -74,7 +74,6 @@ class Editar extends React.Component{
             status: null,
             user_admin: false, 
             user_app: false,
-            id_empresa: 'null',
             id_grupo_empresa: 'null',
             id_grupo_usuario: 'null',
             admin_posto: false,
@@ -117,11 +116,6 @@ class Editar extends React.Component{
                         id_grupo_usuario: results.data[0].id_grupo_usuario,
                     })
 
-                    if (results.data[0].id_empresa){
-                        this.setState({
-                            id_empresa: results.data[0].id_empresa,
-                        })
-                    }
                     if(results.data[0].id_grupo_empresa){
                         this.setState({
                             id_grupo_empresa: results.data[0].id_grupo_empresa,
@@ -137,26 +131,6 @@ class Editar extends React.Component{
                     window.location.href="/login"
                 }
             })
-            
-            if (this.state.id_empresa !== 'null'){
-                api.get(`/api/v1/empresa?id_empresa=${this.state.id_empresa}`, { headers: { Authorization: this.props.token}})
-                .then((results)=>{
-                    if (results.data.length>0){
-                        this.setState({
-                            descricao_empresa: results.data[0].razao_social
-                        })
-                    }
-                }).catch((error)=>{
-                    console.log(error)
-                    if (error.response.data.erros[0] === "Sem conexao com a api ou falta fazer login."){
-                        window.location.href="/login"
-                    } else if (error.response.data.error === "Token expirado"){
-                        window.location.href="/login"
-                    } else if (error.response.data.error === "não autorizado"){
-                        window.location.href='/login'
-                    }
-                });
-            }
             
             if(this.state.id_grupo_empresa !== 'null'){
                 api.get(`/api/v1/grupo-empresa?id_grupo_empresa=${this.state.id_grupo_empresa}`, { headers: { Authorization: this.props.token}})
@@ -184,51 +158,6 @@ class Editar extends React.Component{
         }catch(error){
             console.log(error)
         }
-    }
-
-    preenche_select_empresa(){
-
-        let empresaList = [];
-        let empresaDict;
-
-        api.get(`/api/v1/empresa`, { headers: { Authorization: this.props.token}})
-        .then((results)=>{  
-            if (results.data.length > 0){
-                for(let i=0; i<results.data.length; i++){
-                    empresaDict = {
-                        value: results.data[i].id_empresa,
-                        text: results.data[i].razao_social
-                    }
-                    empresaList.push(empresaDict)
-                }
-                this.setState({
-                    empresas: empresaList
-                })
-            }
-        })
-        .catch((error)=>{
-            console.log(error.response)
-            if(error.name === 'AxiosError'){
-                toast(error.response.data.Error, {
-                    duration: 2000,
-                    style:{
-                        marginRight: '1%',
-                        backgroundColor: '#851C00',
-                        color: 'white'
-                    },
-                    position: 'bottom-right',
-                    icon: <span className="material-symbols-outlined">sentiment_dissatisfied</span>,
-                });
-            } 
-
-            if (error.response.data.erros[0] === "Sem conexao com a api ou falta fazer login."){
-                window.location.href='/login'
-            } 
-            
-            if (error.response.data.error === "Token expirado"){
-                window.location.href='/login'
-            }
-        }) 
     }
 
     preenche_select_grupo_empresa(){
@@ -287,7 +216,6 @@ class Editar extends React.Component{
                 user_admin: this.state.user_admin,
                 user_app: this.state.user_app,
                 admin_posto: this.state.admin_posto,
-                id_empresa: this.state.id_empresa,
                 id_grupo_empresa: this.state.id_grupo_empresa,
                 id_grupo_usuario: 'null'
             }
@@ -368,9 +296,8 @@ class Editar extends React.Component{
         });
     }
 
-    ressetEmpresa(){
+    ressetGrupoEmpresa(){
         this.setState({
-            id_empresa: 'null',
             id_grupo_empresa: 'null'
         }, (()=>{
             this.submitForm()
@@ -379,13 +306,6 @@ class Editar extends React.Component{
     }
 
     render(){
-        let default_empresa;
-        if (this.state.id_empresa && this.state.descricao_empresa){
-            default_empresa = {value: this.state.id_empresa, text: this.state.descricao_empresa}
-        } else {
-            default_empresa = {value: 'null', text: 'Selecione uma empresa'}
-        }
-
         let default_grupo_empresa;
         if (this.state.id_grupo_empresa && this.state.descricao_grupo_empresa){
             default_grupo_empresa = {value: this.state.id_grupo_empresa, text: this.state.descricao_grupo_empresa}
@@ -426,20 +346,9 @@ class Editar extends React.Component{
                                     }
                                 </select>
                             </div>
-                            <div className="col-sm">
-                                <label className='cadastro__formulario__label'>Empresa</label>
-                                <select name='id_empresa' onChange={(value)=>{this.handleNameValue(value)}} className='form-select'>
-                                    <option defaultValue={default_empresa.value}>{default_empresa.text}</option>
-                                    { 
-                                        this.state.empresas.map((item, key)=>(
-                                            <option key={key} value={item.value}>{item.text}</option>
-                                        ))
-                                    }
-                                </select>
-                            </div>
                             <div className='col-sm row'>
                                 <label className='cadastro__formulario__label'></label>
-                                <button onClick={()=>this.ressetEmpresa()} className="bt_apagar_empresa">Apagar empresa</button>
+                                <button onClick={()=>this.ressetGrupoEmpresa()} className="bt_apagar_empresa">Apagar empresa</button>
                             </div>
                         </div>
                         

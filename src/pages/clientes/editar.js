@@ -80,7 +80,6 @@ class Editar extends React.Component{
             e_mail: null,
             telefone: null,
             status: false,
-            id_empresa: null,
 
             tokenDecode: jwtDecode(this.props.token),
 
@@ -91,7 +90,6 @@ class Editar extends React.Component{
             senha: null,
             status_usuario: false,
             user_app: false,
-            id_empresa_usuario: null,
             id_usuario: null,
             descricao_empresa: null
         }
@@ -103,9 +101,6 @@ class Editar extends React.Component{
         if (this.state.id_cliente){
             this.get_cliente();
         }
-        
-        this.preenche_select_empresa();
-
     }
 
     get_cliente(){
@@ -119,7 +114,6 @@ class Editar extends React.Component{
                     e_mail: results.data[0].e_mail,
                     telefone: results.data[0].telefone,
                     status: results.data[0].status,
-                    id_empresa: results.data[0].id_empresa,
                     id_usuario: results.data[0].id_usuario
                 }, ()=>{
                     this.get_usuario()
@@ -146,14 +140,9 @@ class Editar extends React.Component{
                     this.setState({
                         username: results.data[0].username,
                         senha: results.data[0].senha,
-                        id_empresa_usuario: results.data[0].id_empresa,
                         status_usuario: results.data[0].status,
                         user_app: results.data[0].user_app,
-                    }, ()=>{
-                        this.get_default_empresa()
                     })
-
-                    
                 }
             })
             .catch((error)=>{
@@ -161,22 +150,6 @@ class Editar extends React.Component{
             })
         }
         
-    }
-
-    get_default_empresa(){
-        if(this.state.id_empresa_usuario){
-            api.get(`api/v1/empresa?id_empresa=${this.state.id_empresa_usuario}`, { headers: { Authorization: this.props.token}})
-            .then((results)=>{
-                if (results.data.length > 0){
-                    this.setState({
-                        descricao_empresa: results.data[0].razao_social
-                    })
-                }
-            })
-            .catch((error)=>{
-                console.log(error)
-            })
-        }
     }
 
     submitForm(){
@@ -214,7 +187,6 @@ class Editar extends React.Component{
                 e_mail: this.state.e_mail,
                 telefone: this.state.telefone,
                 status: this.state.status,
-                id_empresa: this.state.tokenDecode.id_empresa,
                 id_usuario: this.state.id_usuario,
                 id_grupo_empresa: this.state.tokenDecode.id_grupo_empresa
             }
@@ -263,9 +235,7 @@ class Editar extends React.Component{
     submitFormUsuarios(){
         let message = null;
 
-        if (!this.state.id_empresa_usuario){
-            message = 'Selecione uma empresa';
-        }else if (!this.state.username){
+        if (!this.state.username){
             message = 'Digite um username!';
         }else if(!this.state.senha){
             message = 'Digite uma senha!'
@@ -294,7 +264,6 @@ class Editar extends React.Component{
                 user_app: this.state.user_app,
                 user_admin: false,
                 admin_posto: false,
-                id_empresa: this.state.id_empresa_usuario,
                 id_grupo_empresa: this.state.tokenDecode.id_grupo_empresa,
                 id_grupo_usuario: 'null'
             }
@@ -325,51 +294,6 @@ class Editar extends React.Component{
         }
     }
 
-    preenche_select_empresa(){
-
-        let empresaList = [];
-        let empresaDict;
-
-        api.get(`/api/v1/empresa?id_grupo_empresa=${this.state.tokenDecode.id_grupo_empresa}`, { headers: { Authorization: this.props.token}})
-        .then((results)=>{  
-            if (results.data.length > 0){
-                for(let i=0; i<results.data.length; i++){
-                    empresaDict = {
-                        value: results.data[i].id_empresa,
-                        text: results.data[i].razao_social
-                    }
-                    empresaList.push(empresaDict)
-                }
-                this.setState({
-                    empresas: empresaList
-                })
-            }
-        })
-        .catch((error)=>{
-            console.log(error.response.data)
-            if(error.name === 'AxiosError'){
-                toast(error.response.data.Error, {
-                    duration: 2000,
-                    style:{
-                        marginRight: '1%',
-                        backgroundColor: '#851C00',
-                        color: 'white'
-                    },
-                    position: 'bottom-right',
-                    icon: <span className="material-symbols-outlined">sentiment_dissatisfied</span>,
-                });
-            } 
-
-            if (error.response.data.erros[0] === "Sem conexao com a api ou falta fazer login."){
-                window.location.href="/login";
-            } 
-            
-            if (error.response.data.error === "Token expirado"){
-                window.location.href="/login";
-            }
-        }) 
-    }
-
     handleNameValue(event){
         const target = event.target;
         const value = target.type === 'checkbox' ? target.checked: target.value;
@@ -387,12 +311,6 @@ class Editar extends React.Component{
     }
 
     render(){
-        let default_empresa;
-        if (this.state.id_empresa_usuario && this.state.descricao_empresa){
-            default_empresa = {value: this.state.id_empresa_usuario, text: this.state.descricao_empresa}
-        } else {
-            default_empresa = {value: 0, text: 'Selecione uma empresa'}
-        }
         return (
             <div className='cadastro'>
                 <div  className="cadastro__formulario" >
@@ -412,19 +330,6 @@ class Editar extends React.Component{
                             <div className="col-sm">
                                 <label className='cadastro__formulario__label'>Senha</label>
                                 <input type={'password'} className='form-control' defaultValue={this.state.senha} name={'senha'} onChange={(value)=>{this.handleNameValue(value)}} />
-                            </div>
-                        </div>
-                        <div className="row mt-3">
-                            <div className="col-sm">
-                                <label className='cadastro__formulario__label'>Empresa</label>
-                                <select name='id_empresa_usuario' onChange={(value)=>{this.handleNameValue(value)}} className='form-select'>
-                                    <option defaultValue={default_empresa.value}>{default_empresa.text}</option>
-                                    { 
-                                        this.state.empresas.map((item, key)=>(
-                                            <option key={key} value={item.value}>{item.text}</option>
-                                        ))
-                                    }
-                                </select>
                             </div>
                         </div>
                         <div className="row mt-3">

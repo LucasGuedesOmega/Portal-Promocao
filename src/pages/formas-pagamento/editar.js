@@ -94,7 +94,7 @@ class Editar extends React.Component{
     }
 
     grupo_empresa(){
-        api.get(`/api/v1/empresa?id_empresa=${this.state.tokenDeconde.id_empresa}`, { headers: { Authorization: this.props.token}})
+        api.get(`/api/v1/empresa?id_grupo_empresa=${this.state.tokenDeconde.id_grupo_empresa}`, { headers: { Authorization: this.props.token}})
         .then(async (results)=>{
             if(results.data.length > 0){
                 await this.setState({
