@@ -69,17 +69,6 @@ class Tela extends React.Component{
                                 <p> Todos os cashbacks da Rede </p>
                             </div>
                         </button>
-                        <button className='button-relatorios' onClick={()=>{this.props.navigate('/relatorios/relacao/descontos-cashback/rede')}}>
-                            <div className='header-button-relatorio' >
-                                <p>Pontos</p>
-                            </div>
-                            <div className='body-button-relatorio' >
-                                <img src={require('../../assets/images/pontuacao-de-credito-empresarial.png')}  alt='relatorios' height={50} width={50}/>
-                            </div>
-                            <div className='footer-button-relatorio' >
-                                <p> Todos os pontos de cada cliente da Rede </p>
-                            </div>
-                        </button>
                     </div>
                 </div>  
                 <div className='section-relatorios'>
@@ -101,13 +90,13 @@ class Tela extends React.Component{
                         </button>
                         <button className='button-relatorios' onClick={()=>{this.props.navigate('/relatorios/relacao/resgates/rede')}}>
                             <div className='header-button-relatorio' >
-                                <p>Pontos</p>
+                                <p>Contas a Pagar entre Postos</p>
                             </div>
                             <div className='body-button-relatorio' >
                                 <img src={require('../../assets/images/pontuacao-de-credito-empresarial.png')}  alt='relatorios' height={50} width={50}/>
                             </div>
                             <div className='footer-button-relatorio' >
-                                <p> Resgate de pontos da Rede </p>
+                                <p> O quanto um posto deve ao outro de acordo com resgates.</p>
                             </div>
                         </button>
                     </div>

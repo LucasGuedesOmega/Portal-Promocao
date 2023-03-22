@@ -265,7 +265,6 @@ class Table extends React.Component{
             for (let i = 0; results.data.length > i; i++){
               
               if (results.data[i].status === true){
-                // console.log(results.data[i])
                 results.data[i].status = <span className="material-symbols-outlined" style={{color: 'rgb(85, 255, 100)'}}>thumb_up</span>;
               }else{
                 results.data[i].status = <span className="material-symbols-outlined" style={{color: 'rgb(255, 50, 50)'}}>thumb_down</span>;

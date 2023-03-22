@@ -250,7 +250,6 @@ export class NavbarClass extends React.Component{
         await api.get(`api/v1/grupo-empresa?id_grupo_empresa=${this.state.tokenDecode.id_grupo_empresa}`, {headers: {Authorization: this.props.token}})
         .then((results)=>{
             if (results.data){
-                console.log(results.data)
                 this.setState({
                     descricao_empresa: results.data[0].descricao
                 })

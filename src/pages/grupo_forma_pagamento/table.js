@@ -209,12 +209,10 @@ export class Table extends React.Component{
       let grupoFormaPagamentoList = [];
 
       try{
-        console.log(this.state.url_grupo_forma_pagamento)
         api.get(this.state.url_grupo_forma_pagamento, { headers: { Authorization: this.props.token}})
         .then((results)=>{
           if (results.data.length > 0){
             for (let i = 0; results.data.length > i; i++){
-              console.log(results.data[i])
               if (results.data[i].status === true){
                 results.data[i].status = <span className="material-symbols-outlined" style={{color: 'rgb(85, 255, 100)'}}>thumb_up</span>;
               }else{

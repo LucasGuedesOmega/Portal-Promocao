@@ -8,12 +8,14 @@ export default class Dashboard extends React.Component{
         super(props);
         this.state = {
             token: jwtDecode(localStorage.getItem('tokenApi')),
-            vendas_concluidas: null,
-            vendas_canceladas: null,
-            vendas_emitidas: null,
-            vendas: null,
-            ids_promocao: null,
-            loading: false
+            loading: false,
+
+            cashbackTotal: 0.00,
+            cashbacks_clientes: null,
+
+            descontosTotal: 0.00,
+            descontos_clientes: null
+
         }
     }
 
@@ -22,31 +24,26 @@ export default class Dashboard extends React.Component{
             loading: true
         })
 
-        await this.get_vendas()
+        await this.get_total_cashbacks();
 
         this.setState({
             loading: false
         })
     }
 
-    async get_vendas(){
-        let vendas_concluidas = [];
-        let vendas_canceladas = [];
-        let vendas_emitidas = [];
-        let vendas = [];
-        let ids_promocao = [];
-
-        await api.get(`api/v1/promocao`, {headers: { Authorization: localStorage.getItem('tokenApi')}})
+    async get_total_cashbacks(){
+        let cashbacks_clientes = [];
+        let total_cashback = 0;
+        api.get(`api/v1/total-cashback?tipo=CASHBACK`, {headers: { Authorization: localStorage.getItem('tokenApi')}})
         .then((results)=>{
-            if (results.data.length > 0){
-                for(let i = 0; i<results.data.length; i++){
-                    ids_promocao.push(results.data[i].id_promocao)
-                }
-
-                this.setState({
-                    ids_promocao: ids_promocao
-                })
+            for (let i = 0; i < results.data.length; i++){
+                cashbacks_clientes.push(results.data[i])
+                total_cashback += results.data[i].valor
             }
+            this.setState({
+                cashbackTotal: total_cashback,
+                cashbacks_clientes: cashbacks_clientes
+            })
         })
         .catch((error)=>{
             console.log(error)
@@ -58,28 +55,21 @@ export default class Dashboard extends React.Component{
                 window.location.href='/login'
             }
         })
+    }
 
-        await api.get(`api/v1/vendas`, { headers: { Authorization: localStorage.getItem('tokenApi')}})
+    async get_total_descontos(){
+        let descontos_clientes = [];
+        let total_descontos = 0;
+        api.get(`api/v1/total-cashback?tipo=DESCONTO`, {headers: { Authorization: localStorage.getItem('tokenApi')}})
         .then((results)=>{
-            if (results.data.length > 0){
-                for(let i = 0; i < results.data.length; i++){
-                    if(results.data[i].status_venda === 'CONCLUIDA'){
-                        vendas_concluidas.push(results.data[i])
-                    }else if(results.data[i].status_venda === 'CANCELADA') {
-                        vendas_canceladas.push(results.data[i])
-                    }else if(results.data[i].status_venda === 'EMITIDA'){
-                        vendas_emitidas.push(results.data[i])
-                    }
-                    vendas.push(results.data[i])
-                }
-
-                this.setState({
-                    vendas_emitidas: vendas_emitidas,
-                    vendas_canceladas: vendas_canceladas,
-                    vendas_concluidas: vendas_concluidas,
-                    vendas: vendas
-                })
-            } 
+            for (let i = 0; i < results.data.length; i++){
+                descontos_clientes.push(results.data[i]);
+                total_descontos += results.data[i].valor;
+            }
+            this.setState({
+                descontosTotal: total_descontos,
+                descontos_clientes: descontos_clientes
+            });
         })
         .catch((error)=>{
             console.log(error)
@@ -87,12 +77,11 @@ export default class Dashboard extends React.Component{
                 window.location.href="/login"
             } else if (error.response.data.error === "não autorizado"){
                 window.location.href='/login'
-            } else if (error.response.data.erros === "Sem conexao com a api ou falta fazer login."){
+            } else if (error.response.data.erros[0] === "Sem conexao com a api ou falta fazer login."){
                 window.location.href='/login'
             }
         })
     }
-
     render(){
         return this.state.loading ? (<div className='loader-container'><div className="spinner"></div></div>):(
             <div className="dashboard">
@@ -104,7 +93,7 @@ export default class Dashboard extends React.Component{
                                     <p>CashBack Total</p>
                                 </div>
                                 <div className='content-row-dash body-dash'>
-                                    <p>0.00</p>
+                                    <p>{this.state.cashbackTotal}</p>
                                 </div>
                             </div>
                         </div>
@@ -116,19 +105,7 @@ export default class Dashboard extends React.Component{
                                     <p>Descontos Total</p>
                                 </div>
                                 <div className='content-row-dash body-dash'>
-                                    <p>0.00</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div className='col-sm mt-1 '>
-                        <div className="card card-header-dash">
-                            <div className='content-card-header-dash'>
-                                <div className='content-row-dash header-dash'>
-                                    <p>Pontos Total</p>
-                                </div>
-                                <div className='content-row-dash body-dash'>
-                                    <p>0.00</p>
+                                    <p>{this.state.descontosTotal}</p>
                                 </div>
                             </div>
                         </div>
@@ -178,15 +155,13 @@ export default class Dashboard extends React.Component{
                         </div>
                     </div>
                     <div className="col-sm-4 p-0 m-0">
-                        
                         <div className="card-chart">
                             <div className='card-chart-header'>
-                                <p>Titulo</p>
+                                <p>Postos e Promoções</p>
                             </div>
                             <div className='card-chart-body'>
-                                <PolarAreaChart data={[20, 50, 30, 60]} labels={['1', '2', '3', '4']}/>
+                                <PieChart data={[10, 20, 5, 80, 60]} labels={['1', '2', '3', '4', '5']}/>
                             </div>
-                            
                         </div>
                     </div>
                 </div>
@@ -194,7 +169,7 @@ export default class Dashboard extends React.Component{
                     <div className="col-sm-8 p-0 m-0">
                         <div className="card-chart">
                             <div className='card-chart-header'>
-                                <p>Titulo</p>
+                                <p>Uso de Promoções</p>
                             </div>
                             <div className='card-chart-body'>
                                 <LineChart 
@@ -240,8 +215,9 @@ export default class Dashboard extends React.Component{
                                 <p>Titulo</p>
                             </div>
                             <div className='card-chart-body'>
-                                <PieChart data={[10, 20, 5, 80, 60]} labels={['1', '2', '3', '4', '5']}/>
+                                <PolarAreaChart data={[20, 50, 30, 60]} labels={['1', '2', '3', '4']}/>
                             </div>
+                            
                         </div>
                     </div>
                     <div className="col-sm p-0 m-0">

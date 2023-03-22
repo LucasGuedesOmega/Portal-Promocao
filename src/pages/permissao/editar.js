@@ -365,7 +365,6 @@ class Editar extends React.Component{
 
         api.post('api/v1/permissao', dados_permissao, {headers: {Authorization: this.props.token}})
         .then(async (results)=>{
-            console.log(results, 'oola')
             if(results.data[0].Sucesso){    
                 this.setState({
                     id_permissao: results.data[0].id
@@ -396,7 +395,6 @@ class Editar extends React.Component{
 
         api.post('api/v1/permissao-tela', submit_list, {headers: {Authorization: this.props.token}})
         .then((results)=>{
-            console.log(results, 'ola')
             toast("Permissão cadastrada com sucesso", {
                 duration: 2000,
                 style:{

@@ -136,7 +136,6 @@ class Editar extends React.Component{
                 api.get(`/api/v1/grupo-empresa?id_grupo_empresa=${this.state.id_grupo_empresa}`, { headers: { Authorization: this.props.token}})
                 .then((results)=>{
                     if (results.data.length>0){
-                        console.log(results)
                         this.setState({
                             descricao_grupo_empresa: results.data[0].descricao
                         })
@@ -151,8 +150,6 @@ class Editar extends React.Component{
                         window.location.href='/login'
                     }
                 });
-
-                console.log(this.state.id_grupo_empresa, this.state.descricao_grupo_empresa)
             }
 
         }catch(error){
@@ -181,7 +178,6 @@ class Editar extends React.Component{
             }
         })
         .catch((error)=>{
-            console.log(error.response.data)
             if(error.name === 'AxiosError'){
                 toast(error.response.data.Error, {
                     duration: 2000,
@@ -246,7 +242,6 @@ class Editar extends React.Component{
                 }
             })
             .catch((error)=>{
-                console.log(error.response.data)
 
                 if (error.response.data.error === "Token expirado"){
                     window.location.href="/login"

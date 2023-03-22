@@ -12,8 +12,6 @@ export function EditarGrupoFormaPagamento(){
     let token = localStorage.getItem('tokenApi');
     const navigate = useNavigate();
 
-    console.log(id_grupo_forma_pagamento)
-
     return (<Editar id_grupo_forma_pagamento={id_grupo_forma_pagamento} token={token} navigate={navigate}/>);
 };
 
@@ -121,8 +119,6 @@ class Editar extends React.Component{
             }
         ]   
 
-        console.log(data_grupo_forma_pagamento)
-
         let message;
 
         try{
@@ -150,7 +146,6 @@ class Editar extends React.Component{
                 }
             })
             .catch((error)=>{
-                console.log(error.response.data)
                 if(error.name === 'AxiosError'){
                     toast(error.response.data.Error, {
                         duration: 2000,
@@ -293,11 +288,9 @@ class Editar extends React.Component{
                     }
                 }
 
-                await this.setState({
+                this.setState({
                     formasPagamento: formaPagamentoList
                 })
-
-                console.log(this.state.formasPagamento)
             }
         })
         .catch((error)=>{

@@ -58,7 +58,7 @@ class LoginClass extends React.Component{
             api.post('/api/v1/login', [{'username': this.state.username, 'senha': this.state.senha, 'tipo': 'portal'}])
             .then(async (results)=>{
                 tokenApi = results.data.token; 
-                console.log(results.data.token)
+
                 localStorage.setItem('tokenApi', tokenApi)
 
                 this.props.setToken(tokenApi);

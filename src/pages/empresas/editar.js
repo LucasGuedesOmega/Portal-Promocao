@@ -5,7 +5,7 @@ import { useParams } from "react-router-dom";
 import toast, { Toaster } from 'react-hot-toast';
 import InputMask from 'react-input-mask';
 import { useNavigate } from 'react-router-dom';
-
+import Modal from 'react-modal';
 export function EditarEmpresa(){
 
     const { id_empresa, id_grupo_empresa } = useParams();
@@ -23,6 +23,19 @@ export function CadastrarEmpresa(){
     return (<Editar id_grupo_empresa={id_grupo_empresa} id_empresa={null} token={token} navigate={navigate}/>);
 }
 
+const customStyles = {
+    content: {
+        top: '45%',
+        left: '59%',
+        right: 'auto',
+        bottom: 'auto',
+        marginRight: '-50%',
+        transform: 'translate(-50%, -50%)',
+        width: '60%',
+        height: '60%'
+    },
+};
+
 class Editar extends React.Component{
     constructor(props){
         super(props);
@@ -39,9 +52,10 @@ class Editar extends React.Component{
             token_integracao: null,
             uf: null,
             cidade: null,
-
+            imagem: null,
             usuario: null,
-            senha: null
+            senha: null,
+            openModal: false
         }
 
         this.submitForm = this.submitForm.bind(this);
@@ -56,7 +70,7 @@ class Editar extends React.Component{
 
     get_empresa(){
         try{
-            api.get(`api/v1/empresa?id_grupo_empresa=${this.state.id_grupo_empresa}`,  { headers: { Authorization: this.props.token}})
+            api.get(`api/v1/empresa?id_grupo_empresa=${this.state.id_grupo_empresa}&id_empresa=${this.state.id_empresa}`,  { headers: { Authorization: this.props.token}})
             .then((results)=>{
                 if (results.data.length > 0){
                     this.setState({
@@ -70,7 +84,8 @@ class Editar extends React.Component{
                         status: results.data[0].status,
                         token_integracao: results.data[0].token_integracao,
                         uf: results.data[0].uf,        
-                        cidade: results.data[0].cidade   
+                        cidade: results.data[0].cidade,
+                        imagem: results.data[0].imagem,
                     })
                 }
             })
@@ -115,7 +130,8 @@ class Editar extends React.Component{
                 status: this.state.status,
                 token_integracao: this.state.token_integracao,
                 uf: this.state.uf,
-                cidade: this.state.cidade
+                cidade: this.state.cidade,
+                imagem: this.state.imagem,
             }
         ]   
 
@@ -219,6 +235,45 @@ class Editar extends React.Component{
         })
     }
 
+    async uploadImage(e){
+        const file = e.target.files[0];
+        await this.convertBase64(file);
+    };
+
+    convertBase64 = (file) => {
+        return new Promise((resolve, reject) => {
+            const fileReader = new FileReader();
+            fileReader.readAsDataURL(file);
+
+            fileReader.onload = () => {
+             
+                let image64 = fileReader.result.toString()
+
+                this.setState({
+                    imagem: image64
+                })
+
+                resolve(fileReader.result);
+            };
+
+            fileReader.onerror = (error) => {
+                reject(error);
+            };
+        });
+    };
+
+    openModal(){
+        if (this.state.openModal === false){
+            this.setState({
+                openModal: true
+            })
+        } else {
+            this.setState({
+                openModal: false
+            })
+        }
+    }
+
     render(){
         return (
             <div className='cadastro'>
@@ -273,6 +328,22 @@ class Editar extends React.Component{
                         </div>
                         <div className="row mt-3">
                             <div className="col-sm">
+                                <label className='cadastro__formulario__label'>Imagem</label>
+                                <input type='file' className='form-control' multiple={false} onChangeCapture={(value)=> {this.uploadImage(value)}}/>
+                            </div>
+                            {this.state.imagem ?
+                                (
+                                    <button className='bt_ver_imagem col-sm' onClick={()=>{this.openModal()}}>Ver Imagem</button>
+                                )
+                                :
+                                (
+                                    <div></div>
+                                )
+                            }
+                        </div>
+                        
+                        <div className="row mt-3">
+                            <div className="col-sm">
                                 <label className='cadastro__formulario__label'>Token Itengração</label>
                                 <InputMask readOnly={true} disabled className='form-control' defaultValue={this.state.token_integracao} name={'token_integracao'} onChange={(value)=>{this.handleNameValue(value)}} />
                             </div>
@@ -322,6 +393,27 @@ class Editar extends React.Component{
                         </div>
                     </div>
                 </div>
+                <Modal isOpen={this.state.openModal}  ariaHideApp={false} onRequestClose={this.openModal} style={customStyles} className="card" >
+                    <div className='card card-header'>
+                        <h3>Visualizar Imagem</h3>
+                    </div>
+                    <div className='card card-body' style={{ height: '600px', overflowY: 'scroll' }}>
+                        <div className='row'>
+                            <div className='col-lg'></div>
+                            <div className='col-lg col-image'>
+                                <img alt='*' src={this.state.imagem} className='modal-image'/>
+                            </div>
+                            <div className='col-lg'></div>
+                        </div>
+                    </div>
+                    <div className='card card-footer'>
+                        <div className='row' style={{width: '102%'}}>
+                            <div className='col-lg'>
+                                <button className='bt_fechar_modal' onClick={()=>{this.openModal()}}>Fechar</button>
+                            </div>
+                        </div>
+                    </div>
+                </Modal>
                 <Toaster />
             </div>
         );
